@@ -176,6 +176,7 @@
     <ToggleSwitch v-model="form.reservationAllowed" />
   </div>
 
+  <!-- Temporarily disabled: reservation price field
   <Field
     v-if="form.reservationAllowed"
     v-slot="{ errorMessage }"
@@ -197,6 +198,7 @@
       <ErrorMessage name="reservationPrice" class="text-xs text-red-400" />
     </div>
   </Field>
+  -->
 </template>
 
 <script setup>
