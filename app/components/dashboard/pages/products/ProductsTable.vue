@@ -1,0 +1,59 @@
+<template>
+  <AppDataTable
+    :value="products"
+    :columns="columns"
+    :loading="loading"
+    paginator
+    lazy
+    :rows="rows"
+    :first="first"
+    :total-records="totalRecords"
+    empty-message="لا توجد منتجات."
+    @page="$emit('page', $event)"
+  >
+    <template #product="{ data }">
+      <ProductCell :product="data.productCell" />
+    </template>
+    <template #type="{ data }">
+      <AppStatusTag
+        kind="product-type"
+        :code="data.type"
+        :label="data.typeLabel"
+      />
+    </template>
+    <template #actions="{ data }">
+      <Button
+        label="تعديل"
+        icon="pi pi-pencil"
+        text
+        size="small"
+        severity="primary"
+        @click="$emit('edit', data)"
+      />
+    </template>
+  </AppDataTable>
+</template>
+
+<script setup>
+import Button from "primevue/button";
+import AppDataTable from "~/components/shared/app-data-table/index.vue";
+import AppStatusTag from "~/components/shared/app-status-tag/index.vue";
+import ProductCell from "~/components/shared/product-cell/index.vue";
+
+defineProps({
+  products: { type: Array, default: () => [] },
+  loading: { type: Boolean, default: false },
+  rows: { type: Number, default: 20 },
+  first: { type: Number, default: 0 },
+  totalRecords: { type: Number, default: 0 },
+});
+
+defineEmits(["edit", "page"]);
+
+const columns = [
+  { field: "productCell", header: "المنتج", slot: "product" },
+  { field: "typeLabel", header: "النوع", slot: "type" },
+  { field: "reservationLabel", header: "الحجز" },
+  { field: "actions", header: "إجراء", slot: "actions", style: "width: 8rem" },
+];
+</script>

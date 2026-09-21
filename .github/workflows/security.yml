@@ -1,0 +1,54 @@
+name: Security
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+  schedule:
+# Weekly production header check (requires deploy of vercel.json / nuxt-security)
+    - cron: "0 6 * * 1"
+
+jobs:
+  sca-sast:
+    name: SCA + SAST
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: SCA (npm audit)
+        run: npm run security:sca
+
+      - name: SAST (ESLint security)
+        run: npm run security:sast
+
+  dast:
+    name: DAST (headers)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: DAST header smoke test
+        env:
+          NUXT_PUBLIC_SITE_URL: ${{ vars.NUXT_PUBLIC_SITE_URL }}
+        run: |
+          export NUXT_PUBLIC_SITE_URL="${NUXT_PUBLIC_SITE_URL:-https://performance-v2-new.vercel.app}"
+          npm run security:dast

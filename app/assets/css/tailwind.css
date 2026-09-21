@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --app-bg: #000000;
+  --app-surface: #0a0a0a;
+  --app-card: #111111;
+  --app-elevated: #1a1a1a;
+  --app-border: #262626;
+  --app-border-strong: #404040;
+  --app-text: #e5e5e5;
+  --app-text-strong: #fafafa;
+  --app-muted: #a3a3a3;
+  --app-muted-soft: #d4d4d4;
+  --app-primary: #f5af52;
+  --app-primary-hover: #f6bb6a;
+  --app-primary-active: #e09a3a;
+  --app-primary-contrast: #171717;
+}
+
+html,
+body,
+#__nuxt {
+  min-height: 100%;
+  direction: rtl;
+  text-align: right;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+body {
+  margin: 0;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: "Tahoma", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.p-card {
+  background: var(--app-card) !important;
+  color: var(--app-text-strong) !important;
+  border: 1px solid var(--app-border) !important;
+  box-shadow: none !important;
+}
+
+.p-card .p-card-header,
+.p-card .p-card-content,
+.p-card .p-card-footer,
+.p-card .p-card-title {
+  background: transparent !important;
+  color: var(--app-text-strong) !important;
+}
+
+.p-card .p-card-title {
+  color: var(--app-text-strong) !important;
+}
+
+.p-card .p-card-content {
+  color: var(--app-text) !important;
+}
+
+.p-inputtext,
+.p-select,
+.p-dropdown,
+.p-inputnumber-input,
+.p-calendar .p-inputtext,
+.p-textarea {
+  width: 100%;
+  background: var(--app-surface) !important;
+  border: 1px solid var(--app-border-strong) !important;
+  color: var(--app-text-strong) !important;
+}
+
+.p-inputnumber {
+  display: flex;
+  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.p-inputtext::placeholder,
+.p-select .p-placeholder {
+  color: var(--app-muted) !important;
+}
+
+.p-datatable,
+.p-datatable .p-datatable-wrapper,
+.p-datatable .p-datatable-table-container,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td {
+  background: var(--app-card) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background: var(--app-elevated) !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: center !important;
+}
+
+.p-datatable .p-datatable-column-header-content,
+.p-datatable [data-pc-section="columnheadercontent"] {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover > td {
+  background: var(--app-elevated) !important;
+}
+
+.p-datatable .p-datatable-emptymessage > td,
+.p-datatable .p-datatable-empty-message > td {
+  text-align: center !important;
+  color: var(--app-muted) !important;
+  padding: 2rem 1rem !important;
+  border: none !important;
+}
+
+.p-paginator {
+  background: var(--app-card) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+.p-dialog,
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-footer {
+  background: var(--app-card) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+.p-popover,
+.p-overlaypanel,
+.p-menu,
+.p-tieredmenu,
+.p-select-overlay,
+.p-dropdown-panel,
+.p-datepicker,
+.p-toast .p-toast-message {
+  background: var(--app-card) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border) !important;
+}
+
+.bg-white,
+.bg-slate-50,
+.bg-slate-100,
+.bg-slate-200,
+.bg-slate-300,
+.bg-slate-800,
+.bg-slate-900,
+.bg-slate-950,
+.bg-gray-900,
+.bg-zinc-900,
+.bg-zinc-950,
+.bg-neutral-900,
+.bg-neutral-950 {
+  background-color: var(--app-card) !important;
+}
+
+.bg-slate-800\/50,
+.bg-slate-800\/60,
+.bg-slate-900\/60,
+.bg-slate-900\/80,
+.bg-slate-900\/90,
+.bg-slate-950\/50,
+.bg-slate-950\/60,
+.bg-slate-950\/70,
+.bg-slate-950\/80 {
+  background-color: color-mix(in srgb, var(--app-card) 80%, transparent) !important;
+}
+
+.text-slate-900,
+.text-slate-800,
+.text-slate-700,
+.text-slate-600,
+.text-slate-500,
+.text-slate-400,
+.text-slate-300,
+.text-slate-200,
+.text-slate-100 {
+  color: var(--app-text-strong) !important;
+}
+
+.border-slate-200,
+.border-slate-300,
+.border-slate-600,
+.border-slate-700,
+.border-white\/10,
+.border-white\/20 {
+  border-color: var(--app-border) !important;
+}
+
+.text-slate-500,
+.text-slate-600,
+.text-slate-700 {
+  color: var(--app-muted-soft) !important;
+}
+
+.rounded-2xl,
+.rounded-xl,
+.rounded-lg {
+  background-clip: padding-box;
+}
