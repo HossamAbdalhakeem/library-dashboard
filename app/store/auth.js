@@ -9,6 +9,8 @@ export const useAuthStore = defineStore("authStore", {
     token: null,
     loggedIn: false,
     loading: false,
+    /** True while 00-set-user restores session (fetchUser + fetchYears). */
+    sessionLoading: true,
     baseURL: useRuntimeConfig()?.public?.baseUrl || "/api",
   }),
   getters: {
