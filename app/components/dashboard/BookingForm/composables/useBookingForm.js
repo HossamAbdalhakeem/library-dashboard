@@ -29,6 +29,7 @@ export function useBookingForm(props, emit) {
 
   const hydratingInitial = ref(false);
   const selectedStudent = ref(null);
+  const formKey = ref(0);
 
   const paymentExclude = computed(() =>
     isCustomerService.value ? [PaymentMethod.CASH] : [],
@@ -83,6 +84,34 @@ export function useBookingForm(props, emit) {
     validateDepositAmount: products.validateDepositAmount,
     amountError: products.amountError,
   });
+
+  const resetForm = () => {
+    Object.assign(form, {
+      studentName: "",
+      studentPhone: "",
+      branchId: null,
+      studyYearId: null,
+      teacherId: null,
+      productType: null,
+      productId: null,
+      amount: null,
+      paymentMethod: defaultPaymentMethod.value,
+    });
+    selectedStudent.value = null;
+    products.clearProductSelection();
+    products.amountError.value = "";
+    submit.proofFile.value = null;
+    submit.proofKey.value = "";
+    submit.proofPreviewUrl.value = "";
+    submit.proofRequiredError.value = false;
+    submit.paymentFieldsRef.value?.reset?.();
+    formKey.value += 1;
+  };
+
+  const closeSuccessDialog = () => {
+    submit.closeSuccessDialog();
+    resetForm();
+  };
 
   const setHydrating = (value) => {
     hydratingInitial.value = Boolean(value);
@@ -252,8 +281,10 @@ export function useBookingForm(props, emit) {
     paymentExclude,
     form,
     formInitialValues,
+    formKey,
     ...products,
     ...submit,
+    closeSuccessDialog,
     validateStudentSelection,
     applyStudent,
     clearStudent,

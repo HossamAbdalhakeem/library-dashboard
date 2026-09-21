@@ -19,6 +19,7 @@
     <div class="grid gap-4">
       <Form
         v-slot="{ errors: fieldErrors, setFieldValue, meta }"
+        :key="formKey"
         :initial-values="formInitialValues"
         class="grid gap-4 md:grid-cols-2"
         @submit="handleSubmit"
@@ -115,6 +116,7 @@ const {
   paymentExclude,
   form,
   formInitialValues,
+  formKey,
   loadingProducts,
   amountError,
   canSelectProduct,
