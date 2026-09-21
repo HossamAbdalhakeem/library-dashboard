@@ -1,0 +1,143 @@
+.app-data-table-wrap :deep(.app-data-table) {
+  background: transparent;
+}
+
+.app-data-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-data-table-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.app-data-table-scroll::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+.app-data-table-scroll::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 999px;
+}
+
+.app-data-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #525252;
+}
+
+.app-data-table-wrap :deep(.p-datatable-table-container),
+.app-data-table-wrap :deep(.p-datatable-wrapper),
+.app-data-table-wrap :deep(.p-datatable-table) {
+  background: #111111 !important;
+  border: none !important;
+  border-collapse: collapse !important;
+}
+
+.app-data-table-wrap :deep(.p-datatable-table) {
+  table-layout: auto !important;
+  width: max-content !important;
+  min-width: 100% !important;
+}
+
+.app-data-table-wrap :deep(.p-datatable-thead > tr > th),
+.app-data-table-wrap :deep(.p-datatable-tbody > tr > td) {
+  background: transparent !important;
+  color: #e5e5e5 !important;
+  border: none !important;
+  border-bottom: 1px solid #262626 !important;
+  padding: 0.85rem 0.75rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-size: 0.875rem !important;
+  box-shadow: none !important;
+  white-space: nowrap;
+}
+
+.app-data-table-wrap :deep(.p-datatable-thead > tr > th) {
+  background: #1a1a1a !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
+}
+
+.app-data-table-wrap :deep(.p-datatable-tbody > tr) {
+  background: #111111 !important;
+  color: #e5e5e5 !important;
+  transition: background-color 0.15s ease;
+}
+
+.app-data-table-wrap :deep(.p-datatable-tbody > tr:last-child > td) {
+  border-bottom: none !important;
+}
+
+.app-data-table-wrap :deep(.p-datatable-tbody > tr:hover > td),
+.app-data-table-wrap :deep(.p-datatable-tbody > tr.p-datatable-row-odd:hover > td) {
+  background: #1a1a1a !important;
+}
+
+.app-data-table-wrap :deep(.p-datatable-tbody > tr.p-datatable-row-odd > td) {
+  background: #0a0a0a !important;
+}
+
+/* Expansion rows must wrap and use full width — not table cell nowrap/center rules */
+.app-data-table-wrap :deep(.p-datatable-tbody > tr.p-datatable-row-expansion > td),
+.app-data-table-wrap :deep(.p-datatable-tbody > tr[data-p-expansion-row="true"] > td) {
+  white-space: normal !important;
+  text-align: start !important;
+  vertical-align: top !important;
+  padding: 0.75rem !important;
+}
+
+.app-data-table-wrap :deep(.p-datatable-tbody > tr.app-row-matched > td) {
+  background: rgba(245, 175, 82, 0.12) !important;
+}
+
+.app-data-table-wrap :deep(.p-datatable-empty-message > td),
+.app-data-table-wrap :deep(.p-datatable-emptymessage > td) {
+  text-align: center !important;
+  color: #a3a3a3 !important;
+  padding: 2.5rem 1rem !important;
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  background: #111111 !important;
+  box-shadow: none !important;
+  white-space: normal;
+}
+
+.app-data-table-empty {
+  text-align: center;
+  color: #a3a3a3;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+}
+
+.app-data-table-wrap :deep(.p-paginator) {
+  background: #111111 !important;
+  border: none !important;
+  border-top: 1px solid #262626 !important;
+  color: #e5e5e5 !important;
+  padding: 0.75rem !important;
+  justify-content: center;
+  position: sticky;
+  left: 0;
+  min-width: 100%;
+}
+
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-prev),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-next),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-first),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-last) {
+  background: transparent !important;
+  color: #d4d4d4 !important;
+  border: 1px solid transparent !important;
+  min-width: 2.25rem;
+  height: 2.25rem;
+}
+
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page.p-highlight) {
+  background: #1a1a1a !important;
+  color: #fafafa !important;
+  border-color: #404040 !important;
+}

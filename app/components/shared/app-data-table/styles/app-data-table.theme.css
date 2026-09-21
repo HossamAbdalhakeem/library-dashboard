@@ -1,0 +1,44 @@
+/* Unscoped so Aura theme cannot beat header flex alignment */
+.app-data-table-wrap .p-datatable-thead > tr > th {
+  text-align: center !important;
+}
+
+.app-data-table-wrap .p-datatable-column-header-content,
+.app-data-table-wrap [data-pc-section="columnheadercontent"] {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 0.25rem;
+}
+
+.app-data-table-wrap .p-datatable-column-title,
+.app-data-table-wrap [data-pc-section="columntitle"] {
+  display: inline-block !important;
+  width: auto !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+.app-data-table-wrap .p-datatable-tbody > tr > td {
+  text-align: center !important;
+}
+
+.app-data-table-wrap .p-datatable-tbody > tr > td > * {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.app-data-table-wrap .p-datatable-tbody > tr.p-datatable-row-expansion > td,
+.app-data-table-wrap .p-datatable-tbody > tr[data-p-expansion-row="true"] > td {
+  text-align: start !important;
+  white-space: normal !important;
+}
+
+.app-data-table-wrap .p-datatable-tbody > tr.p-datatable-row-expansion > td > *,
+.app-data-table-wrap .p-datatable-tbody > tr[data-p-expansion-row="true"] > td > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100%;
+  max-width: 100%;
+}

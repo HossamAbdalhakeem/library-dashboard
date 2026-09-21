@@ -41,35 +41,6 @@
           </button>
         </div>
 
-        <!-- <div class="flex flex-wrap items-center justify-center gap-2">
-          <Button
-            type="button"
-            label="قص الصورة"
-            icon="pi pi-crop"
-            size="small"
-            severity="secondary"
-            outlined
-            @click="openCropper"
-          />
-          <Button
-            type="button"
-            label="تغيير الصورة"
-            icon="pi pi-image"
-            size="small"
-            severity="secondary"
-            outlined
-            @click="openPicker"
-          />
-          <Button
-            type="button"
-            label="إزالة"
-            icon="pi pi-times"
-            size="small"
-            severity="danger"
-            text
-            @click="clear"
-          />
-        </div> -->
         <p v-if="fileMeta" class="text-center text-xs text-slate-500">{{ fileMeta }}</p>
       </div>
 
@@ -106,7 +77,7 @@
 </template>
 
 <script setup>
-import Button from "primevue/button";
+import { useImageUpload } from "./composables/useImageUpload";
 
 defineOptions({ name: "ImageUpload" });
 
@@ -129,179 +100,25 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "select", "clear", "error", "cropped"]);
 
-const inputRef = ref(null);
-const previewUrl = ref("");
-const errorMessage = ref("");
-const fileMeta = ref("");
-const showCropper = ref(false);
-const cropperMounted = ref(false);
-const selectedImage = ref("");
-const isProcessing = ref(false);
-const originalFileName = ref("cropped-image.jpg");
-
-const maxBytes = computed(() => {
-  if (props.maxSizeBytes != null && props.maxSizeBytes > 0) {
-    return props.maxSizeBytes;
-  }
-  return Math.max(0.05, props.maxSizeMb) * 1024 * 1024;
-});
-
-const maxSizeLabel = computed(() => {
-  const bytes = maxBytes.value;
-  if (bytes < 1024 * 1024) {
-    return `${Math.round(bytes / 1024)} ك.ب`;
-  }
-  return `${(bytes / (1024 * 1024)).toFixed(1)} م.ب`;
-});
-
-const revokePreview = () => {
-  if (previewUrl.value?.startsWith("blob:")) {
-    URL.revokeObjectURL(previewUrl.value);
-  }
-  previewUrl.value = "";
-};
-
-const openPicker = () => {
-  inputRef.value?.click();
-};
-
-const clear = () => {
-  revokePreview();
-  errorMessage.value = "";
-  fileMeta.value = "";
-  selectedImage.value = "";
-  originalFileName.value = "cropped-image.jpg";
-  if (inputRef.value) inputRef.value.value = "";
-  emit("update:modelValue", null);
-  emit("clear");
-};
-
-const openCropper = () => {
-  if (!previewUrl.value && !selectedImage.value) return;
-  selectedImage.value = selectedImage.value || previewUrl.value;
-  cropperMounted.value = true;
-  showCropper.value = true;
-};
-
-const onFileChange = (event) => {
-  const file = event.target?.files?.[0];
-  if (!file) return;
-
-  errorMessage.value = "";
-
-  if (!file.type.startsWith("image/")) {
-    errorMessage.value = "يسمح برفع الصور فقط.";
-    emit("error", errorMessage.value);
-    if (inputRef.value) inputRef.value.value = "";
-    return;
-  }
-
-  if (file.size > maxBytes.value) {
-    errorMessage.value = `حجم الصورة كبير. الحد الأقصى ${maxSizeLabel.value}.`;
-    emit("error", errorMessage.value);
-    if (inputRef.value) inputRef.value.value = "";
-    return;
-  }
-
-  originalFileName.value = file.name || "cropped-image.jpg";
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    selectedImage.value = String(e.target?.result || "");
-    cropperMounted.value = true;
-    showCropper.value = true;
-  };
-  reader.onerror = () => {
-    errorMessage.value = "تعذر قراءة الصورة.";
-    emit("error", errorMessage.value);
-  };
-  reader.readAsDataURL(file);
-
-  if (inputRef.value) inputRef.value.value = "";
-};
-
-const handleCropped = async ({ blob, dataURL }) => {
-  if (!blob) {
-    errorMessage.value = "تعذر قص الصورة.";
-    emit("error", errorMessage.value);
-    return;
-  }
-
-  isProcessing.value = true;
-
-  try {
-    const extension = blob.type === "image/png" ? "png" : "jpg";
-    const baseName = String(originalFileName.value).replace(/\.[^.]+$/, "") || "cropped-image";
-    const file = new File([blob], `${baseName}.${extension}`, {
-      type: blob.type || "image/jpeg",
-    });
-
-    if (file.size > maxBytes.value) {
-      errorMessage.value = `حجم الصورة بعد القص كبير. الحد الأقصى ${maxSizeLabel.value}.`;
-      emit("error", errorMessage.value);
-      return;
-    }
-
-    revokePreview();
-    previewUrl.value = dataURL || URL.createObjectURL(file);
-    selectedImage.value = previewUrl.value;
-    fileMeta.value = `${file.name} `;
-
-    emit("update:modelValue", file);
-    emit("select", file);
-    emit("cropped", { blob, dataURL, file });
-
-    if (typeof props.uploadHandler === "function") {
-      await props.uploadHandler(file);
-    }
-
-    showCropper.value = false;
-  } catch (error) {
-    errorMessage.value =
-      error?.message || "تعذر حفظ أو رفع الصورة المقصوصة.";
-    emit("error", error);
-  } finally {
-    isProcessing.value = false;
-  }
-};
-
-const handleCropperError = (error) => {
-  errorMessage.value = "تعذر قص الصورة. حاول مرة أخرى.";
-  emit("error", error);
-};
-
-const handleCropperClose = (isOpen) => {
-  if (!isOpen && isProcessing.value) {
-    showCropper.value = true;
-    return;
-  }
-  if (!isOpen) {
-    selectedImage.value = previewUrl.value || "";
-  }
-};
-
-const handleUploadNew = () => {
-  if (isProcessing.value) return;
-  showCropper.value = false;
-  nextTick(() => openPicker());
-};
-
-watch(
-  () => props.modelValue,
-  (value) => {
-    if (value) return;
-    if (!previewUrl.value && !fileMeta.value && !errorMessage.value) return;
-    revokePreview();
-    errorMessage.value = "";
-    fileMeta.value = "";
-    selectedImage.value = "";
-    if (inputRef.value) inputRef.value.value = "";
-  },
-);
-
-onBeforeUnmount(() => {
-  revokePreview();
-});
+const {
+  inputRef,
+  previewUrl,
+  errorMessage,
+  fileMeta,
+  showCropper,
+  cropperMounted,
+  selectedImage,
+  isProcessing,
+  maxSizeLabel,
+  openPicker,
+  clear,
+  openCropper,
+  onFileChange,
+  handleCropped,
+  handleCropperError,
+  handleCropperClose,
+  handleUploadNew,
+} = useImageUpload(props, emit);
 
 defineExpose({ clear, openPicker, openCropper });
 </script>
