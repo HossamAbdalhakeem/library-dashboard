@@ -144,6 +144,6 @@ const {
 } = useBookingForm(props, emit);
 
 const setPaymentFieldsRef = (el) => {
-  paymentFieldsRef.value = el;
+  paymentFieldsRef.value = el || null;
 };
 </script>

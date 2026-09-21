@@ -193,6 +193,6 @@ const props = defineProps({
 });
 
 const setPaymentFieldsRef = (el) => {
-  props.sales.paymentFieldsRef = el;
+  props.sales.setPaymentFieldsRef?.(el);
 };
 </script>

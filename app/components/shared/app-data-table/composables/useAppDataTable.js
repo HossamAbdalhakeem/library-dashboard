@@ -6,10 +6,11 @@ import { toArabicDigits } from "~/utils/format.js";
 export function useAppDataTable(props, emit) {
   const wrapRef = ref(null);
   let paginatorObserver = null;
+  let syncingDigits = false;
 
   const arabicizePaginatorDigits = () => {
     const root = wrapRef.value;
-    if (!root) return;
+    if (!root || syncingDigits) return;
 
     const targets = root.querySelectorAll(
       [
@@ -20,11 +21,43 @@ export function useAppDataTable(props, emit) {
       ].join(", "),
     );
 
-    targets.forEach((node) => {
-      const raw = node.textContent ?? "";
-      if (!/[0-9]/.test(raw)) return;
-      const next = toArabicDigits(raw);
-      if (raw !== next) node.textContent = next;
+    syncingDigits = true;
+    try {
+      targets.forEach((node) => {
+        const raw = node.textContent ?? "";
+        if (!/[0-9]/.test(raw)) return;
+        const next = toArabicDigits(raw);
+        if (raw !== next) node.textContent = next;
+      });
+    } finally {
+      // Defer clear so our own textContent writes don't re-enter the observer.
+      queueMicrotask(() => {
+        syncingDigits = false;
+      });
+    }
+  };
+
+  const disconnectPaginatorObserver = () => {
+    paginatorObserver?.disconnect();
+    paginatorObserver = null;
+  };
+
+  const bindPaginatorObserver = () => {
+    disconnectPaginatorObserver();
+    if (!wrapRef.value || typeof MutationObserver === "undefined") return;
+
+    // Prefer the paginator node only — observing the whole table was costly.
+    const paginatorEl = wrapRef.value.querySelector(".p-paginator");
+    if (!paginatorEl) return;
+
+    paginatorObserver = new MutationObserver(() => {
+      if (syncingDigits) return;
+      arabicizePaginatorDigits();
+    });
+    paginatorObserver.observe(paginatorEl, {
+      childList: true,
+      subtree: true,
+      characterData: true,
     });
   };
 
@@ -78,27 +111,24 @@ export function useAppDataTable(props, emit) {
   };
 
   onMounted(() => {
-    nextTick(arabicizePaginatorDigits);
-    if (!wrapRef.value || typeof MutationObserver === "undefined") return;
-
-    paginatorObserver = new MutationObserver(() => {
+    nextTick(() => {
       arabicizePaginatorDigits();
-    });
-    paginatorObserver.observe(wrapRef.value, {
-      childList: true,
-      subtree: true,
-      characterData: true,
+      bindPaginatorObserver();
     });
   });
 
   onBeforeUnmount(() => {
-    paginatorObserver?.disconnect();
-    paginatorObserver = null;
+    disconnectPaginatorObserver();
   });
 
   watch(
     () => [props.loading, props.first, props.totalRecords, props.value?.length],
-    () => nextTick(arabicizePaginatorDigits),
+    () => {
+      nextTick(() => {
+        arabicizePaginatorDigits();
+        bindPaginatorObserver();
+      });
+    },
   );
 
   return {

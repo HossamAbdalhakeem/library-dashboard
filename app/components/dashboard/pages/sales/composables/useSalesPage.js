@@ -202,6 +202,12 @@ export function useSalesPage() {
     }
   };
 
+  // Keep paymentFieldsRef OUT of reactive() — writing it from a template :ref
+  // (null on unmount, then el) would re-render forever and balloon memory.
+  const setPaymentFieldsRef = (el) => {
+    paymentFieldsRef.value = el || null;
+  };
+
   return reactive({
     saving,
     formKey,
@@ -209,7 +215,6 @@ export function useSalesPage() {
     proofKey,
     proofPreviewUrl,
     proofRequiredError,
-    paymentFieldsRef,
     successDialogVisible,
     saleSummary,
     selectedStudent,
@@ -222,6 +227,7 @@ export function useSalesPage() {
     closeSuccessDialog,
     resetForm,
     submitSale,
+    setPaymentFieldsRef,
     ...productSelection,
   });
 }
