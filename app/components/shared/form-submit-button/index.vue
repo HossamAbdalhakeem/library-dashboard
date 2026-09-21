@@ -8,7 +8,15 @@
     :disabled="loading"
     :class="[buttonClass, { 'form-submit-button--invalid': !valid && !loading }]"
   >
-    <slot>{{ label }}</slot>
+    <!--
+      PrimeVue Button only shows its built-in spinner inside the default slot fallback.
+      Passing any default slot content hides that spinner — so only forward a slot
+      when the parent actually provides one, and render a spinner ourselves then.
+    -->
+    <template v-if="hasDefaultSlot">
+      <i v-if="loading" class="pi pi-spin pi-spinner" aria-hidden="true" />
+      <slot />
+    </template>
   </Button>
 </template>
 
