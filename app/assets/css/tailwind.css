@@ -157,8 +157,7 @@ textarea {
 .p-tieredmenu,
 .p-select-overlay,
 .p-dropdown-panel,
-.p-datepicker,
-.p-toast .p-toast-message {
+.p-datepicker {
   background: var(--app-card) !important;
   color: var(--app-text) !important;
   border-color: var(--app-border) !important;
