@@ -2,21 +2,7 @@
   <Toast position="top-right" />
   <NuxtRouteAnnouncer />
 
-  <div
-    v-if="authStore.sessionLoading"
-    class="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-black"
-    role="status"
-    aria-live="polite"
-    aria-busy="true"
-  >
-    <ProgressSpinner
-      strokeWidth="4"
-      animationDuration=".8s"
-      style="width: 3rem; height: 3rem"
-      aria-label="جاري التحميل"
-    />
-    <!-- <p class="text-sm text-slate-400">جاري تحميل الجلسة…</p> -->
-  </div>
+  <SessionWelcomeSplash v-if="authStore.sessionLoading" />
 
   <NuxtLayout v-else :name="layoutName">
     <NuxtPage />
@@ -25,7 +11,7 @@
 
 <script setup>
 import Toast from "primevue/toast";
-import ProgressSpinner from "primevue/progressspinner";
+import SessionWelcomeSplash from "~/components/shared/session-welcome-splash/index.vue";
 import { useAuthStore } from "~/store/auth.js";
 
 const route = useRoute();
