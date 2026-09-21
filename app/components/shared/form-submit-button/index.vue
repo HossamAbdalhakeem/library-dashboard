@@ -6,7 +6,10 @@
     :severity="severity"
     :size="size"
     :disabled="loading"
-    :class="[buttonClass, { 'form-submit-button--invalid': !valid && !loading }]"
+    :class="[
+      buttonClass,
+      { 'form-submit-button--invalid': !valid && !loading },
+    ]"
   >
     <!--
       PrimeVue Button only shows its built-in spinner inside the default slot fallback.
@@ -34,6 +37,7 @@ defineProps({
 
 const slots = useSlots();
 const hasDefaultSlot = computed(() => Boolean(slots.default));
+console.log("test");
 </script>
 
 <style scoped>
