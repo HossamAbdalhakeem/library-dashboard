@@ -119,7 +119,6 @@
 import { Form, Field, ErrorMessage } from "vee-validate";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
-import Checkbox from "primevue/checkbox";
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
 import { useAuthStore } from "~/store/auth.js";
 import { useAppToast } from "~/composables/useAppToast";
@@ -128,8 +127,8 @@ const authStore = useAuthStore();
 const { showError } = useAppToast();
 const rememberMe = ref(false);
 const form = reactive({
-  email: "",
-  password: "",
+  email: "admin@library.local",
+  password: "Password123!",
 });
 
 const initialValues = {
