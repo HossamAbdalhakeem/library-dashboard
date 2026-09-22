@@ -2,7 +2,6 @@
   <RoleDashboardShell
     role="admin"
     title="لوحة مدير النظام"
-    subtitle="نظرة عامة على العمليات"
   >
     <slot />
   </RoleDashboardShell>

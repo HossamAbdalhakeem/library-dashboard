@@ -13,9 +13,9 @@
           ☰
         </button>
         <div class="min-w-0">
-          <p class="truncate text-xs text-slate-400 sm:text-sm">{{ title }}</p>
-          <h1 class="mt-0.5 truncate text-lg font-bold text-white sm:mt-1 sm:text-2xl">
-            {{ subtitle }}
+          <!-- <p class="truncate text-xs text-slate-400 sm:text-sm">{{ title }}</p> -->
+          <h1 class="mt-0.5 truncate text-lg font-bold text-slate-400  sm:text-2xl">
+            {{ title }}
           </h1>
         </div>
       </div>
@@ -34,14 +34,10 @@
             <p class="max-w-[9rem] truncate text-sm font-semibold text-white sm:max-w-none">
               {{ userName }}
             </p>
-            <p class="text-xs text-neutral-400">{{ roleLabel }}</p>
+            <p class="max-w-[9rem] truncate text-xs text-neutral-400 sm:max-w-none">
+              {{ contextLabel || roleLabel }}
+            </p>
           </div>
-        </div>
-        <div
-          v-if="contextLabel"
-          class="rounded-2xl border border-white/10 bg-[#111111] px-3 py-1.5 text-sm font-semibold text-white shadow-sm sm:px-4 sm:py-2"
-        >
-          {{ contextLabel }}
         </div>
       </div>
     </div>

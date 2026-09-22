@@ -20,7 +20,6 @@
     <div class="min-h-screen lg:mr-72">
       <RoleDashboardHeader
         :title="title"
-        :subtitle="subtitle"
         :normalized-role="normalizedRole"
         :user-initials="userInitials"
         :user-name="userName"
@@ -79,7 +78,6 @@ import { useRoleDashboardShell } from "./RoleDashboardShell/composables/useRoleD
 const props = defineProps({
   role: { type: String, default: "admin" },
   title: { type: String, default: "لوحة التحكم" },
-  subtitle: { type: String, default: "نظرة عامة" },
   stats: { type: Array, default: () => [] },
 });
 

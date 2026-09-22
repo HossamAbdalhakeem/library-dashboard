@@ -2,9 +2,7 @@
   <section class="w-full min-w-0 space-y-3">
     <div>
       <p class="font-bold text-white">نظرة عامة</p>
-      <p class="mt-0.5 text-xs text-slate-400">
-        ملخص سريع — اضغط أي بطاقة للانتقال إلى الصفحة
-      </p>
+
     </div>
 
     <AdminHomeKpiSectionSkeleton v-if="loading" />
@@ -56,6 +54,13 @@ const cards = computed(() => {
       to: "/branches",
     },
     {
+      type: "teachers",
+      title: "المدرسين",
+      count: s.teachersCount ?? 0,
+      hint: "إجمالي المدرسين",
+      to: "/teachers",
+    },
+    {
       type: "students",
       title: "الطلاب",
       count: s.studentsCount ?? 0,
@@ -69,13 +74,7 @@ const cards = computed(() => {
       hint: "إجمالي المنتجات",
       to: "/products",
     },
-    {
-      type: "teachers",
-      title: "المدرسين",
-      count: s.teachersCount ?? 0,
-      hint: "إجمالي المدرسين",
-      to: "/teachers",
-    },
+   
   ];
 });
 

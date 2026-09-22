@@ -174,20 +174,20 @@ const summaryKpis = computed(() => [
     accent: "emerald",
     icon: "pi-check-circle",
   },
-  {
-    key: "lowStock",
-    label: "مخزون منخفض",
-    value: summary.value.lowStock ?? 0,
-    accent: "amber",
-    icon: "pi-exclamation-triangle",
-  },
-  {
-    key: "outOfStock",
-    label: "نفد المخزون",
-    value: summary.value.outOfStock ?? 0,
-    accent: "rose",
-    icon: "pi-times-circle",
-  },
+  // {
+  //   key: "lowStock",
+  //   label: "مخزون منخفض",
+  //   value: summary.value.lowStock ?? 0,
+  //   accent: "amber",
+  //   icon: "pi-exclamation-triangle",
+  // },
+  // {
+  //   key: "outOfStock",
+  //   label: "نفد المخزون",
+  //   value: summary.value.outOfStock ?? 0,
+  //   accent: "rose",
+  //   icon: "pi-times-circle",
+  // },
 ]);
 
 const emptyBucket = () => ({ total: 0, reserved: 0, available: 0 });
