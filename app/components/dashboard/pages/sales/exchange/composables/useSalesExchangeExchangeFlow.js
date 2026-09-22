@@ -37,7 +37,7 @@ export function useSalesExchangeExchangeFlow(props, emit) {
   });
 
   const maxQuantity = computed(() =>
-    Math.max(1, Number(props.sale?.remainingQuantity || 1)),
+    Math.max(1, Number(props.sale?.quantity?.remaining || 1)),
   );
 
   const selectedNewProduct = computed(() =>
@@ -226,7 +226,7 @@ export function useSalesExchangeExchangeFlow(props, emit) {
   );
 
   watch(
-    () => props.sale?.remainingQuantity,
+    () => props.sale?.quantity?.remaining,
     () => {
       if (props.open) {
         exchangeQuantity.value = maxQuantity.value;

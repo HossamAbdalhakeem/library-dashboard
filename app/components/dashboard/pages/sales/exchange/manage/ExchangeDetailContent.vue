@@ -33,10 +33,10 @@
       <div class="rounded-xl border border-white/10 bg-slate-900 p-4 text-sm text-slate-200">
         <p class="mb-3 text-xs font-semibold text-rose-300">المنتج الحالي</p>
         <p class="text-base font-bold text-white">
-          {{ sale.product?.name || sale.productName }}
+          {{ sale.product?.name || "—" }}
         </p>
         <p class="mt-1 text-xs text-slate-400">
-          أ/ {{ sale.product?.teacherName || sale.teacherName || "—" }}
+          أ/ {{ sale.product?.teacher?.name || "—" }}
         </p>
         <AppDetailRows
           class="mt-3"
@@ -65,7 +65,7 @@
             {{ selectedNewProduct.name }}
           </p>
           <p class="mt-1 text-xs text-slate-400">
-            أ/ {{ selectedNewProduct.teacherName || "—" }}
+            أ/ {{ selectedNewProduct.teacher?.name || selectedNewProduct.teacherName || "—" }}
           </p>
           <AppDetailRows
             class="mt-3"
@@ -116,7 +116,7 @@
         :model-value="newProductId"
         source="inventory"
         :branch-id="sale.branchId"
-        :exclude-product-id="sale.product?.id || sale.productId"
+        :exclude-product-id="sale.product?.id"
         :min-available-quantity="Number(exchangeQuantity || 1)"
         label="المنتج الجديد"
         placeholder="اختر المنتج البديل من نفس الفرع"
@@ -188,12 +188,7 @@ defineEmits([
 ]);
 
 const maxQuantity = computed(() =>
-  Math.max(
-    1,
-    Number(
-      props.sale?.quantity?.remaining ?? props.sale?.remainingQuantity ?? 1,
-    ),
-  ),
+  Math.max(1, Number(props.sale?.quantity?.remaining ?? 1)),
 );
 
 const summaryRows = computed(() => {
@@ -205,8 +200,8 @@ const summaryRows = computed(() => {
       value: sale.saleNumber,
       valueClass: "font-semibold text-slate-900",
     },
-    { key: "student", label: "الطالب", value: sale.student?.name || sale.studentName },
-    { key: "branch", label: "الفرع", value: sale.branch?.name || sale.branchName },
+    { key: "student", label: "الطالب", value: sale.student?.name },
+    { key: "branch", label: "الفرع", value: sale.branch?.name },
     {
       key: "maxQuantity",
       label: "الكمية المتاحة للاستبدال",
@@ -219,7 +214,7 @@ const currentProductRows = computed(() => [
   {
     key: "unitPrice",
     label: "سعر الوحدة",
-    value: props.sale?.product?.unitPriceLabel || props.sale?.unitPriceLabel,
+    value: props.sale?.product?.unitPriceLabel,
   },
   {
     key: "qty",

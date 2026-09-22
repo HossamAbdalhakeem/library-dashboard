@@ -16,7 +16,7 @@
     </template>
 
     <AppSwapPreview
-      :from-title="sale?.productName"
+      :from-title="sale?.product?.name"
       :from-subtitle="fromSubtitle"
       :to-title="selectedNewProduct?.name || '—'"
       :to-subtitle="toSubtitle"
@@ -37,7 +37,7 @@ const props = defineProps({
 });
 
 const fromSubtitle = computed(
-  () => `${props.sale?.unitPriceLabel || "—"} × ${props.exchangeQuantity}`,
+  () => `${props.sale?.product?.unitPriceLabel || "—"} × ${props.exchangeQuantity}`,
 );
 
 const toSubtitle = computed(() => {

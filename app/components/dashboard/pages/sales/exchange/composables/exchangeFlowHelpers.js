@@ -91,7 +91,7 @@ export function canConfirmExchangeState({
 }) {
   if (!sale || busy || previewLoading) return false;
   if (!newProductId || !preview) return false;
-  if (String(newProductId) === String(sale?.productId || "")) return false;
+  if (String(newProductId) === String(sale?.product?.id || "")) return false;
   if (!isExchangeQuantityValid(exchangeQuantity, maxQuantity)) return false;
   if (!canSelectExchangeProduct(selectedNewProduct)) return false;
 
@@ -139,7 +139,7 @@ export function validateExchangeRequest({
   if (!newProductId) {
     return { ok: false, exchangeError: "اختر المنتج الجديد قبل التأكيد." };
   }
-  if (newProductId === sale?.productId) {
+  if (newProductId === sale?.product?.id) {
     return {
       ok: false,
       exchangeError: "اختر منتجًا مختلفًا عن المنتج الحالي.",

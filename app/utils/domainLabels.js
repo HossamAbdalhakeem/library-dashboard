@@ -14,6 +14,8 @@ export const SALE_STATUS_LABELS = {
   COMPLETED: "مكتمل",
   PARTIALLY_RETURNED: "مسترد جزئيًا",
   RETURNED: "تم الاسترداد",
+  EXCHANGED: "مستبدل",
+  PARTIALLY_EXCHANGED: "مستبدل جزئيًا",
 };
 
 export const STOCK_MOVEMENT_LABELS = {
@@ -69,6 +71,7 @@ export const TIMELINE_EVENT_LABELS = {
   PAYMENT_SALE: "استلام الدفع",
   PAYMENT_RESERVATION: "دفعة",
   DELIVERED: "تسليم المنتج",
+  DELIVERED_WITH_PAYMENT: "تحصيل المتبقي وتسليم المنتج",
   CANCELLED: "إلغاء الحجز",
   CANCELLED_WITH_REFUND: "إلغاء الحجز مع استرداد المبلغ",
   REFUND: "استرداد المبلغ للطالب",
@@ -230,6 +233,14 @@ export const getTimelineEventLabel = (eventType, operationType, data = {}) => {
       return TIMELINE_EVENT_LABELS.EXCHANGE_COLLECT;
     }
     return TIMELINE_EVENT_LABELS.EXCHANGE;
+  }
+
+  if (type === "DELIVERED") {
+    const paid = Number(data.paid);
+    if ((Number.isFinite(paid) && paid > 0) || data.method) {
+      return TIMELINE_EVENT_LABELS.DELIVERED_WITH_PAYMENT;
+    }
+    return TIMELINE_EVENT_LABELS.DELIVERED;
   }
 
   if (type === "CANCELLED") {

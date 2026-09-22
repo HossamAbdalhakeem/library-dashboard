@@ -156,7 +156,7 @@ const resolvedColumns = computed(() => [
   { field: "type", header: "النوع", slot: "type" },
   { field: "product", header: "المنتج", slot: "product" },
   { field: "qty", header: "الكمية", slot: "qty" },
-  { field: "price", header: "السعر", slot: "price" },
+  { field: "price", header: "الإجمالي", slot: "price" },
 ]);
 
 const first = computed(() =>

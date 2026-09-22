@@ -107,17 +107,64 @@ const pushLine = (lines, value) => {
   lines.push(value);
 };
 
+const productUnitPrice = (product) => {
+  const n = Number(product?.price ?? product?.sellingPrice ?? product?.unitPrice);
+  return Number.isFinite(n) && n > 0 ? n : null;
+};
+
+/**
+ * When API quantity conflicts with total/paid ÷ unit price, prefer the derived qty
+ * (e.g. qty 1 + unit 500 + total 1000 → show qty 2).
+ */
+const reconcileQuantity = (rawQty, unitPrice, moneyAmount) => {
+  const qty = Number(rawQty);
+  const money = Number(moneyAmount);
+  if (!Number.isFinite(qty) || rawQty == null) return rawQty;
+  if (unitPrice == null || !Number.isFinite(money)) return qty;
+
+  const expected = unitPrice * qty;
+  if (Math.abs(expected - money) < 0.02) return qty;
+
+  const derived = Math.round(money / unitPrice);
+  if (derived > 0 && Math.abs(derived * unitPrice - money) < 0.02) {
+    return derived;
+  }
+  return qty;
+};
+
 const detailsForCreated = (data) => {
   const lines = [];
-  pushLine(lines, formatProductLine(data.product));
-  if (data.quantity != null) pushLine(lines, `الكمية: ${data.quantity}`);
-  if (data.total != null) pushLine(lines, `الإجمالي: ${moneyOrDash(data.total)}`);
+  const items = Array.isArray(data.items) ? data.items : [];
+
+  if (items.length) {
+    for (const item of items) {
+      const productLine = formatProductLine(item.product);
+      if (productLine) pushLine(lines, productLine);
+      const unit = productUnitPrice(item.product);
+      const qty = reconcileQuantity(
+        item.quantity ?? data.quantity,
+        unit,
+        item.total ?? item.amount ?? data.total,
+      );
+      if (qty != null) pushLine(lines, `الكمية: ${qty}`);
+      if (item.total != null || item.amount != null) {
+        pushLine(lines, `الإجمالي: ${moneyOrDash(item.total ?? item.amount)}`);
+      }
+    }
+    if (data.total != null && items.length > 1) {
+      pushLine(lines, `الإجمالي: ${moneyOrDash(data.total)}`);
+    }
+  } else {
+    pushLine(lines, formatProductLine(data.product));
+    const unit = productUnitPrice(data.product);
+    const qty = reconcileQuantity(data.quantity, unit, data.total ?? data.paid);
+    if (qty != null) pushLine(lines, `الكمية: ${qty}`);
+    if (data.total != null) pushLine(lines, `الإجمالي: ${moneyOrDash(data.total)}`);
+  }
+
   if (data.paid != null) pushLine(lines, `المدفوع: ${moneyOrDash(data.paid)}`);
   if (data.remaining != null) {
     pushLine(lines, `المتبقي: ${moneyOrDash(data.remaining)}`);
-  }
-  if (data.method) {
-    pushLine(lines, `طريقة الدفع: ${getPaymentMethodLabel(data.method)}`);
   }
   return lines;
 };
@@ -125,7 +172,6 @@ const detailsForCreated = (data) => {
 const detailsForPayment = (data) => {
   const lines = [];
   if (data.amount != null) pushLine(lines, moneyOrDash(data.amount));
-  if (data.method) pushLine(lines, getPaymentMethodLabel(data.method));
   return lines;
 };
 
@@ -142,9 +188,6 @@ const detailsForExchange = (data) => {
   if (data.refundAmount != null) {
     pushLine(lines, `المبلغ المسترد: ${moneyOrDash(data.refundAmount)}`);
   }
-  if (data.method) {
-    pushLine(lines, `طريقة الاسترداد: ${getPaymentMethodLabel(data.method)}`);
-  }
   return lines;
 };
 
@@ -157,9 +200,6 @@ const detailsForCancelled = (data) => {
       `المبلغ المسترد: ${moneyOrDash(data.refundAmount ?? data.amount)}`,
     );
   }
-  if (data.method) {
-    pushLine(lines, `طريقة الاسترداد: ${getPaymentMethodLabel(data.method)}`);
-  }
   return lines;
 };
 
@@ -167,9 +207,6 @@ const detailsForRefund = (data) => {
   const lines = [];
   if (data.amount != null) {
     pushLine(lines, `المبلغ المسترد: ${moneyOrDash(data.amount)}`);
-  }
-  if (data.method) {
-    pushLine(lines, `طريقة الاسترداد: ${getPaymentMethodLabel(data.method)}`);
   }
   return lines;
 };
@@ -196,20 +233,16 @@ const detailsForReturn = (data) => {
   if (data.amount != null) {
     pushLine(lines, `مبلغ المرتجع: ${moneyOrDash(data.amount)}`);
   }
-  if (data.method) {
-    pushLine(lines, `طريقة الاسترداد: ${getPaymentMethodLabel(data.method)}`);
-  }
   return lines;
 };
 
 const detailsForDeliveredOrCompleted = (data) => {
   const lines = [];
   pushLine(lines, formatProductLine(data.product));
-  if (data.quantity != null) pushLine(lines, `الكمية: ${data.quantity}`);
+  const unit = productUnitPrice(data.product);
+  const qty = reconcileQuantity(data.quantity, unit, data.paid ?? data.total);
+  if (qty != null) pushLine(lines, `الكمية: ${qty}`);
   if (data.paid != null) pushLine(lines, `المدفوع: ${moneyOrDash(data.paid)}`);
-  if (data.method) {
-    pushLine(lines, `طريقة الدفع: ${getPaymentMethodLabel(data.method)}`);
-  }
   return lines;
 };
 
@@ -252,7 +285,8 @@ export const mapTimelineEvents = (payload) => {
       actorName: event.actor?.name || null,
       details: buildTimelineEventDetails(event),
       method: data.method || null,
-      methodLabel: data.methodLabel || null,
+      methodLabel:
+        data.methodLabel || getPaymentMethodLabel(data.method, null) || null,
       paymentId: data.paymentId || null,
       image: image
         ? {

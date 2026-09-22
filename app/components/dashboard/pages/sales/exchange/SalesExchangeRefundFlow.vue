@@ -131,7 +131,7 @@ const detailVisible = computed({
 });
 
 const maxQuantity = computed(() =>
-  Math.max(1, Number(props.sale?.remainingQuantity || 1)),
+  Math.max(1, Number(props.sale?.quantity?.remaining || 1)),
 );
 
 const refundMethodLabel = computed(
@@ -140,11 +140,11 @@ const refundMethodLabel = computed(
 
 const refundAmountLabel = computed(() => {
   const qty = Number(refundQuantity.value || 0);
-  const unitPrice = Number(props.sale?.unitPrice || 0);
+  const unitPrice = Number(props.sale?.product?.unitPrice || 0);
   if (qty > 0 && unitPrice > 0) {
     return formatMoney(unitPrice * qty);
   }
-  return props.sale?.refundAmountLabel || formatMoney(0);
+  return props.sale?.product?.refundAmountLabel || formatMoney(0);
 });
 
 const clampQuantity = (value) => {
@@ -252,7 +252,7 @@ watch(
 );
 
 watch(
-  () => props.sale?.remainingQuantity,
+  () => props.sale?.quantity?.remaining,
   () => {
     if (props.open) {
       refundQuantity.value = maxQuantity.value;

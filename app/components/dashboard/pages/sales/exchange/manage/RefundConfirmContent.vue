@@ -7,7 +7,7 @@
       <p>
         هل أنت متأكد من استرداد
         <span class="font-bold text-slate-900">
-          {{ sale?.productName }}
+          {{ sale?.product?.name }}
         </span>
         من العملية
         <span class="font-bold text-slate-900">
@@ -33,7 +33,7 @@ const confirmDetails = computed(() => [
   {
     key: "quantity",
     label: "الكمية",
-    value: `${props.refundQuantity} من أصل ${props.sale?.remainingQuantity ?? "—"}`,
+    value: `${props.refundQuantity} من أصل ${props.sale?.quantity?.remaining ?? "—"}`,
   },
   {
     key: "refund",

@@ -82,7 +82,7 @@
           </ul>
 
           <div
-            v-if="item.image?.hasProof || item.paymentId"
+            v-if="item.method || item.paymentId || item.image?.hasProof"
             class="mt-3"
           >
             <PaymentProofThumb
