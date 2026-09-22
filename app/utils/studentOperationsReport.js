@@ -97,6 +97,7 @@ const formatProductLine = (product) => {
   pushUnique(product.name);
   pushUnique(product.teacher?.name || product.teacherName);
   pushUnique(product.studyYear?.name || product.studyYearName);
+  pushUnique(moneyLabel(product.price ?? product.sellingPrice ?? product.unitPrice));
 
   return parts.join(" — ");
 };
@@ -241,13 +242,25 @@ export const mapTimelineEvents = (payload) => {
     const type = String(event.type || "").toUpperCase();
     const source =
       String(event?.data?.source || "").toUpperCase() || operationType;
+    const data = event?.data || {};
+    const image = data.image || null;
     return {
       id: event.id,
       type,
-      title: getTimelineEventLabel(type, source, event?.data || {}),
+      title: getTimelineEventLabel(type, source, data),
       date: event.date,
       actorName: event.actor?.name || null,
       details: buildTimelineEventDetails(event),
+      method: data.method || null,
+      methodLabel: data.methodLabel || null,
+      paymentId: data.paymentId || null,
+      image: image
+        ? {
+            reference: image.reference ?? null,
+            url: image.url ?? null,
+            hasProof: Boolean(image.hasProof),
+          }
+        : null,
     };
   });
 };

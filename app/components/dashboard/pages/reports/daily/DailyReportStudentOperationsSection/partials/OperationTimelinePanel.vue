@@ -81,6 +81,19 @@
             </li>
           </ul>
 
+          <div
+            v-if="item.image?.hasProof || item.paymentId"
+            class="mt-3"
+          >
+            <PaymentProofThumb
+              :method="item.method"
+              :method-label="item.methodLabel"
+              :payment-id="item.paymentId"
+              :proof-url="item.image?.url"
+              :has-proof="item.image?.hasProof"
+            />
+          </div>
+
           <p
             v-if="item.actorName"
             class="mt-3 text-xs text-slate-500"
@@ -98,6 +111,7 @@ import Timeline from "primevue/timeline";
 import Skeleton from "primevue/skeleton";
 import Button from "primevue/button";
 import AppDateTimeCell from "~/components/shared/app-datetime-cell/index.vue";
+import PaymentProofThumb from "~/components/shared/payment-proof-thumb/index.vue";
 
 defineOptions({ name: "OperationTimelinePanel" });
 

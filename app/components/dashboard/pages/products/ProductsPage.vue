@@ -82,28 +82,15 @@ const drawerTitle = computed(() =>
   editingProduct.value?.id ? "تعديل المنتج" : "إضافة منتج جديد",
 );
 
-const normalizeProduct = (product) => {
-  const name = product.name || "-";
-  const teacherName = product.teacher?.name || null;
-  const studyYearName = product.studyYear?.name || null;
-  const sellingPriceLabel = formatMoney(product.sellingPrice);
-
-  return {
-    ...product,
-    name,
-    teacherName: teacherName || "-",
-    studyYearName: studyYearName || "-",
-    sellingPriceLabel,
-    typeLabel: getProductTypeLabel(product.type),
-    reservationLabel: product.reservationAllowed ? "مفعل" : "غير مفعل",
-    productCell: {
-      name,
-      price: sellingPriceLabel,
-      teacherName,
-      studyYearName,
-    },
-  };
-};
+const normalizeProduct = (product) => ({
+  ...product,
+  name: product.name || "-",
+  teacherName: product.teacher?.name || "-",
+  studyYearName: product.studyYear?.name || "-",
+  sellingPriceLabel: formatMoney(product.sellingPrice),
+  typeLabel: getProductTypeLabel(product.type),
+  reservationLabel: product.reservationAllowed ? "مفعل" : "غير مفعل",
+});
 
 const buildQuery = () => {
   const params = {

@@ -97,7 +97,7 @@
 
     <template #expansion="{ data }">
       <div
-        class="w-full max-w-full overflow-visible rounded-xl border border-slate-700 bg-slate-950/70 p-4 text-right"
+        class="!w-[70%]  rounded-xl border border-slate-700 bg-slate-950/70 p-4 text-right"
       >
         <OperationTimelinePanel
           :timeline="getTimelineEvents(timelineKeyFor(data))"
