@@ -37,7 +37,6 @@ defineProps({
 
 const slots = useSlots();
 const hasDefaultSlot = computed(() => Boolean(slots.default));
-console.log("test");
 </script>
 
 <style scoped>

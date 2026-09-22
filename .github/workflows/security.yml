@@ -7,7 +7,7 @@ on:
     branches: [main, master]
   workflow_dispatch:
   schedule:
-# Weekly production header check (requires deploy of vercel.json / nuxt-security)
+    # Weekly production header check (requires deploy of vercel.json / nuxt-security)
     - cron: "0 6 * * 1"
 
 jobs:
@@ -15,15 +15,17 @@ jobs:
     name: SCA + SAST
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # ignore-scripts: SCA/SAST only need lockfile + JS packages.
+        # Avoids native build failures (better-sqlite3) that abort npm ci on CI.
+        run: npm ci --ignore-scripts
 
       - name: SCA (npm audit)
         run: npm run security:sca
@@ -36,15 +38,15 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: "22"
+          node-version: "24"
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: DAST header smoke test
         env:
