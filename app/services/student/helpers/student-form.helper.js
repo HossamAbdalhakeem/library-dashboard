@@ -45,12 +45,18 @@ export const normalizeStudentListItem = (student) => ({
   statusLabel: getStatusTagLabel("entity", student.status),
 });
 
-export const buildStudentListQuery = ({ page, perPage, filters = {} }) => {
+export const buildStudentListQuery = ({
+  page,
+  perPage,
+  filters = {},
+  includeInactive = false,
+}) => {
   const params = {
     page,
     per_page: perPage,
   };
   if (filters.search?.trim()) params.search = filters.search.trim();
+  if (includeInactive) params.includeInactive = true;
   return params;
 };
 

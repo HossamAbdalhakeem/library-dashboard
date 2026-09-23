@@ -2,12 +2,57 @@
   <div class="ops-timeline-panel w-full space-y-3 text-right" dir="rtl">
     <p class="text-sm font-semibold text-white">سجل العملية</p>
 
-    <div v-if="loading" class="space-y-4">
-      <div v-for="i in 3" :key="`tl-skel-${i}`" class="flex gap-3">
-        <Skeleton height="2.5rem" width="30%" />
-        <Skeleton shape="circle" size="2.75rem" class="mt-0.5 shrink-0" />
-        <div class="min-w-0 flex-1 space-y-2">
-          <Skeleton height="4.5rem" width="100%" border-radius="0.75rem" />
+    <div v-if="loading" class="ops-timeline ops-timeline-skeleton w-[82%] @container">
+      <div
+        v-for="i in 3"
+        :key="`tl-skel-${i}`"
+        class="ops-timeline-skeleton__event flex items-stretch"
+      >
+        <div
+          class="ops-timeline-skeleton__opposite flex min-w-0 flex-1 justify-end pe-3 pt-3 @max-[280px]:hidden"
+        >
+          <Skeleton height="0.85rem" width="6.5rem" border-radius="4px" />
+        </div>
+
+        <div class="ops-timeline-skeleton__separator flex w-12 shrink-0 flex-col items-center">
+          <Skeleton shape="circle" size="3rem" class="shrink-0" />
+          <div
+            v-if="i < 3"
+            class="ops-timeline-skeleton__connector mt-2 mb-4 w-0.5 flex-1 min-h-10 rounded-full bg-slate-400/35"
+          />
+        </div>
+
+        <div class="ops-timeline-skeleton__content min-w-0 flex-1 ps-3 pb-4">
+          <div
+            class="space-y-3 rounded-xl border border-slate-700 bg-slate-900/80 p-4 shadow-sm"
+          >
+            <Skeleton
+              class="hidden @max-[280px]:block"
+              height="0.75rem"
+              width="5.5rem"
+              border-radius="4px"
+            />
+            <Skeleton height="1.1rem" width="45%" border-radius="6px" />
+            <div class="space-y-1.5">
+              <div class="flex items-start gap-2">
+                <Skeleton
+                  shape="circle"
+                  size="0.65rem"
+                  class="mt-1.5 shrink-0"
+                />
+                <Skeleton height="0.8rem" width="88%" border-radius="4px" />
+              </div>
+              <div class="flex items-start gap-2">
+                <Skeleton
+                  shape="circle"
+                  size="0.65rem"
+                  class="mt-1.5 shrink-0"
+                />
+                <Skeleton height="0.8rem" width="72%" border-radius="4px" />
+              </div>
+            </div>
+            <Skeleton height="0.65rem" width="28%" border-radius="4px" />
+          </div>
         </div>
       </div>
     </div>
@@ -153,5 +198,9 @@ const markerMeta = (item) =>
 .ops-timeline :deep(.p-timeline-event-opposite),
 .ops-timeline :deep(.p-timeline-event-content) {
   min-width: 0;
+}
+
+.ops-timeline-skeleton__event:last-child .ops-timeline-skeleton__content {
+  padding-bottom: 0;
 }
 </style>

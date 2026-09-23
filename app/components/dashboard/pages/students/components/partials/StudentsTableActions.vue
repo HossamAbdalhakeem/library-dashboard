@@ -11,7 +11,7 @@
         @click="$emit('transactions', student)"
       />
     </span>
-    <span title="تعديل" class="inline-flex">
+    <span v-if="isActive" title="تعديل" class="inline-flex">
       <Button
         icon="pi pi-pencil"
         text
@@ -22,7 +22,7 @@
         @click="$emit('edit', student)"
       />
     </span>
-    <span title="تعطيل" class="inline-flex">
+    <span v-if="isActive" title="تعطيل" class="inline-flex">
       <Button
         icon="pi pi-ban"
         text
@@ -83,6 +83,7 @@ const props = defineProps({
 
 const emit = defineEmits(["edit", "deactivate", "transactions"]);
 
+const isActive = computed(() => props.student?.status === "ACTIVE");
 const confirmVisible = ref(false);
 
 const confirmDeactivate = () => {

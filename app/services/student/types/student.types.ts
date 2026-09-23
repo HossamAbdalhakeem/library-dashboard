@@ -73,6 +73,8 @@ export type StudentQuery = {
   per_page?: number;
   search?: string;
   academicYearId?: string;
+  /** Admin students table only — include soft-deleted / INACTIVE students. */
+  includeInactive?: boolean;
 };
 
 /** GET /students/:id/transactions query params. */

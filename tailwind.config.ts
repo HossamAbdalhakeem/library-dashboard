@@ -34,6 +34,17 @@ export default <Partial<Config>>{
         sans: ['"Trebuchet MS"', '"Segoe UI"', 'sans-serif'],
         display: ['Georgia', 'serif'],
       },
+      keyframes: {
+        'login-orb-float': {
+          '0%, 100%': { transform: 'translate3d(0, 0, 0) scale(1)' },
+          '50%': { transform: 'translate3d(0, -18px, 0) scale(1.06)' },
+        },
+      },
+      animation: {
+        'login-orb-float': 'login-orb-float 10s ease-in-out infinite',
+        'login-orb-float-slow': 'login-orb-float 12s ease-in-out infinite reverse',
+        'login-orb-float-delayed': 'login-orb-float 8s ease-in-out 1s infinite',
+      },
     },
   },
   plugins: [],

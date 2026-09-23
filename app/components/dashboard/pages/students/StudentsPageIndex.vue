@@ -115,6 +115,7 @@ const loadData = async () => {
         page: pagination.page,
         perPage: pagination.perPage,
         filters,
+        includeInactive: true,
       }),
     );
     students.value = result.data.map(normalizeStudentListItem);
