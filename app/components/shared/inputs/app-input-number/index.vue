@@ -16,6 +16,11 @@
     input-class="w-full"
     fluid
     dir="rtl"
+    :pt="
+      dataTestid
+        ? { pcInputText: { root: { 'data-testid': dataTestid } } }
+        : undefined
+    "
     @update:model-value="emitValue"
     @input="onInput"
   />
@@ -36,6 +41,7 @@ defineProps({
   disabled: { type: Boolean, default: false },
   invalid: { type: Boolean, default: false },
   placeholder: { type: String, default: "" },
+  dataTestid: { type: String, default: "" },
 });
 
 const emit = defineEmits(["update:modelValue"]);

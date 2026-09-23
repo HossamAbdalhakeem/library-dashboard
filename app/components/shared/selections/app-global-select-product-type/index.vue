@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 text-right" :class="wrapperClass">
+  <div class="flex flex-col gap-2 text-right" :class="wrapperClass" data-testid="select-product-type">
     <label v-if="label" class="text-sm font-medium" :class="labelClass">{{ label }}</label>
 
     <Select

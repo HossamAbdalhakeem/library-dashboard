@@ -1,5 +1,6 @@
 <template>
   <div
+    data-testid="header-user"
     class="flex items-center gap-2 rounded-2xl border border-white/10 bg-[#111111] px-2 py-1.5 shadow-sm sm:gap-3 sm:px-3 sm:py-2"
   >
     <div

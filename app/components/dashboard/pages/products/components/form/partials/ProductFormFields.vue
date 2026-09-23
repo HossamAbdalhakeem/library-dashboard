@@ -107,6 +107,7 @@
       <label class="text-sm font-medium">سعر الشراء / الجملة</label>
       <AppInputNumber
         v-model="form.purchasePrice"
+        dataTestid="product-purchase-price"
         mode="currency"
         currency="EGP"
         :min="0"
@@ -163,7 +164,10 @@
     </div>
   </Field>
 
-  <div class="rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-600 text-right">
+  <div
+    class="rounded-xl bg-slate-50 px-3 py-2 text-sm text-slate-600 text-right"
+    data-testid="product-profit-percentage"
+  >
     نسبة الربح المحسوبة:
     <span class="font-semibold text-slate-900">{{ profitPercentage }}%</span>
   </div>

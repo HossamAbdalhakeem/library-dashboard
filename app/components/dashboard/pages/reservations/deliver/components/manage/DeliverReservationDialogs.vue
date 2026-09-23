@@ -35,6 +35,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="تأكيد التسليم"
+            data-testid="deliver-confirm"
             class="rounded-xl bg-[#f5af52] px-5 py-2 font-bold text-white"
             :disabled="!canConfirmDeliver || delivering"
             :loading="delivering"
@@ -79,6 +80,7 @@
                 ? 'نعم، تم التحصيل والتسليم'
                 : 'نعم، تأكيد التسليم'
             "
+            data-testid="deliver-confirm-yes"
             class="rounded-xl bg-[#f5af52] px-5 py-2 font-bold text-white"
             :loading="delivering"
             :disabled="delivering"

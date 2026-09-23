@@ -27,6 +27,7 @@
               type="email"
               placeholder="admin@library.local"
               class="w-full"
+              data-testid="login-email"
               :class="{ 'p-invalid': errorMessage || fieldErrors.email }"
             />
             <ErrorMessage name="email" class="text-xs text-red-400" />
@@ -49,6 +50,12 @@
               :feedback="false"
               placeholder="••••••••"
               class="w-full"
+              input-id="login-password"
+              :pt="{
+                pcInputText: {
+                  root: { 'data-testid': 'login-password' },
+                },
+              }"
               :input-class="[
                 'w-full',
                 { 'p-invalid': errorMessage || fieldErrors.password },
@@ -59,6 +66,7 @@
         </Field>
 
         <FormSubmitButton
+          data-testid="login-submit"
           :loading="authStore.loading"
           :valid="meta.valid"
           severity="primary"

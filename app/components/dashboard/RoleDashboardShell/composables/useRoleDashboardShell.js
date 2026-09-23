@@ -12,9 +12,11 @@ function buildNavigation(role) {
         id: "branch-main",
         label: "",
         items: [
+          { label: "الطلاب", icon: "◎", to: "/students" },
           { label: "البيع المباشر", icon: "◫", to: "/sales/direct" },
           { label: "حجز الكتب", icon: "✓", to: "/reservations" },
           { label: "تسليم الحجز", icon: "📝", to: "/reservations/deliver" },
+          { label: "المبيعات / الاستبدال", icon: "⇄", to: "/sales/exchange" },
           { label: "التقرير", icon: "▤", to: "/reports/branch" },
         ],
       },
@@ -27,6 +29,7 @@ function buildNavigation(role) {
         id: "customer-service-main",
         label: "",
         items: [
+          { label: "الطلاب", icon: "◎", to: "/students" },
           { label: "احجز كتاب", icon: "📝", to: "/books/reserve" },
           { label: "التقرير", icon: "▤", to: "/reports/customer-service" },
         ],

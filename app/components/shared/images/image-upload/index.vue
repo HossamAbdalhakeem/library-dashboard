@@ -11,6 +11,7 @@
         type="file"
         class="hidden"
         accept="image/*"
+        data-testid="payment-proof-file"
         @change="onFileChange"
       />
 

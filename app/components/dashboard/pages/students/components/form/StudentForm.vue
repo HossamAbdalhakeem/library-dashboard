@@ -13,6 +13,7 @@
           v-bind="field"
           v-model="form.name"
           class="w-full"
+          data-testid="student-name"
           :class="{ 'p-invalid': errorMessage || fieldErrors.name }"
         />
         <ErrorMessage name="name" class="text-xs text-red-500" />
@@ -30,16 +31,22 @@
     </Field>
 
     <Field
-      v-slot="{ errorMessage }"
-      v-model="form.studyYearId"
+      v-slot="{ value, handleChange, errorMessage }"
       name="studyYearId"
       rules="required"
+      :model-value="form.studyYearId"
     >
       <AppGlobalSelectStudyYear
-        v-model="form.studyYearId"
+        :model-value="value ?? form.studyYearId"
         label="السنة الدراسية"
         placeholder="اختر السنة الدراسية"
         :invalid="!!(errorMessage || fieldErrors.studyYearId)"
+        @update:model-value="
+          (next) => {
+            form.studyYearId = next;
+            handleChange(next);
+          }
+        "
       />
       <ErrorMessage name="studyYearId" class="text-xs text-red-500" />
     </Field>
@@ -50,6 +57,7 @@
         :label="isEdit ? 'حفظ التعديل' : 'إضافة'"
         :loading="saving"
         :valid="meta.valid"
+        data-testid="student-submit"
       />
     </div>
   </Form>

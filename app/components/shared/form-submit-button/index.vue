@@ -6,6 +6,7 @@
     :severity="severity"
     :size="size"
     :disabled="loading"
+    :data-testid="dataTestid || undefined"
     :class="[
       buttonClass,
       { 'form-submit-button--invalid': !valid && !loading },
@@ -33,6 +34,8 @@ defineProps({
   severity: { type: String, default: "primary" },
   size: { type: String, default: undefined },
   buttonClass: { type: String, default: "" },
+  /** Stable selector for Playwright / QA */
+  dataTestid: { type: String, default: "" },
 });
 
 const slots = useSlots();

@@ -70,6 +70,7 @@
       <Button
         label="تسليم"
         size="small"
+        data-testid="deliver-reservation-action"
         class="rounded-lg bg-[#f5af52] px-4 py-2 text-sm font-bold text-white"
         :disabled="!isDeliverable(data)"
         @click="$emit('deliver', data)"

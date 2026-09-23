@@ -23,6 +23,7 @@
       <div class="flex w-full justify-start gap-2">
         <Button
           label="نعم، تأكيد الاستبدال"
+          data-testid="sale-exchange-yes"
           severity="primary"
           :loading="busy"
           :disabled="busy"

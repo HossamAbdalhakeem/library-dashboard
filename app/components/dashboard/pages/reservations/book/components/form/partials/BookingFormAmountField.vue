@@ -20,6 +20,7 @@
       </div>
       <AppInputNumber
         v-model="amount"
+        data-testid="booking-deposit-amount"
         mode="currency"
         currency="EGP"
         :min="1"

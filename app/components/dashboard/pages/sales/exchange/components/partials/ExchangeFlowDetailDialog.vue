@@ -39,6 +39,7 @@
       <div class="flex w-full justify-start gap-2">
         <Button
           label="تأكيد الاستبدال"
+          data-testid="sale-exchange-confirm"
           severity="primary"
           icon="pi pi-sync"
           :disabled="!canConfirm"

@@ -32,6 +32,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="تأكيد الاستبدال"
+            data-testid="reservation-exchange-confirm"
             severity="primary"
             icon="pi pi-sync"
             :disabled="!canConfirmExchange"
@@ -71,6 +72,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="نعم، تأكيد الاستبدال"
+            data-testid="reservation-exchange-yes"
             severity="primary"
             :loading="busy"
             :disabled="busy"

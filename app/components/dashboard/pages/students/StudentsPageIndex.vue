@@ -8,6 +8,7 @@
             label="إضافة طالب جديد"
             icon="pi pi-user-plus"
             severity="primary"
+            data-testid="students-create"
             :disabled="!currentAcademicYearId"
             @click="openCreate"
           />

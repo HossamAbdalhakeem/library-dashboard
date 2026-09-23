@@ -115,6 +115,7 @@
         </div>
         <AppInputNumber
           v-model="sales.form.quantity"
+          data-testid="sale-quantity"
           :min="1"
           :max="sales.maxQuantity"
           :max-fraction-digits="0"
@@ -164,6 +165,7 @@
 
     <div class="md:col-span-2 flex justify-center">
       <FormSubmitButton
+        data-testid="sale-submit"
         label="تأكيد البيع"
         :loading="sales.saving"
         :valid="meta.valid"

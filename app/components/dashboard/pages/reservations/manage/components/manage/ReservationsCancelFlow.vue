@@ -25,6 +25,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="تأكيد إلغاء الحجز"
+            data-testid="cancel-reservation-confirm"
             severity="danger"
             icon="pi pi-times"
             :disabled="!reservation || busy"
@@ -62,6 +63,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="نعم، إلغاء الحجز"
+            data-testid="cancel-reservation-yes"
             severity="danger"
             :loading="busy"
             :disabled="busy"

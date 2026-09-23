@@ -28,6 +28,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="تأكيد الاسترداد"
+            data-testid="refund-confirm"
             severity="danger"
             icon="pi pi-replay"
             :disabled="!sale || busy"
@@ -68,6 +69,7 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="نعم، تأكيد الاسترداد"
+            data-testid="refund-confirm-yes"
             severity="danger"
             :loading="busy"
             :disabled="busy"

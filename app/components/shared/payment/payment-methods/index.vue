@@ -9,6 +9,7 @@
         v-for="option in resolvedOptions"
         :key="option.value"
         class="flex cursor-pointer items-center justify-end gap-2 text-sm text-slate-200"
+        :data-testid="`payment-method-${option.value}`"
       >
         <span>{{ option.label }}</span>
         <input
@@ -16,6 +17,7 @@
           class="accent-primary-400"
           :value="option.value"
           :checked="modelValue === option.value"
+          :data-testid="`payment-method-input-${option.value}`"
           @change="onSelect(option.value)"
         />
       </label>

@@ -53,6 +53,7 @@
           severity="success"
           title="إضافة منتج"
           aria-label="إضافة منتج"
+          data-testid="branch-add-stock"
           @click="$emit('add-stock', data)"
         />
         <Button
@@ -63,6 +64,7 @@
           severity="warning"
           title="سحب منتج"
           aria-label="سحب منتج"
+          data-testid="branch-remove-stock"
           @click="$emit('remove-stock', data)"
         />
       </div>

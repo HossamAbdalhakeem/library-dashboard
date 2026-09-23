@@ -56,6 +56,7 @@
 
         <div class="md:col-span-2 flex justify-center">
           <FormSubmitButton
+            data-testid="booking-submit"
             :label="submitLabel"
             :loading="saving"
             :valid="meta.valid"
