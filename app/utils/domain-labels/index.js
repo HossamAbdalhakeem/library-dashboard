@@ -28,11 +28,15 @@ export {
 
 export {
   STUDENT_SALE_LABELS,
+  OPERATION_ACTIVITY_LABELS,
+  OPERATION_ACTIVITY_COLORS,
   OPERATION_STATUS_LABELS,
   OPERATION_STATUS_COLORS,
   TIMELINE_EVENT_LABELS,
   getOperationStatusLabel,
   getOperationStatusColor,
+  getOperationActivityLabel,
+  getOperationActivityColor,
   getStudentSaleLabel,
   getTimelineEventLabel,
 } from "./student-operations";

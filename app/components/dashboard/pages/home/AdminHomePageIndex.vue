@@ -14,6 +14,10 @@
         :params="reportParams"
         :reload-key="reloadKey"
       />
+      <ReportsActivityBreakdownSection
+        :params="reportParams"
+        :reload-key="reloadKey"
+      />
       <ReportsRevenueSection
         :params="reportParams"
         :reload-key="reloadKey"
@@ -69,6 +73,11 @@ const AdminHomeRecentOperationsSection = defineAsyncComponent(() =>
 );
 const ReportsSummaryCards = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsSummaryCards/index.vue"),
+);
+const ReportsActivityBreakdownSection = defineAsyncComponent(() =>
+  import(
+    "~/components/shared/admin-page/ReportsActivityBreakdownSection/index.vue"
+  ),
 );
 const ReportsRevenueSection = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsRevenueSection/index.vue"),

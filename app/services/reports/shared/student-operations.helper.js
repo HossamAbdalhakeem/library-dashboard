@@ -2,13 +2,20 @@ import { formatMoney } from "~/utils/format/money";
 import { isFiniteNumber } from "~/utils/format/number";
 import { getPaymentMethodLabel } from "~/enums/paymentMethod";
 import { DEFAULT_METRIC_COLOR } from "~/utils/domain-labels/shared";
-import { STOCK_MOVEMENT_COLORS, getStockMovementColor } from "~/utils/domain-labels/inventory";
+import { STOCK_MOVEMENT_COLORS } from "~/utils/domain-labels/inventory";
 import {
+  getOperationActivityColor,
+  getOperationActivityLabel,
   getOperationStatusColor,
   getOperationStatusLabel,
-  getStudentSaleLabel,
   getTimelineEventLabel,
 } from "~/utils/domain-labels/student-operations";
+import {
+  normalizeOperationActivity,
+  OperationActivity,
+} from "~/enums/operationActivity";
+import { normalizeOperationKind } from "~/enums/operationKind";
+import { normalizeOperationStatus } from "~/enums/operationStatus";
 
 /**
  * Student-ops / timeline mappers for branch + customer-service reports.
@@ -22,6 +29,8 @@ export const STUDENT_OPS_METRIC_COLORS = {
   paid: STOCK_MOVEMENT_COLORS.STOCK_IN,
   remaining: STOCK_MOVEMENT_COLORS.RETURN,
   remainingZero: DEFAULT_METRIC_COLOR,
+  /** Theme primary — highlight money collected today / at delivery. */
+  activityPaid: "#f5af52",
 };
 
 export const STUDENT_OPS_COLUMNS = [
@@ -67,21 +76,37 @@ const toProductCell = (product) => {
 /** Map API student-operation rows into table display rows. */
 export const mapStudentOperationRows = (rows) =>
   (Array.isArray(rows) ? rows : []).map((row) => {
-    const typeKey = String(row.type || "").toUpperCase();
-    const statusKey = String(row.status || "").toUpperCase();
+    const typeKey = normalizeOperationKind(row.type) || String(row.type || "").toUpperCase();
+    // Prefer day-activity (DELIVERED vs RESERVATION) for the type badge.
+    const activityKey =
+      normalizeOperationActivity(row.activity) ||
+      normalizeOperationActivity(row.type) ||
+      typeKey;
+    const statusKey =
+      normalizeOperationStatus(row.status) ||
+      String(row.status || "").toUpperCase();
     const remainingRaw = Number(row.remainingAmount ?? 0);
+    const activityPaidRaw = Number(row.activityPaidAmount ?? 0);
+    const showDeliveryPaidNote =
+      activityKey === OperationActivity.DELIVERED &&
+      isFiniteNumber(activityPaidRaw) &&
+      activityPaidRaw > 0;
     return {
       id: row.id,
       // BE sends both createdAt and date (same value); prefer createdAt.
       createdAt: row.createdAt ?? row.date ?? null,
       typeKey,
-      typeLabel: getStudentSaleLabel(typeKey) || typeKey,
-      typeColor: getStockMovementColor(typeKey),
+      activityKey,
+      typeLabel: getOperationActivityLabel(activityKey) || activityKey,
+      typeColor: getOperationActivityColor(activityKey),
       studentName: row.student?.name || "-",
       branchName: row.branch?.name || "-",
       productObj: toProductCell(row.product),
       totalAmount: moneyOrDash(row.totalAmount),
       paidAmount: moneyOrDash(row.paidAmount),
+      deliveryPaidNote: showDeliveryPaidNote
+        ? moneyOrDash(activityPaidRaw)
+        : null,
       remainingAmount: moneyOrDash(row.remainingAmount),
       remainingRaw: isFiniteNumber(remainingRaw) ? remainingRaw : 0,
       statusKey,

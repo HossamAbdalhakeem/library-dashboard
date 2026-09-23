@@ -3,7 +3,7 @@ import { useAuth } from "~/composables/useAuth";
 
 /**
  * Self-contained admin report section loader.
- * Reloads whenever `params` or `reloadKey` change.
+ * Reloads whenever `params` or `reloadKey` change (when enabled).
  * Each section owns its own loading + error state.
  */
 export const useAdminReportSection = (loader, options = {}) => {
@@ -11,6 +11,8 @@ export const useAdminReportSection = (loader, options = {}) => {
     params,
     reloadKey = ref(0),
     immediate = true,
+    /** When false, skips fetch until true (lazy / collapsed sections). */
+    enabled = true,
     errorMessage = "تعذر تحميل جزء من التقارير.",
     transform = (data) => data,
     emit,
@@ -19,7 +21,7 @@ export const useAdminReportSection = (loader, options = {}) => {
 
   const { showError } = useAppToast();
   const { isLoggedIn } = useAuth();
-  const loading = ref(Boolean(immediate));
+  const loading = ref(Boolean(immediate) && Boolean(unref(enabled)));
   const data = ref(null);
   const error = ref(null);
   let generation = 0;
@@ -43,6 +45,11 @@ export const useAdminReportSection = (loader, options = {}) => {
   });
 
   const reload = async () => {
+    if (!unref(enabled)) {
+      setLoading(false);
+      return;
+    }
+
     if (!isLoggedIn.value) {
       setLoading(false);
       return;
@@ -79,8 +86,9 @@ export const useAdminReportSection = (loader, options = {}) => {
   };
 
   watch(
-    paramsKey,
+    [paramsKey, () => Boolean(unref(enabled))],
     () => {
+      if (!unref(enabled)) return;
       reload();
     },
     { immediate },

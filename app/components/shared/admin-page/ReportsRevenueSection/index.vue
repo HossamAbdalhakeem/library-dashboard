@@ -5,18 +5,13 @@
   >
     <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
       <p class="font-bold text-white">المبيعات والإيرادات</p>
-   
     </div>
 
     <div v-if="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <Skeleton v-for="i in 3" :key="`rev-${i}`" height="4.5rem" />
     </div>
 
-    <ReportsSectionError
-      v-else-if="error"
-      :message="error"
-      @retry="reload"
-    />
+    <ReportsSectionError v-else-if="error" :message="error" @retry="reload" />
 
     <template v-else>
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -39,15 +34,6 @@
           icon="pi-chart-line"
           emphasized
         />
-      </div>
-      <div
-        class="mt-3 rounded-xl border border-white/5 bg-slate-950/60 px-3 py-2 text-xs text-slate-400"
-      >
-        {{ formatMoney(revenue.grossSales, "locale") }} −
-        {{ formatMoney(revenue.returns, "locale") }} =
-        <span class="font-semibold text-emerald-300">{{
-          formatMoney(revenue.netSales, "locale")
-        }}</span>
       </div>
     </template>
   </section>

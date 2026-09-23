@@ -50,6 +50,43 @@ export type AdminSummaryResponse = AdminSectionBase & {
   reservationDeposits: number;
   outstandingAmount: number;
   inventoryTotal: number;
+  grossProfit: number;
+  netProfit: number;
+};
+
+/** GET /reports/admin/activity-breakdown */
+export type AdminActivityBreakdownSales = {
+  directSalesCount: number;
+  directSalesAmount: number;
+  deliveryCount: number;
+  deliverySalesAmount: number;
+  deliveryPaymentsAmount: number;
+  salesCount: number;
+};
+
+export type AdminActivityBreakdownReservations = {
+  totalReservations: number;
+  reservationDeposits: number;
+  reservationPayments: number;
+  cancelledReservationsCount: number;
+  outstandingAmount: number;
+};
+
+export type AdminActivityBreakdownOperations = {
+  returnsCount: number;
+  returnsAmount: number;
+  exchangesCount: number;
+  refundsTotal: number;
+  totalExpenses: number;
+  grossProfit: number;
+  netProfit: number;
+};
+
+export type AdminActivityBreakdownResponse = AdminSectionBase & {
+  section: "activity-breakdown";
+  sales: AdminActivityBreakdownSales;
+  reservations: AdminActivityBreakdownReservations;
+  operations: AdminActivityBreakdownOperations;
 };
 
 /** GET /reports/admin/revenue | /sales */

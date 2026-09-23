@@ -5,6 +5,9 @@
  */
 
 import type { PaymentMethod } from "~/enums/paymentMethod";
+import type { OperationActivity } from "~/enums/operationActivity";
+import type { OperationKind } from "~/enums/operationKind";
+import type { OperationStatus } from "~/enums/operationStatus";
 
 /** Matching Nest `ReportQueryDto` (camelCase). */
 export type ReportQuery = {
@@ -78,24 +81,23 @@ export type ReportCreatedByRef = {
 export type ReportBranchRef = ReportNamedRef;
 
 /** Report-only lifecycle status on student-ops / timeline. */
-export type ReportOperationStatus =
-  | "ACTIVE"
-  | "COMPLETED"
-  | "CANCELLED"
-  | "EXCHANGED"
-  | "PARTIALLY_REFUNDED"
-  | "FULLY_REFUNDED"
-  | string;
+export type ReportOperationStatus = OperationStatus | string;
 
-export type ReportOperationKind = "SALE" | "RESERVATION";
+/** @deprecated Prefer `OperationKind` from `~/enums/operationKind`. */
+export type ReportOperationKind = OperationKind;
+
+/** @deprecated Prefer `OperationActivity` from `~/enums/operationActivity`. */
+export type ReportOperationActivity = OperationActivity;
 
 /**
  * Student-operations list row (branch + CS).
  * Nested student / product / createdBy / branch — no flat FKs.
+ * Use `activity` for the day badge (تسليم حجز vs حجز).
  */
 export type ReportStudentOperationRow = {
   id: string;
-  type: ReportOperationKind;
+  type: OperationKind;
+  activity: OperationActivity;
   date: string;
   createdAt: string;
   student: ReportStudentRef | null;
@@ -104,6 +106,8 @@ export type ReportStudentOperationRow = {
   totalAmount: number;
   paidAmount: number;
   remainingAmount: number;
+  /** Money collected for this day's activity (e.g. remaining at delivery). */
+  activityPaidAmount: number;
   status: ReportOperationStatus;
   operationNumber: string | null;
   createdBy: ReportCreatedByRef | null;
@@ -144,10 +148,10 @@ export type ReportTimelineEvent = {
 export type ReportOperationTimeline = {
   operation: {
     id: string;
-    type: ReportOperationKind;
+    type: OperationKind;
     status: ReportOperationStatus;
     operationNumber: string | null;
-    originType?: ReportOperationKind;
+    originType?: OperationKind;
     student: (ReportStudentRef & { phone?: string | null }) | null;
     product: ReportProductRef | null;
     quantity: number;

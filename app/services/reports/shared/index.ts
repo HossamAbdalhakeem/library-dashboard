@@ -38,6 +38,7 @@ export type {
   ReportBranchRef,
   ReportOperationStatus,
   ReportOperationKind,
+  ReportOperationActivity,
   ReportStudentOperationRow,
   ReportStudentOperationsSection,
   ReportTimelineEventType,

@@ -44,12 +44,20 @@
     </template>
 
     <template #paidAmount="{ data }">
-      <span
-        class="ops-tag tabular-nums"
-        :style="metricTagStyle(STUDENT_OPS_METRIC_COLORS.paid)"
-      >
-        {{ data.paidAmount }}
-      </span>
+      <div class="flex flex-col items-center gap-0.5">
+        <span
+          class="ops-tag tabular-nums"
+          :style="metricTagStyle(STUDENT_OPS_METRIC_COLORS.paid)"
+        >
+          {{ data.paidAmount }}
+        </span>
+        <span
+          v-if="data.deliveryPaidNote"
+          class="mt-1 max-w-full whitespace-nowrap text-center text-[0.65rem] font-semibold leading-4 text-white/70 tabular-nums"
+        >
+          عند التسليم: {{ data.deliveryPaidNote }}
+        </span>
+      </div>
     </template>
 
     <template #remainingAmount="{ data }">
@@ -110,7 +118,7 @@ const props = defineProps({
   showBranch: { type: Boolean, default: false },
   emptyMessage: {
     type: String,
-    default: "لا توجد عمليات بيع أو حجز خلال الفترة المحددة.",
+    default: "لا توجد عمليات بيع أو حجز أو تسليم خلال الفترة المحددة.",
   },
 });
 

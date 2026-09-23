@@ -9,12 +9,11 @@
         </span>
         <h3 class="text-lg font-bold text-white">أهم المؤشرات</h3>
       </div>
-   
     </div>
 
-    <div v-if="loading" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <div v-if="loading" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <div
-        v-for="i in 6"
+        v-for="i in 4"
         :key="`kpi-skel-${i}`"
         class="rounded-2xl border border-white/10 bg-slate-900/80 p-4"
       >
@@ -31,37 +30,28 @@
 
     <div
       v-else
-      class="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3"
+      class="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
     >
       <ReportKpiCard
         compact
         accent="emerald"
         label="إجمالي المبيعات"
         :value="formatMoney(summary.totalSales, 'locale')"
+        hint="مباشر + تسليم"
       />
       <ReportKpiCard
         compact
         accent="sky"
-        label="عدد المبيعات"
-        :value="summary.salesCount ?? 0"
-      />
-      <ReportKpiCard
-        compact
-        accent="emerald"
         label="إجمالي المدفوعات"
         :value="formatMoney(summary.totalPayments, 'locale')"
-      />
-      <ReportKpiCard
-        compact
-        accent="sky"
-        label="إجمالي الحجوزات"
-        :value="summary.totalReservations ?? 0"
+        hint="النقد المحصّل"
       />
       <ReportKpiCard
         compact
         accent="emerald"
-        label="مدفوعات الحجوزات"
-        :value="formatMoney(summary.reservationPayments, 'locale')"
+        label="صافي الربح"
+        :value="formatMoney(summary.netProfit, 'locale')"
+        hint="بعد المصروفات"
       />
       <ReportKpiCard
         compact
