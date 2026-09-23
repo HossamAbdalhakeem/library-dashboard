@@ -1,10 +1,12 @@
-import { saleService } from "~/services/saleService";
 import {
-  PAYMENT_METHOD_LABELS,
+  saleApi,
+  buildSalePayload,
+  mapSaleToSuccessSummary,
+} from "~/services/sale";
+import {
   PaymentMethod,
   paymentMethodNeedsProof,
-} from "~/utils/paymentMethods";
-import { formatDateTime } from "~/utils/format";
+} from "~/enums/paymentMethod";
 import { useAppToast } from "~/composables/useAppToast";
 import { useSalesProductSelection } from "./useSalesProductSelection";
 
@@ -66,11 +68,7 @@ export function useSalesPage() {
     setFieldValue?.("studentName", student.name);
     setFieldValue?.("studentPhone", student.phone);
 
-    const studentStudyYearId =
-      student.studyYearId ||
-      student.studyYear?.id ||
-      student.study_year_id ||
-      null;
+    const studentStudyYearId = student.studyYear?.id || null;
     if (studentStudyYearId && !form.studyYearId) {
       form.studyYearId = studentStudyYearId;
       setFieldValue?.("studyYearId", studentStudyYearId);
@@ -162,35 +160,31 @@ export function useSalesPage() {
       const studentId = await ensureStudent();
       const needsProof = paymentMethodNeedsProof(form.method);
       const product = selectedProductOption.value;
-      const method = form.method;
 
-      const sale = await saleService.createSale({
-        studentId,
-        productId: form.productId,
-        quantity: Number(form.quantity),
-        method,
-        ...(needsProof && proofKey.value
-          ? { proofReference: proofKey.value }
-          : {}),
+      const sale = await saleApi.createSale(
+        buildSalePayload({
+          studentId,
+          productId: form.productId,
+          quantity: form.quantity,
+          method: form.method,
+          ...(needsProof && proofKey.value
+            ? { proofReference: proofKey.value }
+            : {}),
+        }),
+      );
+
+      const summary = mapSaleToSuccessSummary(sale, {
+        product,
+        studentName: asText(form.studentName, "name") || "-",
+        proofImage: proofPreviewUrl.value || "",
+        needsProof,
       });
 
-      if (!sale?.id || !sale?.paymentId) {
+      if (!summary) {
         throw new Error("تعذر قراءة بيانات البيع من الخادم.");
       }
 
-      saleSummary.value = {
-        paymentNumber: sale.paymentId,
-        dateTimeLabel: formatDateTime(sale.createdAt),
-        productName: product?.name || "-",
-        teacherName: product?.teacherName || "",
-        studyYearName: product?.studyYearName || "",
-        studentName: asText(form.studentName, "name") || "-",
-        quantity: sale.quantity,
-        unitPrice: Number(sale.unitPrice),
-        totalAmount: Number(sale.totalAmount),
-        methodLabel: PAYMENT_METHOD_LABELS[sale.method] || sale.method,
-        proofImage: needsProof ? proofPreviewUrl.value || "" : "",
-      };
+      saleSummary.value = summary;
       successDialogVisible.value = true;
 
       // Temporarily disabled — keep form values after successful sale

@@ -3,22 +3,21 @@
 </template>
 
 <script setup>
-import { useAuthStore } from "~/store/auth.js";
+import { useAuth } from "~/composables/useAuth";
 import { homeForRole } from "~/utils/routeAccess";
 
-const authStore = useAuthStore();
+const { isLoggedIn, role } = useAuth();
 
 definePageMeta({
   middleware: ["local-pages"],
 });
 
 onMounted(async () => {
-  if (!authStore.isLoggedIn) {
+  if (!isLoggedIn.value) {
     await navigateTo("/login");
     return;
   }
 
-  const role = authStore.user?.role || "admin";
-  await navigateTo(homeForRole(role));
+  await navigateTo(homeForRole(role.value));
 });
 </script>

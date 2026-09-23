@@ -43,7 +43,7 @@ const DailyReportHero = defineAsyncComponent(() =>
   import("./partials/DailyReportHero.vue"),
 );
 const PaymentMethodsReport = defineAsyncComponent(() =>
-  import("~/components/shared/payment-methods-report/index.vue"),
+  import("~/components/shared/payment/payment-methods-report/index.vue"),
 );
 
 defineProps({

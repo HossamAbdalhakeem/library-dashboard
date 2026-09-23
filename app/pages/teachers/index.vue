@@ -1,9 +1,9 @@
 <template>
-  <TeachersPage />
+  <TeacherPageIndex />
 </template>
 
 <script setup>
-import TeachersPage from "~/components/dashboard/pages/teachers/TeachersPage.vue";
+import TeacherPageIndex from "~/components/dashboard/pages/teachers/TeacherPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

@@ -15,27 +15,19 @@
       @retry="reload"
     />
 
-    <AppDataTable
-      v-else
-      :value="rows"
-      :columns="columns"
-      empty-message="لا توجد بيانات فروع خلال الفترة المحددة."
-    />
+    <BranchesTable v-else :rows="rows" />
   </section>
 </template>
 
 <script setup>
 import Skeleton from "primevue/skeleton";
-import { formatMoney } from "~/utils/format";
-import { reportService } from "~/services/reportService";
+import { formatMoney } from "~/utils/format/money";
+import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import BranchesTable from "./partials/BranchesTable.vue";
 
 defineOptions({ name: "ReportsBranchesSection" });
-
-const AppDataTable = defineAsyncComponent(() =>
-  import("~/components/shared/app-data-table/index.vue"),
-);
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
@@ -45,7 +37,7 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const { loading, data, error, reload } = useAdminReportSection(
-  (params) => reportService.getAdminBranches(params),
+  (params) => adminReportsApi.getBranches(params),
   {
     params: toRef(props, "params"),
     reloadKey: toRef(props, "reloadKey"),
@@ -53,16 +45,6 @@ const { loading, data, error, reload } = useAdminReportSection(
     errorMessage: "تعذر تحميل أداء الفروع.",
   },
 );
-
-const columns = [
-  { field: "branchName", header: "الفرع" },
-  { field: "salesLabel", header: "المبيعات" },
-  { field: "salesCount", header: "عدد العمليات" },
-  { field: "reservations", header: "الحجوزات" },
-  { field: "returnsLabel", header: "المرتجعات" },
-  { field: "expensesLabel", header: "المصروفات" },
-  { field: "netSalesLabel", header: "صافي المبيعات" },
-];
 
 const rows = computed(() =>
   (Array.isArray(data.value?.branches) ? data.value.branches : []).map(

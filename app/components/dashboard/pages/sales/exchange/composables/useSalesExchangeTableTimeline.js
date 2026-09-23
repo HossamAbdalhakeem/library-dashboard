@@ -1,4 +1,4 @@
-import { saleService } from "~/services/saleService";
+import { saleApi } from "~/services/sale";
 import { useOperationTimeline } from "~/composables/useOperationTimeline";
 
 /**
@@ -8,7 +8,7 @@ import { useOperationTimeline } from "~/composables/useOperationTimeline";
 export function useSalesExchangeTableTimeline(resetDeps) {
   const expandedRows = ref({});
   const { timelineState, getTimelineEvents, loadTimeline } =
-    useOperationTimeline((id) => saleService.getTimeline(id));
+    useOperationTimeline((id) => saleApi.getTimeline(id));
 
   const timelineKeyFor = (row) => row?.saleId || row?.id || "";
 

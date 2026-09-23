@@ -126,36 +126,6 @@ const cleanParams = (params: Record<string, any> = {}) => {
   return out;
 };
 
-/**
- * Only attach academicYearId to endpoints that actually filter by it.
- * Do NOT send it to expense-categories, study-years, users, etc.
- * /branches uses it only when inventory_summary=true (plain branch lists ignore it).
- */
-const ACADEMIC_YEAR_SCOPED_PATHS = [
-  "/products",
-  "/teachers",
-  "/students",
-  "/branches",
-  "/sales",
-  "/reservations",
-  "/inventory",
-  "/returns",
-  "/exchanges",
-  "/expenses",
-  "/reports",
-  "/notifications",
-];
-
-const shouldAttachAcademicYear = (path: string) => {
-  const normalized = String(path || "").split("?")[0] || "";
-  if (!normalized) return false;
-  // expense-categories is under /expense-categories, not /expenses — excluded
-  return ACADEMIC_YEAR_SCOPED_PATHS.some(
-    (prefix) =>
-      normalized === prefix || normalized.startsWith(`${prefix}/`),
-  );
-};
-
 const getAcademicYearId = () => {
   try {
     return useLocalStorage("academicYearId").value || null;
@@ -164,28 +134,10 @@ const getAcademicYearId = () => {
   }
 };
 
-const withAcademicYearParams = (
-  path: string,
-  params: Record<string, any> = {},
-  method?: string,
-) => {
+/** Always attach academicYearId as a query param when available. */
+const withAcademicYearParams = (params: Record<string, any> = {}) => {
   const next = { ...params };
 
-  // Opt out of auto academic-year scoping when explicitly requested
-  if (next.skipAcademicYearFilter) {
-    delete next.skipAcademicYearFilter;
-    return next;
-  }
-
-  // Create/update/delete: never send academicYearId as a query param.
-  // Callers must put it in the request body when needed.
-  const verb = String(method || "GET").toUpperCase();
-  if (verb !== "GET" && verb !== "HEAD") {
-    delete next.academicYearId;
-    return next;
-  }
-
-  if (!shouldAttachAcademicYear(path)) return next;
   if (next.academicYearId != null && next.academicYearId !== "") return next;
 
   const academicYearId = getAcademicYearId();
@@ -212,9 +164,7 @@ const request = async <T = any>(
       ...options,
       params: cleanParams(
         withAcademicYearParams(
-          path,
           (options.params || {}) as Record<string, any>,
-          options.method as string | undefined,
         ),
       ),
       baseURL,

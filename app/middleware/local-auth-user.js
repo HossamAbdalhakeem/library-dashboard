@@ -1,10 +1,10 @@
-import { useAuthStore } from "~/store/auth";
+import { useAuth } from "~/composables/useAuth";
 
 export default defineNuxtRouteMiddleware(async () => {
-  const authStore = useAuthStore();
+  const { authStore, isLoggedIn } = useAuth();
   authStore.hydrateFromStorage();
 
-  if (authStore.isLoggedIn) {
+  if (isLoggedIn.value) {
     return navigateTo("/");
   }
 });

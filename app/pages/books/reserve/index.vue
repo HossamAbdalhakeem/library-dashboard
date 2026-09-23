@@ -1,9 +1,9 @@
 <template>
-  <ReserveBookPage />
+  <ReserveBookPageIndex />
 </template>
 
 <script setup>
-import ReserveBookPage from "~/components/dashboard/pages/books/reserve/ReserveBookPage.vue";
+import ReserveBookPageIndex from "~/components/dashboard/pages/books/reserve/ReserveBookPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

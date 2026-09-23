@@ -1,9 +1,9 @@
 <template>
-  <BranchesPage />
+  <BranchesPageIndex />
 </template>
 
 <script setup>
-import BranchesPage from "~/components/dashboard/pages/branches/BranchesPage.vue";
+import BranchesPageIndex from "~/components/dashboard/pages/branches/BranchesPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

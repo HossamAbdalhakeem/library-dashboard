@@ -1,6 +1,6 @@
 <template>
   <RoleDashboardShell
-    role="admin"
+    :role="UserRole.ADMIN"
     title="لوحة مدير النظام"
   >
     <slot />
@@ -8,5 +8,6 @@
 </template>
 
 <script setup>
-import RoleDashboardShell from "~/components/dashboard/RoleDashboardShell.vue";
+import RoleDashboardShell from "~/components/dashboard/RoleDashboardShell/RoleDashboardShellIndex.vue";
+import { UserRole } from "~/enums/userRole";
 </script>

@@ -39,7 +39,7 @@ import {
 import { Line } from "vue-chartjs";
 import Skeleton from "primevue/skeleton";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
-import { reportService } from "~/services/reportService";
+import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 
 ChartJS.register(
@@ -62,7 +62,7 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const { loading, data, error, reload } = useAdminReportSection(
-  (params) => reportService.getAdminSalesTrend(params),
+  (params) => adminReportsApi.getSalesTrend(params),
   {
     params: toRef(props, "params"),
     reloadKey: toRef(props, "reloadKey"),

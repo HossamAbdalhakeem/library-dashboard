@@ -25,14 +25,14 @@
 
 <script setup>
 import Skeleton from "primevue/skeleton";
-import { reportService } from "~/services/reportService";
+import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
 
 defineOptions({ name: "ReportsPaymentsSection" });
 
 const PaymentMethodsReport = defineAsyncComponent(() =>
-  import("~/components/shared/payment-methods-report/index.vue"),
+  import("~/components/shared/payment/payment-methods-report/index.vue"),
 );
 
 const props = defineProps({
@@ -43,7 +43,7 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const { loading, data, error, reload } = useAdminReportSection(
-  (params) => reportService.getAdminPaymentMethods(params),
+  (params) => adminReportsApi.getPaymentMethods(params),
   {
     params: toRef(props, "params"),
     reloadKey: toRef(props, "reloadKey"),

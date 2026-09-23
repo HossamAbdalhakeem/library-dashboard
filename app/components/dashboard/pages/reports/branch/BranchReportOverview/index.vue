@@ -27,8 +27,11 @@
 </template>
 
 <script setup>
-import { buildBranchHeroChips } from "~/utils/dailyReportMetrics";
-import { reportService } from "~/services/reportService";
+import {
+  branchReportsApi,
+  normalizeBranchSummary,
+  buildBranchHeroChips,
+} from "~/services/reports/branch";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
 
@@ -45,7 +48,7 @@ const DailyReportHero = defineAsyncComponent(() =>
   ),
 );
 const PaymentMethodsReport = defineAsyncComponent(() =>
-  import("~/components/shared/payment-methods-report/index.vue"),
+  import("~/components/shared/payment/payment-methods-report/index.vue"),
 );
 
 const props = defineProps({
@@ -58,7 +61,7 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const { loading, data, error, reload } = useAdminReportSection(
-  (params) => reportService.getBranchSummary(params),
+  (params) => branchReportsApi.getSummary(params),
   {
     params: toRef(props, "params"),
     reloadKey: toRef(props, "reloadKey"),
@@ -68,16 +71,14 @@ const { loading, data, error, reload } = useAdminReportSection(
   },
 );
 
-const summary = computed(() => data.value?.summary || data.value || null);
-
-const paymentsTotal = computed(
-  () => summary.value?.paymentsTotal ?? summary.value?.paymentsCollected ?? 0,
+const summary = computed(() =>
+  data.value ? normalizeBranchSummary(data.value) : null,
 );
+
+const paymentsTotal = computed(() => summary.value?.paymentsTotal ?? 0);
 const refundsTotal = computed(() => Number(summary.value?.refundsTotal || 0));
 const heroChips = computed(() => buildBranchHeroChips(summary.value || {}));
-const paymentMethodItems = computed(() =>
-  Array.isArray(summary.value?.paymentsByMethod)
-    ? summary.value.paymentsByMethod
-    : [],
+const paymentMethodItems = computed(
+  () => summary.value?.paymentsByMethod || [],
 );
 </script>

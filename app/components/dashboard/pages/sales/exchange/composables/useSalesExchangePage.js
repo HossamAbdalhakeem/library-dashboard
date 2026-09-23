@@ -1,6 +1,9 @@
-import { exchangeService } from "~/services/exchangeService";
+import {
+  exchangeApi,
+  normalizeEligibleSale,
+  buildEligibleSalesQuery,
+} from "~/services/exchange";
 import { useAppToast } from "~/composables/useAppToast";
-import { normalizeEligibleSale } from "~/utils/normalizeEligibleSale";
 
 /**
  * List + dialog orchestration for the sales exchange/refund page.
@@ -21,15 +24,6 @@ export function useSalesExchangePage() {
     first: 0,
   });
 
-  const buildQuery = () => {
-    const params = {
-      page: pagination.page,
-      per_page: pagination.perPage,
-    };
-    if (filters.search?.trim()) params.search = filters.search.trim();
-    return params;
-  };
-
   const resetPagination = () => {
     pagination.page = 1;
     pagination.first = 0;
@@ -38,7 +32,13 @@ export function useSalesExchangePage() {
   const loadData = async () => {
     loading.value = true;
     try {
-      const result = await exchangeService.getEligibleSales(buildQuery());
+      const result = await exchangeApi.getEligibleSales(
+        buildEligibleSalesQuery({
+          page: pagination.page,
+          perPage: pagination.perPage,
+          filters,
+        }),
+      );
       sales.value = (result.data || []).map(normalizeEligibleSale);
       pagination.total = result.pagination?.total || 0;
     } catch (error) {

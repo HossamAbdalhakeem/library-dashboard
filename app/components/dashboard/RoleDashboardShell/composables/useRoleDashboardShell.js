@@ -1,33 +1,12 @@
-import { useAuthStore } from "~/store/auth.js";
-
-const roleLabels = {
-  admin: { short: "AD", label: "مدير" },
-  branch: { short: "BR", label: "فرع" },
-  social: { short: "SO", label: "اجتماعي" },
-};
-
-function normalizeRole(rawRole) {
-  const raw = String(rawRole || "admin").toLowerCase();
-  if (raw === "admin" || raw === "administrator") return "admin";
-  if (
-    raw === "branch" ||
-    raw === "library_employee" ||
-    raw === "branch_employee"
-  ) {
-    return "branch";
-  }
-  if (
-    raw === "social" ||
-    raw === "customer_service" ||
-    raw === "customer-service"
-  ) {
-    return "social";
-  }
-  return "admin";
-}
+import { useAuth } from "~/composables/useAuth";
+import {
+  getUserRoleLabel,
+  normalizeUserRole,
+  UserRole,
+} from "~/enums/userRole";
 
 function buildNavigation(role) {
-  if (role === "branch") {
+  if (role === UserRole.BRANCH_EMPLOYEE) {
     return [
       {
         id: "branch-main",
@@ -42,10 +21,10 @@ function buildNavigation(role) {
     ];
   }
 
-  if (role === "social") {
+  if (role === UserRole.CUSTOMER_SERVICE) {
     return [
       {
-        id: "social-main",
+        id: "customer-service-main",
         label: "",
         items: [
           { label: "احجز كتاب", icon: "📝", to: "/books/reserve" },
@@ -100,7 +79,7 @@ function buildNavigation(role) {
  * Shell state: role, navigation accordion, mobile nav, user chip, logout.
  */
 export function useRoleDashboardShell(props) {
-  const authStore = useAuthStore();
+  const { user, branch, isCustomerService, authStore } = useAuth();
   const route = useRoute();
   const confirmLogoutVisible = ref(false);
   const loggingOut = ref(false);
@@ -109,11 +88,7 @@ export function useRoleDashboardShell(props) {
   const openSectionId = ref(null);
 
   const normalizedRole = computed(() =>
-    normalizeRole(props.role || authStore.user?.role || "admin"),
-  );
-
-  const roleMeta = computed(
-    () => roleLabels[normalizedRole.value] || roleLabels.admin,
+    normalizeUserRole(props.role || user.value?.role || UserRole.ADMIN),
   );
 
   const isActive = (to) => {
@@ -147,7 +122,7 @@ export function useRoleDashboardShell(props) {
       active?.id || navigation.value.find((s) => s.label)?.id || null;
   };
 
-  const userName = computed(() => authStore.user?.name || "مدير النظام");
+  const userName = computed(() => user.value?.fullName || user.value?.name || "مدير النظام");
   const userInitials = computed(() => {
     const parts = String(userName.value || "")
       .trim()
@@ -160,16 +135,13 @@ export function useRoleDashboardShell(props) {
       .join(" ")
       .toUpperCase();
   });
-  const roleLabel = computed(() => roleMeta.value.label);
+  const roleLabel = computed(() => getUserRoleLabel(normalizedRole.value));
 
   /** Top-left context: branch name for employees, Customer Service for CS role */
   const contextLabel = computed(() => {
-    const branchName =
-      authStore.user?.branch?.name ||
-      authStore.user?.branches?.[0]?.name ||
-      "";
+    const branchName = branch.value?.name || "";
     if (branchName) return branchName;
-    if (normalizedRole.value === "social") return "خدمة العملاء";
+    if (isCustomerService.value) return "خدمة العملاء";
     return "";
   });
 

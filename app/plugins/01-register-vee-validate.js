@@ -48,7 +48,6 @@ const FIELD_LABELS = {
   teacher: "المدرس",
   address: "العنوان",
   minStockQuantity: "حد تنبيه المخزون",
-  reservationPrice: "سعر الحجز",
 };
 
 const fieldLabel = (ctx) => {
@@ -62,10 +61,10 @@ const isEmpty = (value) => {
   if (Array.isArray(value)) return value.length === 0;
   if (value instanceof Date) return Number.isNaN(value.getTime());
   if (value && typeof value === "object" && !Array.isArray(value)) {
-    if (value.file_url !== undefined) {
+    if (value.fileUrl !== undefined) {
       return (
-        !value.file_url ||
-        (typeof value.file_url === "string" && !value.file_url.trim())
+        !value.fileUrl ||
+        (typeof value.fileUrl === "string" && !value.fileUrl.trim())
       );
     }
     return Object.keys(value).length === 0;

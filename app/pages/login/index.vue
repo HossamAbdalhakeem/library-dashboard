@@ -104,8 +104,8 @@
               <p class="font-semibold text-white">بيانات تجريبية:</p>
               <ul class="mt-2 space-y-2">
                 <li>مدير: admin@library.local </li>
-                <!-- <li>خدمة العملاء: hossamabdalhakeem99+098@gmail.com /hossamabdalhakeem99+099@gmail.com</li> -->
-                <!-- <li>موظف فرع: hossamabdalhakeem99+123@gmail.com  /  hossamabdalhakeem99+547@gmail.com</li> -->
+                <li>خدمة العملاء: hossamabdalhakeem99+098@gmail.com /hossamabdalhakeem99+099@gmail.com</li>
+                <li>موظف فرع: hossamabdalhakeem99+123@gmail.com  /  hossamabdalhakeem99+547@gmail.com</li>
               </ul>
             </div>
           </div>
@@ -119,6 +119,7 @@
 import { Form, Field, ErrorMessage } from "vee-validate";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
+import Checkbox from "primevue/checkbox";
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
 import { useAuthStore } from "~/store/auth.js";
 import { useAppToast } from "~/composables/useAppToast";
@@ -127,8 +128,8 @@ const authStore = useAuthStore();
 const { showError } = useAppToast();
 const rememberMe = ref(false);
 const form = reactive({
-  email: "admin@library.local",
-  password: "Password123!",
+  email: "",
+  password: "",
 });
 
 const initialValues = {

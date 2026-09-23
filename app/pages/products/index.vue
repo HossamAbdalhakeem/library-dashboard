@@ -1,9 +1,9 @@
 <template>
-  <ProductsPage />
+  <ProductsPageIndex />
 </template>
 
 <script setup>
-import ProductsPage from "~/components/dashboard/pages/products/ProductsPage.vue";
+import ProductsPageIndex from "~/components/dashboard/pages/products/ProductsPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

@@ -1,40 +1,21 @@
-import { useAuthStore } from "~/store/auth";
+import { useAuth } from "~/composables/useAuth";
 import { canAccessPath, homeForRole } from "~/utils/routeAccess";
 
-// Only the old public pages should be redirected here.
-// Dashboard routes such as /products/create, /inventory, /reservations, /reports, etc. stay available.
-const legacyPublicPaths = [
-  "/features",
-  "/how",
-  "/shop",
-  "/privacy",
-  "/creators",
-];
-
 export default defineNuxtRouteMiddleware(async (to) => {
-  const authStore = useAuthStore();
+  const { authStore, isLoggedIn, role } = useAuth();
   authStore.hydrateFromStorage();
 
-  const isLegacyPublicRoute =
-    legacyPublicPaths.includes(to.path) ||
-    legacyPublicPaths.some((path) => to.path.startsWith(`${path}/`));
-
-  if (isLegacyPublicRoute) {
-    return navigateTo(authStore.isLoggedIn ? "/" : "/login");
-  }
-
-  if (!authStore.isLoggedIn && to.path !== "/login") {
+  if (!isLoggedIn.value && to.path !== "/login") {
     return navigateTo("/login");
   }
 
-  if (authStore.isLoggedIn && to.path === "/login") {
+  if (isLoggedIn.value && to.path === "/login") {
     return navigateTo("/");
   }
 
-  if (!authStore.isLoggedIn) return;
+  if (!isLoggedIn.value) return;
 
-  const role = authStore.user?.role || authStore.getRole;
-  if (!canAccessPath(role, to.path)) {
-    return navigateTo(homeForRole(role));
+  if (!canAccessPath(role.value, to.path)) {
+    return navigateTo(homeForRole(role.value));
   }
 });

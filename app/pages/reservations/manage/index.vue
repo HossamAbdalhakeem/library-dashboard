@@ -1,9 +1,9 @@
 <template>
-  <ReservationsManagePage />
+  <ReservationsManagePageIndex />
 </template>
 
 <script setup>
-import ReservationsManagePage from "~/components/dashboard/pages/reservations/ReservationsManagePage.vue";
+import ReservationsManagePageIndex from "~/components/dashboard/pages/reservations/manage/ReservationsManagePageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

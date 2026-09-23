@@ -1,9 +1,9 @@
 <template>
-  <SalesExchangePage />
+  <SalesExchangePageIndex />
 </template>
 
 <script setup>
-import SalesExchangePage from "~/components/dashboard/pages/sales/exchange/SalesExchangePage.vue";
+import SalesExchangePageIndex from "~/components/dashboard/pages/sales/exchange/SalesExchangePageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

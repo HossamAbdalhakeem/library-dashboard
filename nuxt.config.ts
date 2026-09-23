@@ -167,7 +167,7 @@ export default defineNuxtConfig({
         'frame-src': ["'none'"],
         'object-src': ["'none'"],
         'media-src': ["'self'", 'blob:', 'data:'],
-        // Payment proof previews use data:/blob:; signed file_url may be API or https object storage
+        // Payment proof previews use data:/blob:; signed fileUrl may be API or https object storage
         'img-src': ["'self'", 'data:', 'blob:', apiOrigin, 'https:'],
         'style-src': ["'self'", "'unsafe-inline'"],
         'script-src': scriptSrc,

@@ -1,9 +1,9 @@
 <template>
-  <DirectSalesPage />
+  <DirectSalesPageIndex />
 </template>
 
 <script setup>
-import DirectSalesPage from "~/components/dashboard/pages/sales/direct/DirectSalesPage.vue";
+import DirectSalesPageIndex from "~/components/dashboard/pages/sales/direct/DirectSalesPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

@@ -1,9 +1,9 @@
 <template>
-  <ExpensesPage />
+  <ExpensesPageIndex />
 </template>
 
 <script setup>
-import ExpensesPage from "~/components/dashboard/pages/expenses/ExpensesPage.vue";
+import ExpensesPageIndex from "~/components/dashboard/pages/expenses/ExpensesPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

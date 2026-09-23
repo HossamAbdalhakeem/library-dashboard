@@ -15,27 +15,19 @@
       @retry="reload"
     />
 
-    <AppDataTable
-      v-else
-      :value="rows"
-      :columns="columns"
-      empty-message="لا توجد بيانات منتجات خلال الفترة المحددة."
-    />
+    <ProductsTable v-else :rows="rows" />
   </section>
 </template>
 
 <script setup>
 import Skeleton from "primevue/skeleton";
-import { formatMoney } from "~/utils/format";
-import { reportService } from "~/services/reportService";
+import { formatMoney } from "~/utils/format/money";
+import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ProductsTable from "./partials/ProductsTable.vue";
 
 defineOptions({ name: "ReportsProductsSection" });
-
-const AppDataTable = defineAsyncComponent(() =>
-  import("~/components/shared/app-data-table/index.vue"),
-);
 
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
@@ -45,7 +37,7 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const { loading, data, error, reload } = useAdminReportSection(
-  (params) => reportService.getAdminProducts(params),
+  (params) => adminReportsApi.getProducts(params),
   {
     params: toRef(props, "params"),
     reloadKey: toRef(props, "reloadKey"),
@@ -53,14 +45,6 @@ const { loading, data, error, reload } = useAdminReportSection(
     errorMessage: "تعذر تحميل حركة المنتجات.",
   },
 );
-
-const columns = [
-  { field: "productName", header: "المنتج" },
-  { field: "quantitySold", header: "الكمية المباعة" },
-  { field: "salesAmountLabel", header: "المبيعات" },
-  { field: "profitLabel", header: "الربح" },
-  { field: "remainingQuantity", header: "المتبقي" },
-];
 
 const rows = computed(() =>
   (Array.isArray(data.value?.products) ? data.value.products : []).map(

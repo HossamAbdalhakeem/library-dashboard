@@ -1,3 +1,6 @@
+/**
+ * Backend UserRole enum — single source of truth (matches Prisma UserRole).
+ */
 export const UserRole = Object.freeze({
   ADMIN: "ADMIN",
   CUSTOMER_SERVICE: "CUSTOMER_SERVICE",
@@ -8,6 +11,13 @@ export const USER_ROLE_LABELS = Object.freeze({
   [UserRole.ADMIN]: "مدير",
   [UserRole.CUSTOMER_SERVICE]: "خدمة العملاء",
   [UserRole.BRANCH_EMPLOYEE]: "موظف فرع",
+});
+
+/** Nuxt layout filename per UserRole (kebab-case). */
+export const USER_ROLE_LAYOUT = Object.freeze({
+  [UserRole.ADMIN]: "admin",
+  [UserRole.BRANCH_EMPLOYEE]: "branch-employee",
+  [UserRole.CUSTOMER_SERVICE]: "customer-service",
 });
 
 export const USER_ROLE_OPTIONS = Object.freeze(
@@ -29,6 +39,9 @@ export const getUserRoleLabel = (value) => {
   const role = normalizeUserRole(value, "");
   return USER_ROLE_LABELS[role] || value || "-";
 };
+
+export const getLayoutForUserRole = (value) =>
+  USER_ROLE_LAYOUT[normalizeUserRole(value)] || USER_ROLE_LAYOUT[UserRole.ADMIN];
 
 export const isAdminRole = (value) =>
   normalizeUserRole(value, "") === UserRole.ADMIN;

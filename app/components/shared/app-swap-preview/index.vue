@@ -1,23 +1,23 @@
 <template>
   <div class="grid gap-3 sm:grid-cols-2">
-    <div class="rounded-lg border border-white/10 bg-slate-900 px-3 py-2">
-      <p class="text-xs" :class="fromLabelClass">{{ fromLabel }}</p>
-      <p class="mt-1 font-semibold text-white">{{ fromTitle || "—" }}</p>
-      <p v-if="fromSubtitle" class="mt-0.5 text-xs text-slate-400">
-        {{ fromSubtitle }}
-      </p>
-    </div>
-    <div class="rounded-lg border border-white/10 bg-slate-900 px-3 py-2">
-      <p class="text-xs" :class="toLabelClass">{{ toLabel }}</p>
-      <p class="mt-1 font-semibold text-white">{{ toTitle || "—" }}</p>
-      <p v-if="toSubtitle" class="mt-0.5 text-xs text-slate-400">
-        {{ toSubtitle }}
-      </p>
-    </div>
+    <SwapPreviewCard
+      :label="fromLabel"
+      :label-class="fromLabelClass"
+      :title="fromTitle"
+      :subtitle="fromSubtitle"
+    />
+    <SwapPreviewCard
+      :label="toLabel"
+      :label-class="toLabelClass"
+      :title="toTitle"
+      :subtitle="toSubtitle"
+    />
   </div>
 </template>
 
 <script setup>
+import SwapPreviewCard from "./partials/SwapPreviewCard.vue";
+
 defineOptions({ name: "AppSwapPreview" });
 
 defineProps({

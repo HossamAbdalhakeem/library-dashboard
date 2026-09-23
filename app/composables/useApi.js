@@ -1,4 +1,4 @@
-import { useAuthStore } from "~/store/auth.js";
+import { useAuth } from "~/composables/useAuth";
 
 /**
  * useApi - Nuxt-aware request executor
@@ -14,7 +14,7 @@ import { useAuthStore } from "~/store/auth.js";
  */
 export const useApi = () => {
   const config = useRuntimeConfig();
-  const authStore = useAuthStore();
+  const { token } = useAuth();
 
   const request = (requestConfig) => {
     const {
@@ -26,8 +26,8 @@ export const useApi = () => {
     } = requestConfig;
 
     const requestHeaders = { ...headers };
-    if (authStore.token) {
-      requestHeaders.Authorization = `Bearer ${authStore.token}`;
+    if (token.value) {
+      requestHeaders.Authorization = `Bearer ${token.value}`;
     }
 
     const requestParams = { ...params };

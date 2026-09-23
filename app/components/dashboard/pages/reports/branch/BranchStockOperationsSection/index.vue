@@ -18,8 +18,8 @@
 </template>
 
 <script setup>
-import { STOCK_OPERATION_LABELS } from "~/utils/domainLabels";
-import { reportService } from "~/services/reportService";
+import { STOCK_OPERATION_LABELS } from "~/utils/domain-labels/inventory";
+import { branchReportsApi } from "~/services/reports/branch";
 import { usePaginatedReportSection } from "~/composables/usePaginatedReportSection";
 
 defineOptions({ name: "BranchStockOperationsSection" });
@@ -44,7 +44,7 @@ const stockTypeLabels = STOCK_OPERATION_LABELS;
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
     (query) =>
-      reportService.getBranchSection("stockOperations", {
+      branchReportsApi.getSection("stockOperations", {
         ...query,
         ...(movementType.value ? { movementType: movementType.value } : {}),
       }),

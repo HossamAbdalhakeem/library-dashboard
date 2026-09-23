@@ -1,9 +1,9 @@
 <template>
-  <DeliverReservationPage />
+  <DeliverReservationPageIndex />
 </template>
 
 <script setup>
-import DeliverReservationPage from "~/components/dashboard/pages/reservations/deliver/DeliverReservationPage.vue";
+import DeliverReservationPageIndex from "~/components/dashboard/pages/reservations/deliver/DeliverReservationPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

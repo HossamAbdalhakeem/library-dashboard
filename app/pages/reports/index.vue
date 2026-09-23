@@ -1,9 +1,9 @@
 <template>
-  <AdminReportsPage />
+  <AdminReportsPageIndex />
 </template>
 
 <script setup>
-import AdminReportsPage from "~/components/dashboard/pages/reports/admin/AdminReportsPage.vue";
+import AdminReportsPageIndex from "~/components/dashboard/pages/reports/admin/AdminReportsPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

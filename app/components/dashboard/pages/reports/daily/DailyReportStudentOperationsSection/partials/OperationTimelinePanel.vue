@@ -43,7 +43,7 @@
     >
       <template #opposite="{ item }">
         <div class="pt-1 text-left" dir="ltr">
-          <AppDateTimeCell :value="item.date" />
+          <AppDatetimeTableCell :value="item.date" />
         </div>
       </template>
 
@@ -62,7 +62,7 @@
           dir="rtl"
         >
           <div class="mb-2 hidden text-sm text-slate-400 @max-[280px]:block">
-            <AppDateTimeCell :value="item.date" />
+            <AppDatetimeTableCell :value="item.date" />
           </div>
 
           <p class="mb-3 font-bold text-white">{{ item.title }}</p>
@@ -82,15 +82,15 @@
           </ul>
 
           <div
-            v-if="item.method || item.paymentId || item.image?.hasProof"
+            v-if="item.method || item.payment"
             class="mt-3"
           >
             <PaymentProofThumb
               :method="item.method"
               :method-label="item.methodLabel"
-              :payment-id="item.paymentId"
-              :proof-url="item.image?.url"
-              :has-proof="item.image?.hasProof"
+              :payment-id="item.payment?.id"
+              :proof-url="item.payment?.image?.url"
+              :has-proof="item.payment?.image?.hasProof"
             />
           </div>
 
@@ -110,8 +110,8 @@
 import Timeline from "primevue/timeline";
 import Skeleton from "primevue/skeleton";
 import Button from "primevue/button";
-import AppDateTimeCell from "~/components/shared/app-datetime-cell/index.vue";
-import PaymentProofThumb from "~/components/shared/payment-proof-thumb/index.vue";
+import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
+import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 
 defineOptions({ name: "OperationTimelinePanel" });
 

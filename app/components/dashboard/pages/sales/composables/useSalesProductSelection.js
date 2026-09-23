@@ -1,24 +1,18 @@
-import { inventoryService } from "~/services/inventoryService";
-import { mapInventoryProductOption } from "~/utils/productOptions";
-import { useAuthStore } from "~/store/auth";
+import {
+  inventoryApi,
+  mapInventoryProductOption,
+} from "~/services/inventory";
+import { useAuth } from "~/composables/useAuth";
 import { useAppToast } from "~/composables/useAppToast";
 import { useThrottledCallback } from "~/composables/useThrottledCallback";
 
 export function useSalesProductSelection(form) {
-  const authStore = useAuthStore();
+  const { branchId } = useAuth();
   const { showError } = useAppToast();
 
   const products = ref([]);
   const loadingProducts = ref(false);
   const quantityError = ref("");
-
-  const branchId = computed(
-    () =>
-      authStore.user?.branch_id ||
-      authStore.user?.branchId ||
-      authStore.user?.branches?.[0]?.id ||
-      null,
-  );
 
   const canSelectProduct = computed(
     () =>
@@ -64,6 +58,7 @@ export function useSalesProductSelection(form) {
   const productOptions = computed(() =>
     products.value
       .map(mapInventoryProductOption)
+      .filter(Boolean)
       .filter((option) => option.value && matchesProductFilters(option)),
   );
 
@@ -75,10 +70,9 @@ export function useSalesProductSelection(form) {
 
   const selectedProduct = computed(() => {
     const row = products.value.find(
-      (item) =>
-        (item.product?.id || item.productId || item.id) === form.productId,
+      (item) => item.product?.id === form.productId,
     );
-    return row?.product || row || null;
+    return row?.product || null;
   });
 
   const maxQuantity = computed(() =>
@@ -111,7 +105,7 @@ export function useSalesProductSelection(form) {
     loadingProducts.value = true;
     try {
       const query = String(search || "").trim();
-      const items = await inventoryService.getBranchInventory(branchId.value, {
+      const items = await inventoryApi.getBranchInventory(branchId.value, {
         availableOnly: true,
         studyYearId: form.studyYearId,
         teacherId: form.teacherId,

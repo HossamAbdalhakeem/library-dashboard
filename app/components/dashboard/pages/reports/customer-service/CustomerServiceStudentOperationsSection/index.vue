@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { reportService } from "~/services/reportService";
+import { customerServiceReportsApi } from "~/services/reports/customer-service";
 import { usePaginatedReportSection } from "~/composables/usePaginatedReportSection";
 
 defineOptions({ name: "CustomerServiceStudentOperationsSection" });
@@ -34,12 +34,12 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const timelineFetcher = (operationId) =>
-  reportService.getCustomerServiceOperationTimeline(operationId);
+  customerServiceReportsApi.getOperationTimeline(operationId);
 
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
     (query) =>
-      reportService.getCustomerServiceSection("studentOperations", query),
+      customerServiceReportsApi.getSection("studentOperations", query),
     {
       params: toRef(props, "params"),
       reloadKey: toRef(props, "reloadKey"),

@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { reportService } from "~/services/reportService";
+import { branchReportsApi } from "~/services/reports/branch";
 import { usePaginatedReportSection } from "~/composables/usePaginatedReportSection";
 
 defineOptions({ name: "BranchStudentOperationsSection" });
@@ -33,11 +33,11 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const timelineFetcher = (operationId) =>
-  reportService.getBranchOperationTimeline(operationId);
+  branchReportsApi.getOperationTimeline(operationId);
 
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
-    (query) => reportService.getBranchSection("studentOperations", query),
+    (query) => branchReportsApi.getSection("studentOperations", query),
     {
       params: toRef(props, "params"),
       reloadKey: toRef(props, "reloadKey"),

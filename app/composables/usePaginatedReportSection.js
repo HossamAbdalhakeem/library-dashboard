@@ -1,5 +1,5 @@
 import { useAppToast } from "~/composables/useAppToast";
-import { useAuthStore } from "~/store/auth.js";
+import { useAuth } from "~/composables/useAuth";
 
 const extractRows = (payload) => {
   if (!payload) return [];
@@ -32,7 +32,7 @@ export const usePaginatedReportSection = (loader, options = {}) => {
   } = options;
 
   const { showError } = useAppToast();
-  const authStore = useAuthStore();
+  const { isLoggedIn } = useAuth();
   const loading = ref(Boolean(immediate));
   const rows = ref([]);
   const error = ref("");
@@ -63,7 +63,7 @@ export const usePaginatedReportSection = (loader, options = {}) => {
   });
 
   const reload = async () => {
-    if (!authStore.isLoggedIn) {
+    if (!isLoggedIn.value) {
       setLoading(false);
       return;
     }

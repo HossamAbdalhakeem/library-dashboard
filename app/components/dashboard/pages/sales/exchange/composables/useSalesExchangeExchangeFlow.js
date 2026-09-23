@@ -1,6 +1,6 @@
-import { exchangeService } from "~/services/exchangeService";
+import { exchangeApi, normalizeExchangePreview } from "~/services/exchange";
 import { useAppToast } from "~/composables/useAppToast";
-import { PaymentMethod } from "~/utils/paymentMethods";
+import { PaymentMethod } from "~/enums/paymentMethod";
 import {
   buildExchangePayload,
   buildPriceComparisonUi,
@@ -112,14 +112,14 @@ export function useSalesExchangeExchangeFlow(props, emit) {
     previewLoading.value = true;
     exchangeError.value = "";
     try {
-      const result = await exchangeService.previewExchange({
+      const result = await exchangeApi.previewExchange({
         saleId: props.sale.saleId,
         saleItemId: props.sale.saleItemId,
         newProductId: productId,
         quantity: qty,
       });
       if (requestId !== previewRequestId) return;
-      preview.value = result;
+      preview.value = normalizeExchangePreview(result);
     } catch (error) {
       if (requestId !== previewRequestId) return;
       preview.value = null;
@@ -205,7 +205,7 @@ export function useSalesExchangeExchangeFlow(props, emit) {
         exchangeProofKey: exchangeProofKey.value,
       });
 
-      await exchangeService.createExchange(payload);
+      await exchangeApi.createExchange(payload);
       confirmVisible.value = false;
       detailVisible.value = false;
       resetFields();

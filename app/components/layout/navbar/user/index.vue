@@ -18,12 +18,12 @@
 </template>
 
 <script setup>
-import { useAuthStore } from "~/store/auth.js";
+import { useAuth } from "~/composables/useAuth";
 
 defineEmits(["toggle-menu"]);
-const authStore = useAuthStore();
+const { user } = useAuth();
 const displayName = computed(
-  () => authStore.user?.name || authStore.user?.full_name || "Your account"
+  () => user.value?.fullName || user.value?.name || "Your account"
 );
 const initials = computed(() => {
   const parts = String(displayName.value || "")

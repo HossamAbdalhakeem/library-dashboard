@@ -1,11 +1,10 @@
+import { isFiniteNumber } from "~/utils/format/number";
 import {
   PaymentMethod,
   paymentMethodNeedsProof,
-} from "~/utils/paymentMethods";
-import {
-  buildExchangeDiffLabels,
-  getAvailabilityLabel,
-} from "~/utils/domainLabels";
+} from "~/enums/paymentMethod";
+import { buildExchangeDiffLabels } from "~/utils/domain-labels/exchange";
+import { getAvailabilityLabel } from "~/utils/domain-labels/product";
 import { canSelectExchangeProduct } from "~/utils/productOptions";
 
 export const COMPARISON_UI = {
@@ -56,7 +55,7 @@ export function buildPriceComparisonUi(preview) {
 
 export function clampExchangeQuantity(value, maxQuantity) {
   const n = Number(value);
-  if (!Number.isFinite(n) || n < 1) return 1;
+  if (!isFiniteNumber(n) || n < 1) return 1;
   return Math.min(Math.floor(n), maxQuantity);
 }
 

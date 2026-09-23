@@ -2,7 +2,7 @@
   <div
     class="reports-filters flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-end"
   >
-    <ProductSelect
+    <AppGlobalSelectProduct
       :model-value="book"
       source="catalog"
       variant="simple"
@@ -24,7 +24,7 @@
       @update:model-value="onBranchChange"
     />
 
-    <PeriodDateFilter
+    <AppPeriodDateFilter
       :from="from"
       :to="to"
       :academic-year-range="academicYearRange"
@@ -49,9 +49,9 @@
 
 <script setup>
 import Button from "primevue/button";
-import ProductSelect from "~/components/shared/product-select/index.vue";
-import AppGlobalSelectBranch from "~/components/shared/app-global-select-branch/index.vue";
-import PeriodDateFilter from "~/components/shared/period-date-filter/index.vue";
+import AppGlobalSelectProduct from "~/components/shared/selections/app-global-select-product/index.vue";
+import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
+import AppPeriodDateFilter from "~/components/shared/reports/app-period-date-filter/index.vue";
 
 defineOptions({ name: "ReportsFilters" });
 

@@ -1,28 +1,12 @@
 <script setup>
-import { useAuthStore } from "~/store/auth";
+import { useAuth } from "~/composables/useAuth";
 
 definePageMeta({ middleware: ["local-pages"] });
 
-const authStore = useAuthStore();
+const { isCustomerService } = useAuth();
 
-const resolveDailyReportPath = () => {
-  const raw = String(
-    authStore.user?.role ||
-      authStore.getRole ||
-      authStore.dashboardRole ||
-      "",
-  ).toLowerCase();
-
-  if (
-    raw === "social" ||
-    raw === "customer_service" ||
-    raw === "customer-service"
-  ) {
-    return "/reports/customer-service";
-  }
-
-  return "/reports/branch";
-};
+const resolveDailyReportPath = () =>
+  isCustomerService.value ? "/reports/customer-service" : "/reports/branch";
 
 await navigateTo(resolveDailyReportPath(), { replace: true });
 </script>

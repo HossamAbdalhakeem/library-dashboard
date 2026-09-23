@@ -1,20 +1,5 @@
-import { studentService } from "~/services/studentService";
+import { studentApi, normalizeStudentTransaction } from "~/services/student";
 import { useAppToast } from "~/composables/useAppToast";
-import { formatMoney } from "~/utils/format";
-import { PAYMENT_METHOD_LABELS } from "~/utils/paymentMethods";
-import { getStatusTagMeta, getStatusTagSeverity } from "~/utils/statusTags";
-import {
-  getReservationStatusLabel,
-  getSaleStatusLabel,
-  getTransactionTypeLabel,
-} from "~/utils/domainLabels";
-
-const TYPE_META = {
-  SALE: getStatusTagMeta("transaction", "SALE"),
-  RESERVATION: getStatusTagMeta("transaction", "RESERVATION"),
-  RETURN: getStatusTagMeta("transaction", "RETURN"),
-  EXCHANGE: getStatusTagMeta("transaction", "EXCHANGE"),
-};
 
 const today = () => {
   const d = new Date();
@@ -25,89 +10,6 @@ const monthStart = () => {
   const d = new Date();
   d.setDate(1);
   return d.toISOString().slice(0, 10);
-};
-
-const statusSeverity = (status, type) => {
-  const normalizedType = String(type || "").toUpperCase();
-
-  if (normalizedType === "SALE") return "success";
-  if (normalizedType === "RETURN") return "danger";
-  if (normalizedType === "EXCHANGE") {
-    return getStatusTagSeverity("sale", status);
-  }
-  return getStatusTagSeverity("reservation", status);
-};
-
-/** Support both `{ data, pagination }` and legacy `{ transactions }` shapes */
-const extractRows = (result) => {
-  if (Array.isArray(result?.data)) return result.data;
-  if (Array.isArray(result?.transactions)) return result.transactions;
-  if (Array.isArray(result)) return result;
-  return [];
-};
-
-const normalizeTransaction = (item) => {
-  const type = String(item.type || item.transactionType || "").toUpperCase();
-  const typeMeta = TYPE_META[type] || {
-    label: getTransactionTypeLabel(type),
-    severity: "warn",
-  };
-  const dateValue = item.date || item.createdAt || item.created_at;
-  const amount = item.amount ?? item.totalAmount ?? item.paidAmount ?? 0;
-  const productName =
-    item.productName ||
-    item.product?.name ||
-    item.product_name ||
-    null;
-  const teacherName =
-    item.teacherName ||
-    item.teacher?.name ||
-    item.teacher_name ||
-    null;
-  const studyYearName =
-    item.studyYearName ||
-    item.studyYear?.name ||
-    item.product?.studyYear?.name ||
-    null;
-  const branchName =
-    item.branchName ||
-    item.branch?.name ||
-    item.branch_name ||
-    "—";
-  const status = item.status || "";
-  const statusLabel =
-    type === "SALE" || type === "RETURN" || type === "EXCHANGE"
-      ? getSaleStatusLabel(status)
-      : getReservationStatusLabel(status);
-  const paymentMethod = String(item.paymentMethod || "CASH").toUpperCase();
-
-  return {
-    ...item,
-    type,
-    typeLabel: typeMeta.label,
-    date: dateValue,
-    amountLabel: formatMoney(amount),
-    productName: productName || "—",
-    teacherName: teacherName ? `أ. ${teacherName}` : "—",
-    productCell: {
-      name: productName,
-      teacherName,
-      studyYearName,
-    },
-    branchName,
-    quantity: item.quantity ?? item.qty ?? "—",
-    statusLabel,
-    paymentId: item.paymentId || null,
-    paymentMethod,
-    paymentMethodLabel:
-      item.paymentMethodLabel ||
-      PAYMENT_METHOD_LABELS[paymentMethod] ||
-      paymentMethod ||
-      "—",
-    proofUrl: item.proofUrl || null,
-    hasProof: Boolean(item.hasProof),
-    statusSeverity: statusSeverity(status, type),
-  };
 };
 
 /**
@@ -183,14 +85,13 @@ export function useStudentTransactions(props) {
     if (!props.student?.id) return;
     loading.value = true;
     try {
-      const result = await studentService.getStudentTransactions(
+      const result = await studentApi.getStudentTransactions(
         props.student.id,
         buildParams(),
       );
-      rows.value = extractRows(result).map(normalizeTransaction);
-      pagination.total = Number(
-        result?.pagination?.total ?? extractRows(result).length,
-      );
+      const data = Array.isArray(result?.data) ? result.data : [];
+      rows.value = data.map(normalizeStudentTransaction);
+      pagination.total = Number(result?.pagination?.total ?? data.length);
     } catch (error) {
       rows.value = [];
       pagination.total = 0;

@@ -82,17 +82,17 @@
         <span class="text-xs text-slate-500">صافي المدفوعات</span>
 
         <span class="font-bold text-emerald-400">
-          {{ formatMoney(netPayments, "rtl") }}
+          {{ formatMoney(netPayments) }}
         </span>
       </div>
 
       <div class="mt-1.5 flex items-center justify-between text-[11px]">
         <span class="text-slate-600">
-          مدفوع {{ formatMoney(branch.paidTotal, "rtl") }}
+          مدفوع {{ formatMoney(branch.paidTotal) }}
         </span>
 
         <span class="text-rose-400/70">
-          مسترد {{ formatMoney(branch.refundsTotal, "rtl") }}
+          مسترد {{ formatMoney(branch.refundsTotal) }}
         </span>
       </div>
     </div>
@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { formatMoney } from "~/utils/format";
+import { formatMoney } from "~/utils/format/money";
 
 defineOptions({ name: "DailyReportBranchCard" });
 

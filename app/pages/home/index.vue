@@ -1,9 +1,9 @@
 <template>
-  <AdminHomePage />
+  <AdminHomePageIndex />
 </template>
 
 <script setup>
-import AdminHomePage from "~/components/dashboard/pages/home/AdminHomePage.vue";
+import AdminHomePageIndex from "~/components/dashboard/pages/home/AdminHomePageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

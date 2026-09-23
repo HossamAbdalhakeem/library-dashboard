@@ -1,9 +1,9 @@
 <template>
-  <CustomerServiceReportsPage />
+  <CustomerServiceReportsPageIndex />
 </template>
 
 <script setup>
-import CustomerServiceReportsPage from "~/components/dashboard/pages/reports/customer-service/CustomerServiceReportsPage.vue";
+import CustomerServiceReportsPageIndex from "~/components/dashboard/pages/reports/customer-service/CustomerServiceReportsPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

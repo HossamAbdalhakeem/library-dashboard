@@ -1,9 +1,9 @@
 <template>
-  <StudyYearsPage />
+  <StudyYearsPageIndex />
 </template>
 
 <script setup>
-import StudyYearsPage from "~/components/dashboard/pages/study-years/StudyYearsPage.vue";
+import StudyYearsPageIndex from "~/components/dashboard/pages/study-years/StudyYearsPageIndex.vue";
 
 definePageMeta({ middleware: ["local-pages"] });
 </script>

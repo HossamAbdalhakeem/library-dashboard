@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { academicYearService } from "~/services/academicYearService";
+import { academicYearApi } from "~/services/academic-year";
 import { useLocalStorage } from "~/composables/useLocalStorage";
 
 const STORAGE_KEY = "academicYearId";
@@ -95,7 +95,7 @@ export const useAcademicYearStore = defineStore("academicYearStore", {
       this.loading = true;
       fetchPromise = (async () => {
         try {
-          this.years = await academicYearService.getAcademicYears();
+          this.years = await academicYearApi.getAcademicYears();
           this.loaded = true;
           this.ensureSelectedId();
           return this.years;

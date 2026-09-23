@@ -52,7 +52,10 @@
 </template>
 
 <script setup>
-import { REPORT_ACTIVITY_KEY_LABELS, getReportMetricColor } from "~/utils/domainLabels";
+import {
+  REPORT_ACTIVITY_KEY_LABELS,
+  getReportMetricColor,
+} from "~/utils/domain-labels/report";
 
 defineOptions({ name: "DailyReportInventorySection" });
 

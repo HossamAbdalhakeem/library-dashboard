@@ -9,10 +9,10 @@
       <div>
         <p class="text-sm text-emerald-200/80">{{ title }}</p>
         <p class="mt-2 text-3xl font-extrabold tracking-tight text-white">
-          {{ formatMoney(paymentsTotal, "rtl") }}
+          {{ formatMoney(paymentsTotal) }}
         </p>
         <p v-if="Number(refundsTotal) > 0" class="mt-2 text-xs text-rose-300">
-          بعد خصم الاسترداد {{ formatMoney(refundsTotal, "rtl") }}
+          بعد خصم الاسترداد {{ formatMoney(refundsTotal) }}
         </p>
       </div>
       <span
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { formatMoney } from "~/utils/format";
+import { formatMoney } from "~/utils/format/money";
 
 defineOptions({ name: "DailyReportHero" });
 
@@ -61,7 +61,7 @@ const chipGridClass = computed(() => {
 });
 
 const formatChipValue = (chip) => {
-  if (chip.format === "money") return formatMoney(chip.value, "rtl");
+  if (chip.format === "money") return formatMoney(chip.value);
   return Number(chip.value || 0);
 };
 </script>
