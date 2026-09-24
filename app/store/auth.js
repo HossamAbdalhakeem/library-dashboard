@@ -107,7 +107,8 @@ export const useAuthStore = defineStore("authStore", {
     },
     async logout() {
       try {
-        await authApi.logout();
+        // TEMP: skip logout API while testing — local session clear only
+        // await authApi.logout();
       } catch (error) {
         console.error("Logout request failed", error);
       }

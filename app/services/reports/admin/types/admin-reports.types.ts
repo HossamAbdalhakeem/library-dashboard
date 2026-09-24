@@ -16,6 +16,8 @@ export type AdminReportFilters = {
   branchId?: string;
   productId?: string;
   academicYearId?: string;
+  /** ISO timestamp: inventory levels reconstructed as of this moment (`to` end). */
+  asOf?: string;
 };
 
 type AdminSectionBase = {
@@ -97,7 +99,7 @@ export type AdminInventoryBucket = {
   available: number;
 };
 
-/** GET /reports/admin/inventory */
+/** GET /reports/admin/inventory — stock as of selected `to` (end of range). */
 export type AdminInventoryResponse = AdminSectionBase & {
   section: "inventory";
   summary: {
@@ -108,11 +110,6 @@ export type AdminInventoryResponse = AdminSectionBase & {
     outOfStock: number;
   };
   byType: AdminInventoryBucket[];
-  /** Present on legacy inventory-by-type shape */
-  inventoryTotal?: number;
-  books?: AdminInventoryBucket;
-  cards?: AdminInventoryBucket;
-  booklets?: AdminInventoryBucket;
 };
 
 export type AdminProductPerformanceRow = {

@@ -6,13 +6,13 @@
     <div class="mb-4">
       <p class="font-bold text-white">المخزون</p>
       <p class="mt-1 text-xs text-slate-400">
-        نظرة سريعة على الإجمالي والمتاح والمحجوز والتنبيهات
+        مستويات المخزون في نهاية الفترة المحددة (الإجمالي / المحجوز / المتاح)
       </p>
     </div>
 
     <div v-if="loading" class="space-y-3">
-      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
-        <Skeleton v-for="i in 5" :key="`inv-kpi-${i}`" height="4.5rem" />
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <Skeleton v-for="i in 3" :key="`inv-kpi-${i}`" height="4.5rem" />
       </div>
       <Skeleton width="100%" height="2.2rem" />
       <Skeleton width="100%" height="2.2rem" />
@@ -26,7 +26,7 @@
     />
 
     <template v-else>
-      <div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+      <div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
         <ReportKpiCard
           v-for="kpi in summaryKpis"
           :key="kpi.key"
@@ -140,24 +140,15 @@ const summaryKpis = computed(() => [
   },
 ]);
 
-const emptyBucket = () => ({ total: 0, reserved: 0, available: 0 });
-
 const rows = computed(() => {
-  const inventory = data.value || {};
-  if (Array.isArray(inventory.byType) && inventory.byType.length) {
-    return inventory.byType.map((row) =>
-      mapInventoryRow(row.type, {
-        total: row.total ?? 0,
-        reserved: row.reserved ?? 0,
-        available: row.available ?? 0,
-      }),
-    );
-  }
-
-  return [
-    mapInventoryRow(ProductType.BOOK, inventory.books || emptyBucket()),
-    mapInventoryRow(ProductType.CARD, inventory.cards || emptyBucket()),
-    mapInventoryRow(ProductType.BOOKLET, inventory.booklets || emptyBucket()),
-  ];
+  const byType = data.value?.byType;
+  if (!Array.isArray(byType) || !byType.length) return [];
+  return byType.map((row) =>
+    mapInventoryRow(row.type, {
+      total: row.total ?? 0,
+      reserved: row.reserved ?? 0,
+      available: row.available ?? 0,
+    }),
+  );
 });
 </script>
