@@ -85,7 +85,7 @@
         </div>
 
         <div class="flex items-center justify-between gap-3 border-t border-emerald-200 pt-3">
-          <span class="text-sm font-semibold text-emerald-700">إجمالي الحجز</span>
+          <span class="text-sm font-semibold text-emerald-700">إجمالي السعر</span>
           <span class="text-lg font-extrabold text-emerald-700">
             {{ formatMoney(summary.totalAmount) }}
           </span>

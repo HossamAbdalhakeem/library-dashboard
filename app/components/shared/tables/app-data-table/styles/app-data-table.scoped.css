@@ -134,10 +134,25 @@
   border: 1px solid transparent !important;
   min-width: 2.25rem;
   height: 2.25rem;
+  border-radius: 0.5rem;
 }
 
-.app-data-table-wrap :deep(.p-paginator .p-paginator-page.p-highlight) {
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page:hover),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-prev:hover),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-next:hover),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-first:hover),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-last:hover) {
   background: #1a1a1a !important;
   color: #fafafa !important;
-  border-color: #404040 !important;
+}
+
+/* PrimeVue 4 uses p-paginator-page-selected (not p-highlight) */
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page.p-paginator-page-selected),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page.p-highlight),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page[aria-current="page"]),
+.app-data-table-wrap :deep(.p-paginator .p-paginator-page[data-p-active="true"]) {
+  background: rgba(245, 175, 82, 0.18) !important;
+  color: #f5af52 !important;
+  border-color: rgba(245, 175, 82, 0.55) !important;
+  font-weight: 700 !important;
 }

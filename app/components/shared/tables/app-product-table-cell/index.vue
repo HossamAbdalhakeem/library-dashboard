@@ -6,7 +6,7 @@
   >
     <div class="flex max-w-full flex-wrap items-center gap-1.5">
       <p
-        class="m-0 min-w-0 max-w-full line-clamp-2 break-words text-right text-sm font-semibold leading-snug text-neutral-100"
+        class="m-0 min-w-0 max-w-full whitespace-normal break-words text-right text-sm font-semibold leading-snug text-neutral-100"
       >
         {{ product.name }}
       </p>
