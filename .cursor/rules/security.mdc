@@ -1,0 +1,26 @@
+---
+description: Frontend security posture (CSP, auth token, no XSS sinks)
+alwaysApply: true
+---
+# Security
+
+Follow [`SECURITY.md`](mdc:SECURITY.md). NestJS API owns real authorization.
+
+## Hard rules in app code
+
+- **Never** use `v-html`, `innerHTML`, or inject unsanitized HTML
+- **Never** commit secrets; use [`.env.example`](mdc:.env.example) placeholders only (`.env` gitignored)
+- Client role gates ([`routeAccess.js`](mdc:app/utils/routeAccess.js)) are defense in depth — not security boundaries
+- Bearer token in `localStorage` is XSS-sensitive; logout must clear token / dashboard storage
+
+## Config already in place
+
+- `nuxt-security` + CSP in [`nuxt.config.ts`](mdc:nuxt.config.ts)
+- Edge headers in [`vercel.json`](mdc:vercel.json)
+- Scripts: `npm run security:sca` | `security:sast` | `security:dast` | `security:check`
+
+## When changing security-related behavior
+
+- Keep CSP `connect-src` aligned with `NUXT_ENV_BASE_URL` / API origin
+- Do not weaken headers or re-enable HTML injection for convenience
+- Prefer extending allowlists carefully over bypassing middleware

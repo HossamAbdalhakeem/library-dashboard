@@ -1,0 +1,35 @@
+---
+description: Auth, Pinia stores, middleware, and role route access
+globs: app/middleware/**/*,app/store/**/*,app/utils/routeAccess.js,app/composables/useAuth.js,app/pages/**/*.vue
+alwaysApply: false
+---
+# Auth, stores & routing
+
+## Middleware
+
+- Authenticated app pages: `definePageMeta({ middleware: ["local-pages"] })`
+- Login page: `middleware: ["local-auth-user"]`
+- Logic: [`local-pages.js`](mdc:app/middleware/local-pages.js) — login redirect + `canAccessPath`
+
+## Role access (UI-only)
+
+Allowlists in [`routeAccess.js`](mdc:app/utils/routeAccess.js). **API remains source of truth.**
+
+| Role | Home |
+|------|------|
+| `ADMIN` | `/home` (all paths) |
+| `BRANCH_EMPLOYEE` | `/sales/direct` |
+| `CUSTOMER_SERVICE` | `/books/reserve` |
+
+When adding a page for a non-admin role, update `canAccessPath` allowlists.
+
+## Pinia
+
+- Stores: [`app/store/auth.js`](mdc:app/store/auth.js), [`academicYear.js`](mdc:app/store/academicYear.js)
+- Ids: `"authStore"`, `"academicYearStore"`; exports `useAuthStore` / `useAcademicYearStore`
+- Options-style `defineStore` (`state` / `getters` / `actions`); token + academic year in localStorage
+- Prefer [`useAuth`](mdc:app/composables/useAuth.js) / [`useAcademicYear`](mdc:app/composables/useAcademicYear.js) in UI
+
+## Layouts
+
+Role → layout via `USER_ROLE_LAYOUT` in [`userRole.js`](mdc:app/enums/userRole.js): `admin` | `branch-employee` | `customer-service` | `login`.

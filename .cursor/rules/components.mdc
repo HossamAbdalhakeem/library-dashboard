@@ -1,0 +1,50 @@
+---
+description: Vue/Nuxt component and page conventions
+globs: app/components/**/*.vue,app/pages/**/*.vue,app/layouts/**/*.vue
+alwaysApply: false
+---
+# Components & pages
+
+## Thin pages
+
+Pages only mount a feature entry and set middleware — put UI in `components/dashboard/`:
+
+```vue
+<!-- ✅ app/pages/users/index.vue -->
+<template>
+  <UsersPageIndex />
+</template>
+<script setup>
+import UsersPageIndex from "~/components/dashboard/pages/users/UsersPageIndex.vue";
+definePageMeta({ middleware: ["local-pages"] });
+</script>
+```
+
+## Naming
+
+| Kind | Pattern | Example |
+|------|---------|---------|
+| Shared reusable | kebab folder + `index.vue` | [`shared/dialog/reservation-success-dialog/`](mdc:app/components/shared/dialog/reservation-success-dialog/index.vue) |
+| Feature page shell | PascalCase `*PageIndex.vue` | `UsersPageIndex.vue` |
+| Feature form/table/dialog | PascalCase `.vue` under feature tree | `UserForm.vue`, `SalesSuccessDialog.vue` |
+
+## Script patterns
+
+- Always `<script setup>` (no Options API components)
+- Prefer `defineOptions({ name: "PascalCaseName" })` (common on shared; not universal)
+- Dialogs: `visible` prop + `update:visible` / `close` emits
+- Import PrimeVue pieces explicitly (`Dialog`, `Button`, …)
+- Style with **Tailwind** first; scoped CSS only when needed (see `app-data-table`)
+
+## Placement
+
+- Reusable across features → [`app/components/shared/`](mdc:app/components/shared/) (usually kebab + `index.vue`; some report shells use PascalCase folders e.g. `ReportsSummaryCards/`)
+- Feature-only → [`app/components/dashboard/pages/<feature>/`](mdc:app/components/dashboard/pages/)
+- Login UI → [`app/components/login/`](mdc:app/components/login/)
+- Layout chrome → [`app/components/layout/`](mdc:app/components/layout/) / [`app/layouts/`](mdc:app/layouts/)
+- Exception: [`app/pages/index.vue`](mdc:app/pages/index.vue) is a role-home redirect, not a `*PageIndex` mount
+
+```vue
+<!-- ❌ Don’t put large feature UI in pages/ -->
+<!-- ❌ Don’t use v-html / innerHTML -->
+```

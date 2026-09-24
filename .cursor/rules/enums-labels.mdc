@@ -1,0 +1,47 @@
+---
+description: Enums, Arabic labels, and domain-labels maps
+globs: app/enums/**/*,app/utils/domain-labels/**/*,app/utils/status-tags/**/*
+alwaysApply: false
+---
+# Enums & labels
+
+No `@nuxtjs/i18n`. User-facing strings are **Arabic** inline or in label maps.
+
+## Enums ([`app/enums/`](mdc:app/enums/))
+
+Match backend string values. Prefer:
+
+1. Const map (`Object.freeze` in `.js`, or `as const` in `.ts`)
+2. Type alias from values (TS)
+3. `*_LABELS` / options / `isX` + `normalizeX` helpers
+
+```ts
+// ✅ app/enums/operationActivity.ts style
+export const OperationActivity = {
+  SALE: "SALE",
+  RESERVATION: "RESERVATION",
+} as const;
+export type OperationActivity =
+  (typeof OperationActivity)[keyof typeof OperationActivity];
+```
+
+```js
+// ✅ app/enums/userRole.js — also USER_ROLE_LABELS + USER_ROLE_LAYOUT
+export const UserRole = Object.freeze({
+  ADMIN: "ADMIN",
+  CUSTOMER_SERVICE: "CUSTOMER_SERVICE",
+  BRANCH_EMPLOYEE: "BRANCH_EMPLOYEE",
+});
+```
+
+```ts
+// ❌ TypeScript `enum` keyword, or English-only UI labels for domain status
+```
+
+## Domain labels & tags
+
+- Status / metric Arabic copy: [`app/utils/domain-labels/`](mdc:app/utils/domain-labels/) + `getLabel` in [`shared.js`](mdc:app/utils/domain-labels/shared.js)
+- Tag presentation: [`app/utils/status-tags/`](mdc:app/utils/status-tags/)
+- Money/date/number display: [`app/utils/format/`](mdc:app/utils/format/)
+
+When adding a backend status value, update the enum **and** the matching label/tag map.

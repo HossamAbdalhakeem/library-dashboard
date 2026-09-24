@@ -1,0 +1,46 @@
+---
+description: Domain services and apiFetch HTTP conventions
+globs: app/services/**/*,app/utils/apiFetch.ts
+alwaysApply: false
+---
+# Services & API
+
+## Domain folder shape
+
+Each domain under [`app/services/<domain>/`](mdc:app/services/):
+
+```
+api/*.api.ts      # HTTP via apiFetch (auth uses authFetch)
+types/*.types.ts  # + types/index.ts
+helpers/*.helper.js
+index.ts          # re-export api + types + helpers
+```
+
+Reports nest further: `services/reports/{admin|branch|customer-service|shared}/`.  
+Example barrel: [`app/services/user/index.ts`](mdc:app/services/user/index.ts).
+
+## Calling the API
+
+- Use [`apiFetch`](mdc:app/utils/apiFetch.ts) / helpers `asList`, `asData`, `asPaginated`, `firstRow`
+- Do **not** raw-`$fetch` the Nest API from components — go through `*Api` modules
+- Auth: Bearer token from localStorage (handled in `apiFetch`); public allowlist includes `/auth/login`
+- `academicYearId` query is attached automatically when stored
+- [`useApi.js`](mdc:app/composables/useApi.js) exists but is unused — prefer `*Api` + `apiFetch`, do not revive it for new work
+
+```ts
+// ✅
+export const userApi = {
+  async getUsers(params: UserQuery = {}): Promise<UserResponse[]> {
+    return asList<UserResponse>(
+      await apiFetch("/users", { method: "GET", params }),
+    );
+  },
+};
+
+// ❌ fetch/axios directly, or duplicate Authorization headers in every call
+```
+
+## Helpers vs UI
+
+- Form mapping / list normalize / query builders → `helpers/*.helper.js`
+- Keep Vue components thin: call service exports, don’t embed endpoint paths

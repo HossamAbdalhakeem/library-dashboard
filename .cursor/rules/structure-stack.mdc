@@ -1,0 +1,34 @@
+---
+alwaysApply: true
+---
+# Project structure & stack
+
+Nuxt 4 **SPA** (`ssr: false`) library dashboard. App code lives under [`app/`](mdc:app/).
+
+## Layout
+
+| Area | Path |
+|------|------|
+| Pages (thin) | [`app/pages/`](mdc:app/pages/) |
+| Feature UI | [`app/components/dashboard/`](mdc:app/components/dashboard/) |
+| Shared UI | [`app/components/shared/`](mdc:app/components/shared/) |
+| Domain API | [`app/services/<domain>/`](mdc:app/services/) |
+| Enums | [`app/enums/`](mdc:app/enums/) |
+| Pinia | [`app/store/`](mdc:app/store/) |
+| Composables | [`app/composables/`](mdc:app/composables/) (`use*`) |
+| Utils | [`app/utils/`](mdc:app/utils/) |
+| Middleware | [`app/middleware/`](mdc:app/middleware/) |
+| Plugins | [`app/plugins/`](mdc:app/plugins/) |
+
+## Stack (do not add alternatives without need)
+
+- Vue 3 `<script setup>`, Pinia, PrimeVue 4, Tailwind, VeeValidate
+- Config: [`nuxt.config.ts`](mdc:nuxt.config.ts), [`tailwind.config.ts`](mdc:tailwind.config.ts)
+- Document is **Arabic RTL**: `lang="ar"` `dir="rtl"` `class="app-dark"`
+- **No i18n module** — copy is inline Arabic; labels in enums / [`domain-labels`](mdc:app/utils/domain-labels/)
+- **No test runner** in package.json — do not invent Vitest/Jest unless asked
+- NestJS API origin: `runtimeConfig.public.baseUrl` ← `NUXT_ENV_BASE_URL` (dev UI port **8000**)
+
+## Imports
+
+Prefer `~/` aliases (`~/components/...`, `~/services/...`, `~/enums/...`).
