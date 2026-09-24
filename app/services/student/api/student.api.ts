@@ -38,13 +38,6 @@ export const studentApi = {
     return result.data;
   },
 
-  /** GET /students/:id → StudentResponse | null */
-  async getStudent(id: string): Promise<StudentResponse | null> {
-    return firstRow<StudentResponse>(
-      await apiFetch(`/students/${id}`, { method: "GET" }),
-    );
-  },
-
   /** GET /students/:id/transactions → PaginatedResponse<StudentTransactionResponse> */
   async getStudentTransactions(
     id: string,

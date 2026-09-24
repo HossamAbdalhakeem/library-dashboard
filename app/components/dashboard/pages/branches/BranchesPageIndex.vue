@@ -15,6 +15,7 @@
 
       <template #content>
         <BranchesTable
+          v-if="currentAcademicYearId"
           :branches="branches"
           :loading="loading"
           @edit="openEdit"
@@ -92,11 +93,13 @@ import Card from "primevue/card";
 import Button from "primevue/button";
 import Drawer from "primevue/drawer";
 import AppGlobalDrawer from "~/components/shared/drawer/app-global-drawer/index.vue";
-import BranchesTable from "~/components/dashboard/pages/branches/components/table/BranchesTable.vue";
 import { branchApi, normalizeBranchListItem } from "~/services/branch";
 import { useAppToast } from "~/composables/useAppToast";
 import { useAcademicYear } from "~/composables/useAcademicYear";
 
+const BranchesTable = defineAsyncComponent(() =>
+  import("~/components/dashboard/pages/branches/components/table/BranchesTable.vue"),
+);
 const BranchForm = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/branches/components/form/BranchForm.vue"),
 );

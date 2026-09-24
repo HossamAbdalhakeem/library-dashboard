@@ -4,6 +4,9 @@
     dir="rtl"
   >
     <p class="mb-3 font-bold text-white">أداء الفروع</p>
+    <p class="mb-3 text-xs text-slate-400">
+      المبيعات بإجمالي البيع · المرتجعات بتاريخ الإرجاع · صافي المبيعات = المبيعات − المرتجعات
+    </p>
 
     <div v-if="loading" class="space-y-2">
       <Skeleton v-for="i in 4" :key="`br-${i}`" width="100%" height="2.2rem" />
@@ -24,7 +27,7 @@ import Skeleton from "primevue/skeleton";
 import { formatMoney } from "~/utils/format/money";
 import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 import BranchesTable from "./partials/BranchesTable.vue";
 
 defineOptions({ name: "ReportsBranchesSection" });

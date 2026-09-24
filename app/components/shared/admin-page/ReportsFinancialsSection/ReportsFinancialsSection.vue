@@ -38,7 +38,7 @@ import Skeleton from "primevue/skeleton";
 import { formatMoney } from "~/utils/format/money";
 import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 
 defineOptions({ name: "ReportsFinancialsSection" });
 

@@ -12,12 +12,12 @@ function buildNavigation(role) {
         id: "branch-main",
         label: "",
         items: [
-          // { label: "الطلاب", icon: "◎", to: "/students" },
-          { label: "البيع المباشر", icon: "◫", to: "/sales/direct" },
-          { label: "حجز الكتب", icon: "✓", to: "/reservations" },
-          { label: "تسليم الحجز", icon: "📝", to: "/reservations/deliver" },
-          // { label: "المبيعات / الاستبدال", icon: "⇄", to: "/sales/exchange" },
-          { label: "التقرير", icon: "▤", to: "/reports/branch" },
+          // { label: "الطلاب", icon: "pi pi-users", to: "/students" },
+          { label: "البيع المباشر", icon: "pi pi-shopping-cart", to: "/sales/direct" },
+          { label: "حجز الكتب", icon: "pi pi-book", to: "/reservations" },
+          { label: "تسليم الحجز", icon: "pi pi-check-square", to: "/reservations/deliver" },
+          // { label: "المبيعات / الاستبدال", icon: "pi pi-sync", to: "/sales/exchange" },
+          { label: "التقرير", icon: "pi pi-chart-bar", to: "/reports/branch" },
         ],
       },
     ];
@@ -29,9 +29,10 @@ function buildNavigation(role) {
         id: "customer-service-main",
         label: "",
         items: [
-          // { label: "الطلاب", icon: "◎", to: "/students" },
-          { label: "احجز كتاب", icon: "📝", to: "/books/reserve" },
-          { label: "التقرير", icon: "▤", to: "/reports/customer-service" },
+          // { label: "الطلاب", icon: "pi pi-users", to: "/students" },
+          { label: "احجز كتاب", icon: "pi pi-book", to: "/books/reserve" },
+          // { label: "التقرير", icon: "pi pi-chart-bar", to: "/reports/customer-service" },
+
         ],
       },
     ];
@@ -41,38 +42,34 @@ function buildNavigation(role) {
     {
       id: "home",
       label: "",
-      items: [{ label: "الرئيسية", icon: "⌂", to: "/home" }],
+      items: [{ label: "الرئيسية", icon: "pi pi-home", to: "/home" }],
     },
     {
       id: "base",
       label: "البيانات الأساسية",
       items: [
-        { label: "المنتجات", icon: "＋", to: "/products" },
-        { label: "المدرسون", icon: "◉", to: "/teachers" },
-        { label: "السنوات الدراسية", icon: "▦", to: "/study-years" },
-        { label: "الفروع", icon: "⬡", to: "/branches" },
-        { label: "الطلاب", icon: "◎", to: "/students" },
+        { label: "المنتجات", icon: "pi pi-box", to: "/products" },
+        { label: "المدرسون", icon: "pi pi-user", to: "/teachers" },
+        { label: "السنوات الدراسية", icon: "pi pi-calendar", to: "/study-years" },
+        { label: "الفروع", icon: "pi pi-building", to: "/branches" },
+        { label: "الطلاب", icon: "pi pi-users", to: "/students" },
+        { label: "الموظفون", icon: "pi pi-id-card", to: "/users" },
       ],
     },
     {
       id: "operations",
       label: "العمليات",
       items: [
-        { label: "الحجوزات", icon: "✓", to: "/reservations/manage" },
-        { label: "المبيعات", icon: "⇄", to: "/sales/exchange" },
+        { label: "الحجوزات", icon: "pi pi-book", to: "/reservations/manage" },
+        { label: "المبيعات", icon: "pi pi-shopping-cart", to: "/sales/exchange" },
       ],
-    },
-    {
-      id: "people",
-      label: "الأشخاص",
-      items: [{ label: "الموظفون", icon: "♟", to: "/users" }],
     },
     {
       id: "finance",
       label: "المالية والتقارير",
       items: [
-        { label: "المصروفات", icon: "⊖", to: "/expenses" },
-        { label: "التقارير", icon: "▤", to: "/reports" },
+        { label: "المصروفات", icon: "pi pi-wallet", to: "/expenses" },
+        { label: "التقارير", icon: "pi pi-chart-bar", to: "/reports" },
       ],
     },
   ];

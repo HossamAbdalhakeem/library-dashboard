@@ -45,7 +45,7 @@
           @click="$emit('close-mobile')"
         >
           <span>{{ item.label }}</span>
-          <span class="text-lg" aria-hidden="true">{{ item.icon }}</span>
+          <i :class="item.icon" class="text-base" aria-hidden="true" />
         </NuxtLink>
       </div>
     </div>

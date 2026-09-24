@@ -16,13 +16,6 @@ export const academicYearApi = {
     );
   },
 
-  /** GET /academic-years/:id → AcademicYearResponse | null */
-  async getAcademicYear(id: string): Promise<AcademicYearResponse | null> {
-    return firstRow<AcademicYearResponse>(
-      await apiFetch(`/academic-years/${id}`, { method: "GET" }),
-    );
-  },
-
   /** POST /academic-years → AcademicYearResponse | null */
   async createAcademicYear(
     payload: AcademicYearPayload,

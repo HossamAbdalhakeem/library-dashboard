@@ -19,7 +19,6 @@ export type {
   EligibleSaleResponse,
   EligibleSaleListItem,
   ExchangeFlowSale,
-  ExchangeQuery,
   EligibleSalesQuery,
   ExchangePreviewPayload,
   ExchangeCreatePayload,

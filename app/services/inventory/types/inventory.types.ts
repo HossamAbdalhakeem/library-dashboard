@@ -1,6 +1,5 @@
 /**
- * Inventory API contracts — aligned with BE `toInventoryResponse`,
- * `toInventorySummaryResponse`, and `toStockMovementResponse`.
+ * Inventory API contracts — aligned with BE `toInventoryResponse`.
  *
  * - `productId` kept as routing key for `/inventory/:branchId/:productId`
  * - nested `product` via product response shape
@@ -16,7 +15,7 @@ export type AcademicYearRef = NamedRef & {
   status?: string;
 };
 
-/** Nested product on inventory / movement reads. */
+/** Nested product on inventory reads. */
 export type InventoryProductResponse = {
   id: string;
   name: string;
@@ -36,8 +35,7 @@ export type InventoryProductResponse = {
 
 /**
  * Stable inventory row from:
- * GET /inventory, GET /inventory/:branchId,
- * GET /inventory/:branchId/:productId
+ * GET /inventory/:branchId
  */
 export type InventoryResponse = {
   productId: string;
@@ -47,45 +45,8 @@ export type InventoryResponse = {
   product: InventoryProductResponse;
   branch?: NamedRef | null;
   lowStockThreshold?: number;
-};
-
-/** Preview row inside inventory_summary. */
-export type InventorySummaryPreviewItem = {
-  product: NamedRef;
-  physicalQuantity: number;
-  reservedQuantity: number;
-  availableQuantity: number;
-};
-
-/**
- * Summary from GET /inventory?inventory_summary=true (per branch)
- * or GET /inventory/:branchId?inventory_summary=true.
- */
-export type InventorySummaryResponse = {
-  branch: NamedRef;
-  productsCount: number;
-  preview: InventorySummaryPreviewItem[];
-};
-
-/**
- * Stock movement from GET /inventory/:branchId/:productId/movements.
- * Nested product + branch; flat FKs omitted.
- */
-export type StockMovementResponse = {
-  id: string;
-  movementType: string | unknown;
-  physicalQuantityChange: number;
-  reservedQuantityChange: number;
-  note: string | null;
-  referenceId: string | null;
-  createdAt: string | unknown;
-  product: InventoryProductResponse | null;
-  branch: NamedRef | null;
-  createdBy: {
-    id: string;
-    fullName: string | null;
-    email: string | null;
-  } | null;
+  soldQuantity?: number;
+  isLowStock?: boolean;
 };
 
 /** POST add/remove stock — BE returns `{ id }` only. */
@@ -93,14 +54,7 @@ export type StockMutationResponse = {
   id: string;
 };
 
-/** FE availability helper return (from getStockItem). */
-export type InventoryAvailability = {
-  availableQuantity: number;
-  physicalQuantity: number;
-  reservedQuantity: number;
-};
-
-/** GET /inventory query params. */
+/** GET /inventory/:branchId query params. */
 export type InventoryQuery = {
   search?: string;
   teacherId?: string;
@@ -109,7 +63,9 @@ export type InventoryQuery = {
   type?: string;
   availableOnly?: boolean;
   forReservation?: boolean;
-  inventory_summary?: boolean;
+  include_sold?: boolean;
+  page?: number;
+  per_page?: number;
 };
 
 /**
@@ -121,19 +77,4 @@ export type StockQuantityPayload = {
   productId: string;
   quantity: number;
   note?: string;
-};
-
-/** List/table row after `normalizeInventoryListItem`. */
-export type InventoryListItem = {
-  productId: string | null;
-  physicalQuantity: number;
-  reservedQuantity: number;
-  availableQuantity: number;
-  lowStockThreshold: number | null;
-  product: InventoryProductResponse | null;
-  branch: NamedRef | null;
-  productName: string;
-  teacherName: string;
-  studyYearName: string;
-  branchName: string;
 };

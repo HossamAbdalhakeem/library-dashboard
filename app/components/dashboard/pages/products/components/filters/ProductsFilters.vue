@@ -1,7 +1,7 @@
 <template>
   <div class="mb-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
     <AppSearchInput
-      placeholder="اسم المنتج / مدرس / نوع / سنة"
+      placeholder="اسم المنتج"
       @search="onSearch"
     />
 

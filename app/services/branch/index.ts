@@ -3,7 +3,7 @@ export { branchApi, branchService } from "./api/branch.api";
 export type {
   NamedRef,
   BranchStatus,
-  BranchInventoryItem,
+  BranchInventoryPreviewItem,
   BranchInventorySummary,
   BranchResponse,
   BranchQuery,
@@ -18,6 +18,7 @@ export {
   emptyBranchForm,
   mapBranchToForm,
   buildBranchPayload,
+  normalizeInventoryPreviewItem,
   normalizeInventoryItem,
   normalizeBranchListItem,
 } from "./helpers/branch-form.helper";

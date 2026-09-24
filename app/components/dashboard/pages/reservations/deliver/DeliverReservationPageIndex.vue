@@ -53,7 +53,7 @@ const pendingDeliverReservation = ref(null);
 const emptyMessage = computed(() =>
   search.value.trim()
     ? "لا توجد حجوزات مطابقة"
-    : "لا توجد حجوزات قابلة للعرض",
+    : "لا توجد حجوزات جاهزة أو بانتظار المخزون",
 );
 
 const isDeliverable = (item) => item?.status === "READY";
@@ -63,7 +63,7 @@ const buildQuery = () =>
     page: 1,
     perPage: 20,
     filters: {
-      status: "READY",
+      status: ["READY", "WAITING_FOR_STOCK"],
       search: search.value,
     },
   });

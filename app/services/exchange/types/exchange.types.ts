@@ -234,17 +234,13 @@ export type ExchangeFlowSale = {
   payment: ExchangePaymentRef | null;
 };
 
-/** GET /exchanges query params. */
-export type ExchangeQuery = {
-  academicYearId?: string;
-};
-
 /** GET /exchanges/eligible-sales query params. */
 export type EligibleSalesQuery = {
   page?: number;
   per_page?: number;
   search?: string;
   academicYearId?: string;
+  branchId?: string;
 };
 
 /** POST /exchanges/preview body. */

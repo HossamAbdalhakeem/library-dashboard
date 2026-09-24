@@ -5,8 +5,15 @@
         <span class="text-lg font-bold text-slate-900">الحجوزات</span>
       </template>
       <template #content>
-        <div class="mb-5">
+        <div class="mb-5 grid gap-3 md:grid-cols-2">
           <AppSearchInput placeholder="رقم الحجز / طالب / منتج" @search="onSearch" />
+          <AppGlobalSelectBranch
+            v-model="filters.branchId"
+            label="الفرع"
+            placeholder="كل الفروع"
+            show-clear
+            @change="onBranchChange"
+          />
         </div>
 
         <ReservationsTable
@@ -44,6 +51,7 @@
 import Card from "primevue/card";
 import ReservationsTable from "~/components/dashboard/pages/reservations/components/table/ReservationsTable.vue";
 import AppSearchInput from "~/components/shared/inputs/app-search-input/index.vue";
+import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
 import {
   reservationApi,
   normalizeReservation,
@@ -69,6 +77,7 @@ const cancelOpen = ref(false);
 const exchangeOpen = ref(false);
 const filters = reactive({
   search: "",
+  branchId: null,
 });
 const pagination = reactive({
   page: 1,
@@ -113,6 +122,11 @@ const onPage = (event) => {
 
 const onSearch = (value) => {
   filters.search = value;
+  resetPagination();
+  loadData();
+};
+
+const onBranchChange = () => {
   resetPagination();
   loadData();
 };

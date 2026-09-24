@@ -24,12 +24,9 @@
       </template>
 
       <template #student="{ data }">
-        <div class="flex flex-col gap-0.5">
-          <span class="font-medium text-slate-100">{{ data.studentName }}</span>
-          <span class="text-xs text-slate-400">{{
-            data.studentPhone || "—"
-          }}</span>
-        </div>
+        <AppStudentTableCell
+          :student="{ name: data.studentName, phone: data.studentPhone }"
+        />
       </template>
 
       <template #product="{ data }">
@@ -75,6 +72,7 @@
 
 <script setup>
 import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
+import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 import SalesExchangeProductsCell from "~/components/dashboard/pages/sales/exchange/components/partials/SalesExchangeProductsCell.vue";
 import { formatMoney } from "~/utils/format/money";

@@ -16,6 +16,8 @@ export type AdminReportFilters = {
   branchId?: string;
   productId?: string;
   academicYearId?: string;
+  /** ISO timestamp: inventory levels reconstructed as of this moment (`to` end). */
+  asOf?: string;
 };
 
 type AdminSectionBase = {
@@ -24,19 +26,6 @@ type AdminSectionBase = {
   from?: string;
   to?: string;
   filters?: AdminReportFilters;
-};
-
-/** GET /reports/admin/kpis */
-export type AdminKpisResponse = AdminSectionBase & {
-  section: "kpis";
-  summary: {
-    sales: number;
-    salesAmount: number;
-    reservations: number;
-    reservationsPaidAmount: number;
-    reservationDeposits: number;
-    inventoryTotal: number;
-  };
 };
 
 /** GET /reports/admin/summary */
@@ -54,42 +43,7 @@ export type AdminSummaryResponse = AdminSectionBase & {
   netProfit: number;
 };
 
-/** GET /reports/admin/activity-breakdown */
-export type AdminActivityBreakdownSales = {
-  directSalesCount: number;
-  directSalesAmount: number;
-  deliveryCount: number;
-  deliverySalesAmount: number;
-  deliveryPaymentsAmount: number;
-  salesCount: number;
-};
-
-export type AdminActivityBreakdownReservations = {
-  totalReservations: number;
-  reservationDeposits: number;
-  reservationPayments: number;
-  cancelledReservationsCount: number;
-  outstandingAmount: number;
-};
-
-export type AdminActivityBreakdownOperations = {
-  returnsCount: number;
-  returnsAmount: number;
-  exchangesCount: number;
-  refundsTotal: number;
-  totalExpenses: number;
-  grossProfit: number;
-  netProfit: number;
-};
-
-export type AdminActivityBreakdownResponse = AdminSectionBase & {
-  section: "activity-breakdown";
-  sales: AdminActivityBreakdownSales;
-  reservations: AdminActivityBreakdownReservations;
-  operations: AdminActivityBreakdownOperations;
-};
-
-/** GET /reports/admin/revenue | /sales */
+/** GET /reports/admin/revenue */
 export type AdminRevenueResponse = AdminSectionBase & {
   section: "revenue" | "sales";
   grossSales: number;
@@ -138,14 +92,6 @@ export type AdminPaymentMethodsResponse = AdminSectionBase & {
   paymentsTotal: number;
 };
 
-/** GET /reports/admin/payments (legacy alias + refunds) */
-export type AdminPaymentsResponse = Omit<
-  AdminPaymentMethodsResponse,
-  "section"
-> & {
-  section: "payments";
-};
-
 export type AdminInventoryBucket = {
   type: string;
   total: number;
@@ -153,7 +99,7 @@ export type AdminInventoryBucket = {
   available: number;
 };
 
-/** GET /reports/admin/inventory */
+/** GET /reports/admin/inventory — stock as of selected `to` (end of range). */
 export type AdminInventoryResponse = AdminSectionBase & {
   section: "inventory";
   summary: {
@@ -164,11 +110,6 @@ export type AdminInventoryResponse = AdminSectionBase & {
     outOfStock: number;
   };
   byType: AdminInventoryBucket[];
-  /** Present on legacy inventory-by-type shape */
-  inventoryTotal?: number;
-  books?: AdminInventoryBucket;
-  cards?: AdminInventoryBucket;
-  booklets?: AdminInventoryBucket;
 };
 
 export type AdminProductPerformanceRow = {
@@ -184,6 +125,12 @@ export type AdminProductPerformanceRow = {
 export type AdminProductsResponse = AdminSectionBase & {
   section: "products";
   products: AdminProductPerformanceRow[];
+  pagination?: {
+    total: number;
+    current_page: number;
+    per_page: number;
+    to: number;
+  };
 };
 
 export type AdminBranchPerformanceRow = {

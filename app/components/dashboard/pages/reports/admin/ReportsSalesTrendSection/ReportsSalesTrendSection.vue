@@ -38,7 +38,7 @@ import {
 } from "chart.js";
 import { Line } from "vue-chartjs";
 import Skeleton from "primevue/skeleton";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 
@@ -72,8 +72,9 @@ const { loading, data, error, reload } = useAdminReportSection(
 );
 
 const points = computed(() => {
-  if (Array.isArray(data.value)) return data.value;
+  if (Array.isArray(data.value?.data)) return data.value.data;
   if (Array.isArray(data.value?.points)) return data.value.points;
+  if (Array.isArray(data.value)) return data.value;
   return [];
 });
 

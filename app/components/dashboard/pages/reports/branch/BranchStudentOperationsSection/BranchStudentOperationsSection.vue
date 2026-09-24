@@ -1,12 +1,12 @@
 <template>
-  <DailyReportRefundEventsSection
+  <DailyReportStudentOperationsSection
     :rows="rows"
     :loading="loading"
     :error="error"
     :page="page"
     :page-size="pageSize"
     :total-records="total"
-    :total-amount="totalAmount"
+    :timeline-fetcher="timelineFetcher"
     @retry="reload"
     @update:page="setPage"
   />
@@ -16,11 +16,11 @@
 import { branchReportsApi } from "~/services/reports/branch";
 import { usePaginatedReportSection } from "~/composables/usePaginatedReportSection";
 
-defineOptions({ name: "BranchRefundEventsSection" });
+defineOptions({ name: "BranchStudentOperationsSection" });
 
-const DailyReportRefundEventsSection = defineAsyncComponent(() =>
+const DailyReportStudentOperationsSection = defineAsyncComponent(() =>
   import(
-    "~/components/dashboard/pages/reports/daily/DailyReportRefundEventsSection/index.vue"
+    "~/components/dashboard/pages/reports/daily/DailyReportStudentOperationsSection/DailyReportStudentOperationsSection.vue"
   ),
 );
 
@@ -32,22 +32,18 @@ const props = defineProps({
 
 const emit = defineEmits(["loading"]);
 
-const totalAmount = ref(0);
+const timelineFetcher = (operationId) =>
+  branchReportsApi.getOperationTimeline(operationId);
 
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
-    async (query) => {
-      const payload = await branchReportsApi.getSection("refunds", query);
-      totalAmount.value = Number(payload?.totals?.amount || 0);
-      return payload;
-    },
+    (query) => branchReportsApi.getSection("studentOperations", query),
     {
       params: toRef(props, "params"),
       reloadKey: toRef(props, "reloadKey"),
       pageSize: toRef(props, "pageSize"),
       emit,
-      errorMessage: "تعذر تحميل المرتجعات والإلغاءات.",
-      toastOnError: true,
+      errorMessage: "تعذر تحميل سجل العمليات.",
     },
   );
 </script>

@@ -8,7 +8,6 @@ export type {
   BookResponse,
   BookSearchBranch,
   BookSearchResponse,
-  BookQuery,
   BookSearchQuery,
   BookSearchListItem,
   BookSelection,
@@ -17,6 +16,5 @@ export type {
 export {
   normalizeBookSearchItem,
   buildBookSelection,
-  buildBookListQuery,
   buildBookSearchQuery,
 } from "./helpers/book-list.helper";

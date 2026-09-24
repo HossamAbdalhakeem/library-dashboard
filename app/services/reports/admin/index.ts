@@ -6,19 +6,13 @@ export {
 export type {
   AdminReportQuery,
   AdminReportFilters,
-  AdminKpisResponse,
   AdminSummaryResponse,
-  AdminActivityBreakdownResponse,
-  AdminActivityBreakdownSales,
-  AdminActivityBreakdownReservations,
-  AdminActivityBreakdownOperations,
   AdminRevenueResponse,
   AdminSalesTrendPoint,
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
   AdminPaymentMethodItem,
   AdminPaymentMethodsResponse,
-  AdminPaymentsResponse,
   AdminInventoryBucket,
   AdminInventoryResponse,
   AdminProductPerformanceRow,
@@ -38,13 +32,7 @@ export type {
 } from "./types/admin-reports.types";
 
 export {
-  buildAdminReportQuery,
   buildGeneralSalesTrendQuery,
-  normalizeGeneralSummary,
   extractPaymentMethodItems,
-  extractSalesTrendPoints,
-  extractAdminProducts,
-  extractAdminBranches,
   extractGeneralTopProducts,
-  extractGeneralRecentOperations,
 } from "./helpers/admin-reports.helper";

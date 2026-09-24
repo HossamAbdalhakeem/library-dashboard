@@ -65,8 +65,7 @@ export type ReturnRefundRef = {
 };
 
 /**
- * Stable response from:
- * GET /returns, GET /returns/:id, POST /returns
+ * Stable response from POST /returns
  */
 export type ReturnResponse = {
   id: string;
@@ -87,11 +86,6 @@ export type ReturnResponse = {
   createdAt?: string;
 };
 
-/** GET /returns query params. */
-export type ReturnQuery = {
-  academicYearId?: string | null;
-};
-
 /** One line in POST /returns body. */
 export type ReturnItemPayload = {
   saleItemId: string;
@@ -104,17 +98,4 @@ export type ReturnPayload = {
   items: ReturnItemPayload[];
   method: PaymentMethod;
   proofReference?: string;
-};
-
-/** List/table row after `normalizeReturnListItem`. */
-export type ReturnListItem = ReturnResponse & {
-  studentName: string;
-  branchName: string;
-  academicYearName: string;
-  products: string;
-  quantity: number;
-  totalRefundAmountLabel: string;
-  createdByName: string;
-  refundMethod: string | null;
-  refundMethodLabel: string;
 };

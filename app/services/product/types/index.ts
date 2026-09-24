@@ -11,6 +11,5 @@ export type {
   ProductSearchQuery,
   ProductPayload,
   ProductUpdatePayload,
-  ProductStatusPayload,
   ProductListItem,
 } from "./product.types";

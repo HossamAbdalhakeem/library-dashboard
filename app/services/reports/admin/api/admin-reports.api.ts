@@ -2,14 +2,11 @@ import { apiFetch, asData } from "~/utils/apiFetch";
 import { buildGeneralSalesTrendQuery } from "../helpers/admin-reports.helper";
 import type {
   AdminReportQuery,
-  AdminKpisResponse,
   AdminSummaryResponse,
-  AdminActivityBreakdownResponse,
   AdminRevenueResponse,
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
   AdminPaymentMethodsResponse,
-  AdminPaymentsResponse,
   AdminInventoryResponse,
   AdminProductsResponse,
   AdminBranchesResponse,
@@ -25,12 +22,6 @@ import type {
 export const adminReportsApi = {
   // --- Modular /reports/admin/* ---
 
-  async getKpis(params: AdminReportQuery = {}): Promise<AdminKpisResponse> {
-    return asData(
-      await apiFetch("/reports/admin/kpis", { method: "GET", params }),
-    );
-  },
-
   async getSummary(
     params: AdminReportQuery = {},
   ): Promise<AdminSummaryResponse> {
@@ -39,31 +30,11 @@ export const adminReportsApi = {
     );
   },
 
-  async getActivityBreakdown(
-    params: AdminReportQuery = {},
-  ): Promise<AdminActivityBreakdownResponse> {
-    return asData(
-      await apiFetch("/reports/admin/activity-breakdown", {
-        method: "GET",
-        params,
-      }),
-    );
-  },
-
   async getRevenue(
     params: AdminReportQuery = {},
   ): Promise<AdminRevenueResponse> {
     return asData(
       await apiFetch("/reports/admin/revenue", { method: "GET", params }),
-    );
-  },
-
-  /** Alias for getRevenue (sales = gross − returns = net). */
-  async getSales(
-    params: AdminReportQuery = {},
-  ): Promise<AdminRevenueResponse> {
-    return asData(
-      await apiFetch("/reports/admin/sales", { method: "GET", params }),
     );
   },
 
@@ -134,14 +105,6 @@ export const adminReportsApi = {
   ): Promise<AdminExpensesResponse> {
     return asData(
       await apiFetch("/reports/admin/expenses", { method: "GET", params }),
-    );
-  },
-
-  async getPayments(
-    params: AdminReportQuery = {},
-  ): Promise<AdminPaymentsResponse> {
-    return asData(
-      await apiFetch("/reports/admin/payments", { method: "GET", params }),
     );
   },
 

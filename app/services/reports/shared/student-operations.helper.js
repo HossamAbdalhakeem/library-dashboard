@@ -34,11 +34,11 @@ export const STUDENT_OPS_METRIC_COLORS = {
 };
 
 export const STUDENT_OPS_COLUMNS = [
-  { key: "expander", expander: true, style: "width: 3rem" },
+  { field: "timeline", header: "", slot: "timeline", style: "width: 3.5rem" },
   { field: "createdAt", header: "التاريخ", slot: "time" },
   { field: "typeLabel", header: "النوع", slot: "type" },
   { field: "statusLabel", header: "الحالة", slot: "status" },
-  { field: "studentName", header: "الطالب" },
+  { field: "studentName", header: "الطالب", slot: "student" },
   { field: "product", header: "المنتج", slot: "product" },
   { field: "totalAmount", header: "الإجمالي", slot: "totalAmount" },
   { field: "paidAmount", header: "المدفوع", slot: "paidAmount" },
@@ -100,6 +100,7 @@ export const mapStudentOperationRows = (rows) =>
       typeLabel: getOperationActivityLabel(activityKey) || activityKey,
       typeColor: getOperationActivityColor(activityKey),
       studentName: row.student?.name || "-",
+      phone: row.student?.phone || "",
       branchName: row.branch?.name || "-",
       productObj: toProductCell(row.product),
       totalAmount: moneyOrDash(row.totalAmount),

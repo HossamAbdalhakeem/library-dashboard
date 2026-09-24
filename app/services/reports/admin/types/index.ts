@@ -1,7 +1,6 @@
 export type {
   AdminReportQuery,
   AdminReportFilters,
-  AdminKpisResponse,
   AdminSummaryResponse,
   AdminRevenueResponse,
   AdminSalesTrendPoint,
@@ -9,7 +8,6 @@ export type {
   AdminProfitLossResponse,
   AdminPaymentMethodItem,
   AdminPaymentMethodsResponse,
-  AdminPaymentsResponse,
   AdminInventoryBucket,
   AdminInventoryResponse,
   AdminProductPerformanceRow,

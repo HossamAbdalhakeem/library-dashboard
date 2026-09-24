@@ -86,8 +86,7 @@ export type SaleExchangeBrief = {
 };
 
 /**
- * Stable response from:
- * GET /sales, GET /sales/:id, POST /sales
+ * Stable response from POST /sales
  */
 export type SaleResponse = {
   id: string;
@@ -107,11 +106,6 @@ export type SaleResponse = {
   updatedAt?: string;
 };
 
-/** GET /sales query params. */
-export type SaleQuery = {
-  academicYearId?: string;
-};
-
 /** POST /sales body — flat FKs (CreateSaleDto). */
 export type SalePayload = {
   studentId: string;
@@ -119,23 +113,6 @@ export type SalePayload = {
   quantity: number;
   method: PaymentMethod;
   proofReference?: string;
-};
-
-/** List/table row after `normalizeSaleListItem`. */
-export type SaleListItem = SaleResponse & {
-  status: string;
-  statusLabel: string;
-  totalAmountLabel: string;
-  quantity: number;
-  products: string;
-  createdAtLabel: string;
-  product: Pick<SaleProductRef, "id" | "name" | "teacher" | "studyYear"> | null;
-  studentName: string;
-  phone: string;
-  branchName: string;
-  academicYearName: string;
-  productName: string;
-  createdByName: string;
 };
 
 /** Timeline event types from BE operation timeline. */

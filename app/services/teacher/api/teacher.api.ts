@@ -15,13 +15,6 @@ export const teacherApi = {
     );
   },
 
-  /** GET /teachers/:id → TeacherResponse | null */
-  async getTeacher(id: string): Promise<TeacherResponse | null> {
-    return firstRow<TeacherResponse>(
-      await apiFetch(`/teachers/${id}`, { method: "GET" }),
-    );
-  },
-
   /** POST /teachers → TeacherResponse | null */
   async createTeacher(payload: TeacherPayload): Promise<TeacherResponse | null> {
     return firstRow<TeacherResponse>(

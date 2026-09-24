@@ -37,7 +37,7 @@
         accent="emerald"
         label="إجمالي المبيعات"
         :value="formatMoney(summary.totalSales, 'locale')"
-        hint="مباشر + تسليم"
+        hint="بيع مباشر + تسليم حجز"
       />
       <ReportKpiCard
         compact
@@ -67,7 +67,7 @@
 <script setup>
 import Skeleton from "primevue/skeleton";
 import ReportKpiCard from "./partials/ReportKpiCard.vue";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 import { adminReportsApi } from "~/services/reports/admin";
 import { formatMoney } from "~/utils/format/money";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";

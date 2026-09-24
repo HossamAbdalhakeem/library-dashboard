@@ -44,11 +44,6 @@ export const authApi = {
     });
     return normalizeAuthSession(user, useLocalStorage("token").value);
   },
-
-  /** GET /auth/me → AuthSession */
-  async me(): Promise<AuthSession> {
-    return this.getCurrentUser();
-  },
 };
 
 /** @deprecated Prefer `authApi` */

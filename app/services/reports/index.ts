@@ -4,13 +4,11 @@ export {
 } from "./admin";
 export type {
   AdminReportQuery,
-  AdminKpisResponse,
   AdminSummaryResponse,
   AdminRevenueResponse,
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
   AdminPaymentMethodsResponse,
-  AdminPaymentsResponse,
   AdminInventoryResponse,
   AdminProductsResponse,
   AdminBranchesResponse,

@@ -26,11 +26,6 @@
       :reload-key="reloadKey"
       @loading="setSectionLoading('summary', $event)"
     />
-    <ReportsActivityBreakdownSection
-      :params="reportParams"
-      :reload-key="reloadKey"
-      @loading="setSectionLoading('activityBreakdown', $event)"
-    />
     <ReportsRevenueSection
       :params="reportParams"
       :reload-key="reloadKey"
@@ -81,7 +76,7 @@
 </template>
 
 <script setup>
-import ReportsFilters from "~/components/dashboard/pages/reports/admin/ReportsFilters/index.vue";
+import ReportsFilters from "~/components/dashboard/pages/reports/admin/ReportsFilters/ReportsFilters.vue";
 import { useAcademicYear } from "~/composables/useAcademicYear";
 import {
   buildReportDateRangeParams,
@@ -89,45 +84,40 @@ import {
 } from "~/services/reports/shared";
 
 const ReportsSummaryCards = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsSummaryCards/index.vue"),
-);
-const ReportsActivityBreakdownSection = defineAsyncComponent(() =>
-  import(
-    "~/components/shared/admin-page/ReportsActivityBreakdownSection/index.vue"
-  ),
+  import("~/components/shared/admin-page/ReportsSummaryCards/ReportsSummaryCards.vue"),
 );
 const ReportsRevenueSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsRevenueSection/index.vue"),
+  import("~/components/shared/admin-page/ReportsRevenueSection/ReportsRevenueSection.vue"),
 );
 const ReportsSalesTrendSection = defineAsyncComponent(() =>
   import(
-    "~/components/dashboard/pages/reports/admin/ReportsSalesTrendSection/index.vue"
+    "~/components/dashboard/pages/reports/admin/ReportsSalesTrendSection/ReportsSalesTrendSection.vue"
   ),
 );
 const ReportsInventoryTable = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsInventoryTable/index.vue"),
+  import("~/components/shared/admin-page/ReportsInventoryTable/ReportsInventoryTable.vue"),
 );
 const ReportsFinancialsSection = defineAsyncComponent(() =>
   import(
-    "~/components/shared/admin-page/ReportsFinancialsSection/index.vue"
+    "~/components/shared/admin-page/ReportsFinancialsSection/ReportsFinancialsSection.vue"
   ),
 );
 const ReportsPaymentsSection = defineAsyncComponent(() =>
-  import("~/components/dashboard/pages/reports/admin/ReportsPaymentsSection/index.vue"),
+  import("~/components/dashboard/pages/reports/admin/ReportsPaymentsSection/ReportsPaymentsSection.vue"),
 );
 const ReportsProductsSection = defineAsyncComponent(() =>
-  import("~/components/dashboard/pages/reports/admin/ReportsProductsSection/index.vue"),
+  import("~/components/dashboard/pages/reports/admin/ReportsProductsSection/ReportsProductsSection.vue"),
 );
 const ReportsBranchesSection = defineAsyncComponent(() =>
-  import("~/components/dashboard/pages/reports/admin/ReportsBranchesSection/index.vue"),
+  import("~/components/dashboard/pages/reports/admin/ReportsBranchesSection/ReportsBranchesSection.vue"),
 );
 const ReportsReturnsExchangesSection = defineAsyncComponent(() =>
   import(
-    "~/components/shared/admin-page/ReportsReturnsExchangesSection/index.vue"
+    "~/components/shared/admin-page/ReportsReturnsExchangesSection/ReportsReturnsExchangesSection.vue"
   ),
 );
 const ReportsExpensesSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsExpensesSection/index.vue"),
+  import("~/components/shared/admin-page/ReportsExpensesSection/ReportsExpensesSection.vue"),
 );
 
 defineOptions({ name: "AdminReportsPageIndex" });
@@ -163,7 +153,6 @@ const selectedBook = ref(null);
 const reloadKey = ref(0);
 const sectionLoading = reactive({
   summary: false,
-  activityBreakdown: false,
   revenue: false,
   salesTrend: false,
   profitLoss: false,

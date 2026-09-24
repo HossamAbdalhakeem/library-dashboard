@@ -1,27 +1,26 @@
 <template>
-  <DailyReportStudentOperationsSection
+  <DailyReportRefundEventsSection
     :rows="rows"
     :loading="loading"
     :error="error"
     :page="page"
     :page-size="pageSize"
     :total-records="total"
-    :timeline-fetcher="timelineFetcher"
-    show-branch
+    :total-amount="totalAmount"
     @retry="reload"
     @update:page="setPage"
   />
 </template>
 
 <script setup>
-import { customerServiceReportsApi } from "~/services/reports/customer-service";
+import { branchReportsApi } from "~/services/reports/branch";
 import { usePaginatedReportSection } from "~/composables/usePaginatedReportSection";
 
-defineOptions({ name: "CustomerServiceStudentOperationsSection" });
+defineOptions({ name: "BranchRefundEventsSection" });
 
-const DailyReportStudentOperationsSection = defineAsyncComponent(() =>
+const DailyReportRefundEventsSection = defineAsyncComponent(() =>
   import(
-    "~/components/dashboard/pages/reports/daily/DailyReportStudentOperationsSection/index.vue"
+    "~/components/dashboard/pages/reports/daily/DailyReportRefundEventsSection/DailyReportRefundEventsSection.vue"
   ),
 );
 
@@ -33,19 +32,22 @@ const props = defineProps({
 
 const emit = defineEmits(["loading"]);
 
-const timelineFetcher = (operationId) =>
-  customerServiceReportsApi.getOperationTimeline(operationId);
+const totalAmount = ref(0);
 
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
-    (query) =>
-      customerServiceReportsApi.getSection("studentOperations", query),
+    async (query) => {
+      const payload = await branchReportsApi.getSection("refunds", query);
+      totalAmount.value = Number(payload?.totals?.amount || 0);
+      return payload;
+    },
     {
       params: toRef(props, "params"),
       reloadKey: toRef(props, "reloadKey"),
       pageSize: toRef(props, "pageSize"),
       emit,
-      errorMessage: "تعذر تحميل سجل العمليات.",
+      errorMessage: "تعذر تحميل المرتجعات والإلغاءات.",
+      toastOnError: true,
     },
   );
 </script>
