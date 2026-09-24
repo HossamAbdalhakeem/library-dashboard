@@ -1,14 +1,12 @@
 import {
   apiFetch,
   asData,
-  asList,
   asPaginated,
   firstRow,
   type PaginatedResponse,
 } from "~/utils/apiFetch";
 import { normalizePaymentMethod } from "~/enums/paymentMethod";
 import type {
-  ExchangeQuery,
   EligibleSalesQuery,
   ExchangePreviewPayload,
   ExchangeCreatePayload,
@@ -44,20 +42,6 @@ export const exchangeApi = {
           quantity: Number(payload.quantity || 1),
         },
       }),
-    );
-  },
-
-  /** GET /exchanges → ExchangeResponse[] */
-  async getExchanges(params: ExchangeQuery = {}): Promise<ExchangeResponse[]> {
-    return asList<ExchangeResponse>(
-      await apiFetch("/exchanges", { method: "GET", params }),
-    );
-  },
-
-  /** GET /exchanges/:id → ExchangeResponse | null */
-  async getExchange(id: string): Promise<ExchangeResponse | null> {
-    return firstRow<ExchangeResponse>(
-      await apiFetch(`/exchanges/${id}`, { method: "GET" }),
     );
   },
 

@@ -59,18 +59,6 @@ export const buildBookSelection = (product, branch = null) => ({
   totalAvailable: product.totalAvailable,
 });
 
-export const buildBookListQuery = ({ page, perPage, filters = {} }) => {
-  const params = {
-    page,
-    per_page: perPage,
-  };
-  if (filters.search?.trim()) params.search = filters.search.trim();
-  if (filters.teacherId) params.teacherId = filters.teacherId;
-  if (filters.studyYearId) params.studyYearId = filters.studyYearId;
-  if (filters.academicYearId) params.academicYearId = filters.academicYearId;
-  return params;
-};
-
 export const buildBookSearchQuery = (term = "", extras = {}) => {
   const product = String(term ?? "").trim();
   return {

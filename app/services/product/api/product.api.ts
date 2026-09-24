@@ -9,7 +9,6 @@ import type {
   ProductSearchQuery,
   ProductPayload,
   ProductUpdatePayload,
-  ProductStatusPayload,
   ProductResponse,
   ProductSearchResponse,
 } from "../types/product.types";
@@ -33,7 +32,6 @@ export const productApi = {
     );
   },
 
-  /** GET /products/:id → ProductResponse | null */
   async getProduct(id: string): Promise<ProductResponse | null> {
     return firstRow<ProductResponse>(
       await apiFetch(`/products/${id}`, { method: "GET" }),
@@ -52,26 +50,12 @@ export const productApi = {
     );
   },
 
-  /** PATCH /products/:id → ProductResponse | null */
   async updateProduct(
     id: string,
     payload: ProductUpdatePayload,
   ): Promise<ProductResponse | null> {
     return firstRow<ProductResponse>(
       await apiFetch(`/products/${id}`, {
-        method: "PATCH",
-        body: payload,
-      }),
-    );
-  },
-
-  /** PATCH /products/:id/status → ProductResponse | null */
-  async updateProductStatus(
-    id: string,
-    payload: ProductStatusPayload,
-  ): Promise<ProductResponse | null> {
-    return firstRow<ProductResponse>(
-      await apiFetch(`/products/${id}/status`, {
         method: "PATCH",
         body: payload,
       }),

@@ -11,7 +11,6 @@ import type {
   ExpenseUpdatePayload,
   ExpenseCategoryQuery,
   ExpenseCategoryPayload,
-  ExpenseCategoryUpdatePayload,
   ExpenseResponse,
   ExpenseCategoryResponse,
 } from "../types/expense.types";
@@ -38,32 +37,12 @@ export const expenseApi = {
     );
   },
 
-  /** PATCH /expense-categories/:id → ExpenseCategoryResponse | null */
-  async updateCategory(
-    id: string,
-    payload: ExpenseCategoryUpdatePayload,
-  ): Promise<ExpenseCategoryResponse | null> {
-    return firstRow<ExpenseCategoryResponse>(
-      await apiFetch(`/expense-categories/${id}`, {
-        method: "PATCH",
-        body: payload,
-      }),
-    );
-  },
-
   /** GET /expenses → PaginatedResponse<ExpenseResponse> */
   async getExpenses(
     params: ExpenseQuery = {},
   ): Promise<PaginatedResponse<ExpenseResponse>> {
     return asPaginated<ExpenseResponse>(
       await apiFetch("/expenses", { method: "GET", params }),
-    );
-  },
-
-  /** GET /expenses/:id → ExpenseResponse | null */
-  async getExpense(id: string): Promise<ExpenseResponse | null> {
-    return firstRow<ExpenseResponse>(
-      await apiFetch(`/expenses/${id}`, { method: "GET" }),
     );
   },
 

@@ -51,16 +51,9 @@ export type ExpenseCategoryPayload = {
   status?: ExpenseCategoryStatus;
 };
 
-/** PATCH /expense-categories/:id body. */
-export type ExpenseCategoryUpdatePayload = {
-  name?: string;
-  status?: ExpenseCategoryStatus;
-};
-
 /**
  * Stable response from:
- * GET /expenses, GET /expenses/:id,
- * POST /expenses, PATCH /expenses/:id
+ * GET /expenses, POST /expenses, PATCH /expenses/:id
  */
 export type ExpenseResponse = {
   id: string;

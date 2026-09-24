@@ -1,26 +1,11 @@
-import { apiFetch, firstRow, asList, asData } from "~/utils/apiFetch";
+import { apiFetch, firstRow, asData } from "~/utils/apiFetch";
 import type {
-  SaleQuery,
   SalePayload,
   SaleResponse,
   SaleTimelineResponse,
 } from "../types/sale.types";
 
 export const saleApi = {
-  /** GET /sales → SaleResponse[] */
-  async getSales(params: SaleQuery = {}): Promise<SaleResponse[]> {
-    return asList<SaleResponse>(
-      await apiFetch("/sales", { method: "GET", params }),
-    );
-  },
-
-  /** GET /sales/:id → SaleResponse | null */
-  async getSale(id: string): Promise<SaleResponse | null> {
-    return firstRow<SaleResponse>(
-      await apiFetch(`/sales/${id}`, { method: "GET" }),
-    );
-  },
-
   /** POST /sales → SaleResponse | null */
   async createSale(payload: SalePayload): Promise<SaleResponse | null> {
     return firstRow<SaleResponse>(

@@ -13,7 +13,6 @@ export type {
   ProductSearchQuery,
   ProductPayload,
   ProductUpdatePayload,
-  ProductStatusPayload,
   ProductListItem,
 } from "./types/product.types";
 

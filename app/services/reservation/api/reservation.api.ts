@@ -30,13 +30,6 @@ export const reservationApi = {
     );
   },
 
-  /** GET /reservations/:id → ReservationResponse | null */
-  async getReservation(id: string): Promise<ReservationResponse | null> {
-    return firstRow<ReservationResponse>(
-      await apiFetch(`/reservations/${id}`, { method: "GET" }),
-    );
-  },
-
   /** POST /reservations → ReservationResponse | null */
   async createReservation(
     payload: CreateReservationPayload,

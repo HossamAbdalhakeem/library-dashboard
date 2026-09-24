@@ -26,19 +26,6 @@ type AdminSectionBase = {
   filters?: AdminReportFilters;
 };
 
-/** GET /reports/admin/kpis */
-export type AdminKpisResponse = AdminSectionBase & {
-  section: "kpis";
-  summary: {
-    sales: number;
-    salesAmount: number;
-    reservations: number;
-    reservationsPaidAmount: number;
-    reservationDeposits: number;
-    inventoryTotal: number;
-  };
-};
-
 /** GET /reports/admin/summary */
 export type AdminSummaryResponse = AdminSectionBase & {
   section: "summary";
@@ -54,7 +41,7 @@ export type AdminSummaryResponse = AdminSectionBase & {
   netProfit: number;
 };
 
-/** GET /reports/admin/revenue | /sales */
+/** GET /reports/admin/revenue */
 export type AdminRevenueResponse = AdminSectionBase & {
   section: "revenue" | "sales";
   grossSales: number;
@@ -101,14 +88,6 @@ export type AdminPaymentMethodsResponse = AdminSectionBase & {
   paymentsCollected: number;
   refundsTotal: number;
   paymentsTotal: number;
-};
-
-/** GET /reports/admin/payments (legacy alias + refunds) */
-export type AdminPaymentsResponse = Omit<
-  AdminPaymentMethodsResponse,
-  "section"
-> & {
-  section: "payments";
 };
 
 export type AdminInventoryBucket = {

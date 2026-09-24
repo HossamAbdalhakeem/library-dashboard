@@ -8,8 +8,6 @@ export type {
   ReturnItemResponse,
   ReturnRefundRef,
   ReturnResponse,
-  ReturnQuery,
   ReturnItemPayload,
   ReturnPayload,
-  ReturnListItem,
 } from "./return.types";

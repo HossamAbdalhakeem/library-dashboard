@@ -6,7 +6,6 @@ export type {
   BookResponse,
   BookSearchBranch,
   BookSearchResponse,
-  BookQuery,
   BookSearchQuery,
   BookSearchListItem,
   BookSelection,

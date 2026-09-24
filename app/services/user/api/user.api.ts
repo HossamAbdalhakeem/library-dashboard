@@ -15,13 +15,6 @@ export const userApi = {
     );
   },
 
-  /** GET /users/:id → UserResponse | null */
-  async getUser(id: string): Promise<UserResponse | null> {
-    return firstRow<UserResponse>(
-      await apiFetch(`/users/${id}`, { method: "GET" }),
-    );
-  },
-
   /** POST /users → UserResponse | null */
   async createUser(payload: UserPayload): Promise<UserResponse | null> {
     return firstRow<UserResponse>(

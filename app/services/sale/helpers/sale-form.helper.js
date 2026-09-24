@@ -5,14 +5,6 @@ import {
   PaymentMethod,
 } from "~/enums/paymentMethod";
 
-export const emptySaleForm = () => ({
-  studentId: null,
-  productId: null,
-  quantity: 1,
-  method: PaymentMethod.CASH,
-  proofReference: "",
-});
-
 /**
  * Build create body matching CreateSaleDto.
  * Request body uses flat FK ids (DTO contract).
@@ -30,14 +22,6 @@ export const buildSalePayload = (form) => {
   }
 
   return payload;
-};
-
-export const validateSaleForm = (form) => {
-  if (!form?.studentId) return "اختر طالباً من القائمة أو أضف طالباً جديداً.";
-  if (!form?.productId) return "اختر منتجاً.";
-  if (Number(form?.quantity || 0) < 1) return "الكمية يجب أن تكون 1 على الأقل.";
-  if (!form?.method) return "اختر طريقة الدفع.";
-  return null;
 };
 
 /** Map API sale → detail/display (nested relations only). */

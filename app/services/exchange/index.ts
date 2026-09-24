@@ -21,7 +21,6 @@ export type {
   EligibleSaleResponse,
   EligibleSaleListItem,
   ExchangeFlowSale,
-  ExchangeQuery,
   EligibleSalesQuery,
   ExchangePreviewPayload,
   ExchangeCreatePayload,
@@ -36,6 +35,4 @@ export {
 export {
   toExchangeFlowSale,
   normalizeExchangePreview,
-  normalizeExchangeDetail,
-  buildExchangeCreatePayload,
 } from "./helpers/exchange-form.helper";

@@ -25,7 +25,7 @@ export type ProductAvailabilityStatus =
 /**
  * Stable response from:
  * GET /products, GET /products/:id,
- * POST /products, PATCH /products/:id, PATCH /products/:id/status
+ * POST /products, PATCH /products/:id
  *
  * Cost fields (`purchasePrice`, `profitPercentage`) are admin-only.
  */
@@ -106,11 +106,6 @@ export type ProductPayload = {
 
 /** PATCH /products/:id body. */
 export type ProductUpdatePayload = Partial<ProductPayload>;
-
-/** PATCH /products/:id/status body. */
-export type ProductStatusPayload = {
-  status: ProductStatus;
-};
 
 /** List/table row after `normalizeProductListItem`. */
 export type ProductListItem = ProductResponse & {

@@ -9,7 +9,6 @@ export type {
   ExpenseCategoryResponse,
   ExpenseCategoryQuery,
   ExpenseCategoryPayload,
-  ExpenseCategoryUpdatePayload,
   ExpenseResponse,
   ExpenseQuery,
   ExpensePayload,

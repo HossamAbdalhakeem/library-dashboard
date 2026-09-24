@@ -10,74 +10,6 @@ const toMoneyNumber = (value) => {
   return toFiniteNumber(value, 0);
 };
 
-/** Map inventory row → table/display fields (nested product / branch only). */
-export const normalizeInventoryListItem = (item) => {
-  const product = item?.product || null;
-  const branch = item?.branch || null;
-  const physicalQuantity = Number(item?.physicalQuantity ?? 0);
-  const reservedQuantity = Number(item?.reservedQuantity ?? 0);
-  const availableQuantity = Number(
-    item?.availableQuantity ?? Math.max(0, physicalQuantity - reservedQuantity),
-  );
-
-  return {
-    productId: product?.id || null,
-    physicalQuantity,
-    reservedQuantity,
-    availableQuantity,
-    lowStockThreshold:
-      item?.lowStockThreshold == null ? null : Number(item.lowStockThreshold),
-    product: product
-      ? {
-          id: product.id,
-          name: product.name || "-",
-          type: product.type || null,
-          status: product.status || null,
-          sellingPrice: product.sellingPrice,
-          reservationAllowed: Boolean(product.reservationAllowed),
-          teacher: product.teacher || null,
-          studyYear: product.studyYear || null,
-          academicYear: product.academicYear || null,
-        }
-      : null,
-    branch: branch ? { id: branch.id, name: branch.name || "-" } : null,
-    productName: product?.name || "-",
-    teacherName: product?.teacher?.name || "-",
-    studyYearName: product?.studyYear?.name || "-",
-    branchName: branch?.name || "-",
-  };
-};
-
-/** Map inventory_summary preview / branch summary row. */
-export const normalizeInventorySummaryPreview = (item) => {
-  const product = item?.product || null;
-  const physicalQuantity = Number(item?.physicalQuantity ?? 0);
-  const reservedQuantity = Number(item?.reservedQuantity ?? 0);
-  const availableQuantity = Number(
-    item?.availableQuantity ?? Math.max(0, physicalQuantity - reservedQuantity),
-  );
-
-  return {
-    productId: product?.id || null,
-    productName: product?.name || "-",
-    physicalQuantity,
-    reservedQuantity,
-    availableQuantity,
-    product,
-  };
-};
-
-export const normalizeInventorySummary = (summary) => {
-  const branch = summary?.branch || null;
-  return {
-    branchId: branch?.id || null,
-    branchName: branch?.name || "-",
-    branch,
-    productsCount: Number(summary?.productsCount ?? 0),
-    preview: (summary?.preview || []).map(normalizeInventorySummaryPreview),
-  };
-};
-
 /**
  * Inventory row → select option.
  * Expects nested `product` with teacher / studyYear from the API.
@@ -150,22 +82,6 @@ export const mapInventoryProductOptions = (items = [], filters = {}) => {
         option.reservationAllowed,
     );
 };
-
-export const normalizeStockMovement = (movement) => ({
-  id: movement?.id || null,
-  movementType: movement?.movementType || null,
-  physicalQuantityChange: Number(movement?.physicalQuantityChange ?? 0),
-  reservedQuantityChange: Number(movement?.reservedQuantityChange ?? 0),
-  note: movement?.note || null,
-  referenceId: movement?.referenceId || null,
-  createdAt: movement?.createdAt || null,
-  product: movement?.product || null,
-  branch: movement?.branch || null,
-  createdBy: movement?.createdBy || null,
-  productName: movement?.product?.name || "-",
-  branchName: movement?.branch?.name || "-",
-  createdByName: movement?.createdBy?.fullName || "-",
-});
 
 /** Query for paginated branch inventory expand (same shape as expenses/reservations). */
 export const buildBranchInventoryPageQuery = ({

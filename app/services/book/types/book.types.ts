@@ -24,8 +24,7 @@ export type BookAvailabilityStatus =
   | string;
 
 /**
- * Stable product/book READ shape from:
- * GET /products (filtered BOOK), GET /products/:id
+ * Stable product/book READ shape used as base for search responses.
  */
 export type BookResponse = {
   id: string;
@@ -65,17 +64,6 @@ export type BookSearchResponse = Omit<BookResponse, "status"> & {
   productStatus: BookProductStatus;
   branches: BookSearchBranch[];
   totalAvailable: number;
-};
-
-/** GET /products query params (book list — type forced by API wrapper). */
-export type BookQuery = {
-  page?: number;
-  per_page?: number;
-  search?: string;
-  teacherId?: string;
-  studyYearId?: string;
-  academicYearId?: string;
-  reservationAllowed?: boolean;
 };
 
 /** GET /products/search query params (book search). */
