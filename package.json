@@ -8,6 +8,11 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "E2E_HEADED=1 playwright test --headed",
+    "test:e2e:watch": "E2E_HEADED=1 E2E_SLOW_MO=1000 E2E_SKIP_WEBSERVER=1 playwright test --headed",
+    "test:e2e:report": "playwright show-report",
     "security:sca": "npm audit --omit=dev --audit-level=high",
     "security:sast": "eslint -c eslint.security.config.mjs . --max-warnings 0",
     "security:dast": "node scripts/security-dast.mjs",
@@ -42,7 +47,9 @@
     "vue-tel-input": "^9.8.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@primevue/nuxt-module": "^4.4.1",
+    "@types/node": "^26.6.2",
     "eslint-plugin-security": "^4.0.1",
     "nuxt-schema-org": "^6.3.1",
     "sass-embedded": "^1.103.1"

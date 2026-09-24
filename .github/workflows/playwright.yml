@@ -1,0 +1,74 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    # Requires a reachable Nest API + seeded users. Skip gracefully when secrets absent.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Check E2E secrets
+        id: secrets
+        env:
+          E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+          E2E_EMPLOYEE_PASSWORD: ${{ secrets.E2E_EMPLOYEE_PASSWORD }}
+          E2E_CS_PASSWORD: ${{ secrets.E2E_CS_PASSWORD }}
+          NUXT_ENV_BASE_URL: ${{ secrets.NUXT_ENV_BASE_URL }}
+        run: |
+          if [ -z "$E2E_ADMIN_PASSWORD" ] || [ -z "$E2E_EMPLOYEE_PASSWORD" ] || [ -z "$E2E_CS_PASSWORD" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Missing E2E_*_PASSWORD secrets — skipping Playwright job."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run Playwright tests
+        if: steps.secrets.outputs.configured == 'true'
+        env:
+          CI: true
+          E2E_SKIP_WEBSERVER: "0"
+          NUXT_ENV_BASE_URL: ${{ secrets.NUXT_ENV_BASE_URL }}
+          E2E_BASE_URL: http://localhost:8000
+          E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
+          E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+          E2E_EMPLOYEE_EMAIL: ${{ secrets.E2E_EMPLOYEE_EMAIL }}
+          E2E_EMPLOYEE_PASSWORD: ${{ secrets.E2E_EMPLOYEE_PASSWORD }}
+          E2E_CS_EMAIL: ${{ secrets.E2E_CS_EMAIL }}
+          E2E_CS_PASSWORD: ${{ secrets.E2E_CS_PASSWORD }}
+          E2E_STUDENT_SEARCH: ${{ secrets.E2E_STUDENT_SEARCH }}
+          E2E_PRODUCT_SEARCH: ${{ secrets.E2E_PRODUCT_SEARCH }}
+        run: |
+          export E2E_ADMIN_EMAIL="${E2E_ADMIN_EMAIL:-admin@library.local}"
+          export E2E_EMPLOYEE_EMAIL="${E2E_EMPLOYEE_EMAIL:-branch+123@gmail.com}"
+          export E2E_CS_EMAIL="${E2E_CS_EMAIL:-cs+098@gmail.com}"
+          npx playwright test e2e/auth e2e/stories e2e/commerce e2e/admin-ops.spec.ts e2e/admin-reports.spec.ts e2e/customer-service.spec.ts e2e/branch-employee.spec.ts
+
+      - name: Upload report
+        if: ${{ !cancelled() && steps.secrets.outputs.configured == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Skip notice
+        if: steps.secrets.outputs.configured != 'true'
+        run: echo "Playwright skipped — add repo secrets E2E_ADMIN_PASSWORD, E2E_EMPLOYEE_PASSWORD, E2E_CS_PASSWORD, NUXT_ENV_BASE_URL."
