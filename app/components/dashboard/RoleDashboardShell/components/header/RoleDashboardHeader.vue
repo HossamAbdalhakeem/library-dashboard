@@ -1,6 +1,6 @@
 <template>
   <header
-    class="border-b border-white/10 bg-black/90 px-3 py-3 backdrop-blur-sm sm:px-6 sm:py-5"
+    class="sticky top-0 z-20 border-b border-white/10 bg-black/90 px-3 py-3 backdrop-blur-sm sm:px-6 sm:py-5"
   >
     <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div class="flex min-w-0 items-center gap-2 sm:gap-3">
