@@ -71,6 +71,7 @@ export type ReportProductRef = {
 export type ReportStudentRef = {
   id: string;
   name: string;
+  phone?: string | null;
 };
 
 export type ReportCreatedByRef = {

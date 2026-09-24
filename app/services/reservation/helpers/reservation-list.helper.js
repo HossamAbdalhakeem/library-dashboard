@@ -148,7 +148,11 @@ export const buildReservationListQuery = ({
     per_page: perPage,
   };
   if (filters.search?.trim()) params.search = filters.search.trim();
-  if (filters.status) params.status = filters.status;
+  if (filters.status) {
+    params.status = Array.isArray(filters.status)
+      ? filters.status.join(",")
+      : filters.status;
+  }
   if (filters.academicYearId) params.academicYearId = filters.academicYearId;
   if (filters.branchId) params.branchId = filters.branchId;
   return params;

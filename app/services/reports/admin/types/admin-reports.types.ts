@@ -125,6 +125,12 @@ export type AdminProductPerformanceRow = {
 export type AdminProductsResponse = AdminSectionBase & {
   section: "products";
   products: AdminProductPerformanceRow[];
+  pagination?: {
+    total: number;
+    current_page: number;
+    per_page: number;
+    to: number;
+  };
 };
 
 export type AdminBranchPerformanceRow = {

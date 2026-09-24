@@ -22,6 +22,12 @@
       <AppProductTableCell :product="data.productCell" />
     </template>
 
+    <template #student="{ data }">
+      <AppStudentTableCell
+        :student="{ name: data.studentName, phone: data.phone }"
+      />
+    </template>
+
     <template #paidAmountLabel="{ data }">
       <span
         class="rounded-md px-2 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-300"
@@ -119,6 +125,7 @@ import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
 import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 import AppProductTableCell from "~/components/shared/tables/app-product-table-cell/index.vue";
+import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import OperationTimelinePanel from "~/components/dashboard/pages/reports/daily/DailyReportStudentOperationsSection/partials/OperationTimelinePanel.vue";
 import { reservationApi } from "~/services/reservation";
 import { useOperationTimeline } from "~/composables/useOperationTimeline";
@@ -156,7 +163,7 @@ const columns = [
   { key: "expander", expander: true, style: "width: 3rem" },
   { field: "reservationNumber", header: "رقم الحجز" },
   { field: "createdAt", header: "تاريخ الحجز", slot: "createdAt" },
-  { field: "studentName", header: "الطالب" },
+  { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },
   { field: "createdByName", header: "أنشئ بواسطة", slot: "createdBy" },
   { field: "branchName", header: "الفرع" },

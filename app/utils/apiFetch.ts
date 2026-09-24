@@ -1,16 +1,24 @@
 import { useLocalStorage } from "~/composables/useLocalStorage";
+import { resolveApiErrorMessage } from "~/utils/api-errors/messages";
 
 type FetchOptions = Parameters<typeof $fetch>[1];
 
 export class ApiError extends Error {
   code: string;
   status?: number;
+  detail?: string;
 
-  constructor(code: string, message: string, status?: number) {
+  constructor(
+    code: string,
+    message: string,
+    status?: number,
+    detail?: string,
+  ) {
     super(message);
     this.name = "ApiError";
     this.code = code;
     this.status = status;
+    this.detail = detail;
   }
 }
 
@@ -63,11 +71,19 @@ const extractMessage = (body: any): string => {
 
 const toApiError = (error: any) => {
   const body = error?.data || error;
-  const code = String(
-    body?.statusCode || body?.code || body?.error || "REQUEST_FAILED",
+  // Prefer backend ErrorCode string over numeric HTTP statusCode.
+  const code = String(body?.code || body?.error || "REQUEST_FAILED");
+  const detail =
+    typeof body?.detail === "string" ? body.detail : undefined;
+  const fallback =
+    extractMessage(body) || error?.message || "Request failed.";
+  const message = resolveApiErrorMessage(code, String(fallback));
+  return new ApiError(
+    code,
+    message,
+    error?.status || error?.statusCode || body?.status,
+    detail,
   );
-  const message = extractMessage(body) || error?.message || "Request failed.";
-  return new ApiError(code, String(message), error?.status || error?.statusCode);
 };
 
 export const asData = <T = any>(response: any): T => {

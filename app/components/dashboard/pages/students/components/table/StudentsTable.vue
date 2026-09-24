@@ -11,6 +11,11 @@
     empty-message="لا يوجد طلاب."
     @page="$emit('page', $event)"
   >
+    <template #student="{ data }">
+      <AppStudentTableCell
+        :student="{ name: data.name, phone: data.phone }"
+      />
+    </template>
     <template #status="{ data }">
       <AppStatusTableCell
         kind="entity"
@@ -33,6 +38,7 @@
 <script setup>
 import AppDataTable from "~/components/shared/tables/app-data-table/index.vue";
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
+import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import StudentsTableActions from "~/components/dashboard/pages/students/components/partials/StudentsTableActions.vue";
 
 defineProps({
@@ -47,8 +53,7 @@ defineProps({
 defineEmits(["edit", "deactivate", "transactions", "page"]);
 
 const columns = [
-  { field: "name", header: "الاسم" },
-  { field: "phone", header: "الهاتف" },
+  { field: "name", header: "الطالب", slot: "student" },
   { field: "studyYearName", header: "السنة الدراسية" },
   { field: "statusLabel", header: "الحالة", slot: "status" },
   { field: "actions", header: "إجراء", slot: "actions", style: "width: 8rem" },

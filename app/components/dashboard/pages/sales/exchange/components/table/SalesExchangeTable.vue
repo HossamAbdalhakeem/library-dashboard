@@ -19,9 +19,8 @@
     </template>
 
     <template #student="{ data }">
-      <SalesExchangeStudentCell
-        :name="data.studentName"
-        :phone="data.phone"
+      <AppStudentTableCell
+        :student="{ name: data.studentName, phone: data.phone }"
       />
     </template>
 
@@ -83,7 +82,7 @@
 import AppDataTable from "~/components/shared/tables/app-data-table/index.vue";
 import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
-import SalesExchangeStudentCell from "~/components/dashboard/pages/sales/exchange/components/partials/SalesExchangeStudentCell.vue";
+import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import SalesExchangeProductsCell from "~/components/dashboard/pages/sales/exchange/components/partials/SalesExchangeProductsCell.vue";
 import SalesExchangeAmountCell from "~/components/dashboard/pages/sales/exchange/components/partials/SalesExchangeAmountCell.vue";
 import SalesExchangeActionsCell from "~/components/dashboard/pages/sales/exchange/components/partials/SalesExchangeActionsCell.vue";

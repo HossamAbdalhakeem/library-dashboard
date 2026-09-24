@@ -87,7 +87,8 @@ export type ReservationQuery = {
   page?: number;
   per_page?: number;
   search?: string;
-  status?: string;
+  /** Single status or comma-joined list (e.g. READY,WAITING_FOR_STOCK). */
+  status?: string | string[];
   academicYearId?: string;
   branchId?: string;
 };

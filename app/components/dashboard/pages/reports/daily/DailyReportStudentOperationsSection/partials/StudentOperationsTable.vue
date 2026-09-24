@@ -34,6 +34,12 @@
       <AppProductTableCell :product="data.productObj" />
     </template>
 
+    <template #student="{ data }">
+      <AppStudentTableCell
+        :student="{ name: data.studentName, phone: data.phone }"
+      />
+    </template>
+
     <template #totalAmount="{ data }">
       <span
         class="ops-tag tabular-nums"
@@ -92,6 +98,7 @@
 
 <script setup>
 import AppProductTableCell from "~/components/shared/tables/app-product-table-cell/index.vue";
+import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
 import OperationTimelinePanel from "./OperationTimelinePanel.vue";
 import { useOperationTimeline } from "~/composables/useOperationTimeline";

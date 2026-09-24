@@ -41,6 +41,8 @@ export const useAdminReportSection = (loader, options = {}) => {
       productId: p.productId || null,
       academicYearId: p.academicYearId || null,
       period: p.period || null,
+      page: p.page ?? null,
+      per_page: p.per_page ?? null,
     })}:${key}`;
   });
 

@@ -14,6 +14,12 @@
       <AppProductTableCell :product="data.productCell" />
     </template>
 
+    <template #student="{ data }">
+      <AppStudentTableCell
+        :student="{ name: data.studentName, phone: data.phone }"
+      />
+    </template>
+
     <template #createdBy="{ data }">
       <div class="flex flex-col items-center gap-0.5">
         <span class="text-sm font-medium text-slate-100">
@@ -85,6 +91,7 @@ import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-
 import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
 import AppProductTableCell from "~/components/shared/tables/app-product-table-cell/index.vue";
+import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 
 const AppDataTable = defineAsyncComponent(() =>
   import("~/components/shared/tables/app-data-table/index.vue"),
@@ -102,15 +109,14 @@ defineEmits(["deliver"]);
 
 const columns = [
   { field: "reservationNumber", header: "رقم الحجز" },
+  { field: "statusLabel", header: "الحالة", slot: "status" },
   { field: "createdAt", header: "التاريخ والوقت", slot: "createdAt" },
-  { field: "studentName", header: "اسم الطالب" },
-  { field: "phone", header: "الموبايل", fallback: "-" },
+  { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },
   { field: "createdByLabel", header: "أنشئ بواسطة", slot: "createdBy" },
   { field: "paidAmountLabel", header: "المقدم", slot: "paidAmount" },
   { field: "paymentMethodLabel", header: "طريقة الدفع", slot: "paymentMethod" },
   { field: "remainingAmountLabel", header: "المتبقي", slot: "remainingAmount" },
-  { field: "statusLabel", header: "الحالة", slot: "status" },
   { field: "actions", header: "إجراء", slot: "actions", style: "width: 7rem" },
 ];
 
