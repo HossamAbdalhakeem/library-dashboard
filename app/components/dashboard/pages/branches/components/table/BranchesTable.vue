@@ -8,6 +8,7 @@
     paginator
     :rows="20"
     empty-message="لا توجد فروع مسجلة."
+    @row-expand="onRowExpand"
   >
     <template #status="{ data }">
       <AppStatusTableCell
@@ -27,8 +28,11 @@
           {{ item.productName }}:
           <strong>{{ item.physicalQuantity }}</strong>
         </span>
-        <span v-if="data?.inventoryItems?.length > 3" class="text-xs font-medium text-primary-600">
-          +{{ data.inventoryItems.length - 3 }} منتج آخر
+        <span
+          v-if="moreProductsCount(data) > 0"
+          class="text-xs font-medium text-primary-600"
+        >
+          +{{ moreProductsCount(data) }} منتج آخر
         </span>
       </div>
     </template>
@@ -71,39 +75,10 @@
     </template>
 
     <template #expansion="{ data }">
-      <div class="rounded-xl border border-slate-700 bg-slate-900 p-4">
-        <p class="mb-3 text-sm font-semibold text-slate-100">مخزون الفرع</p>
-        <AppDataTable
-          :value="data.inventoryItems || []"
-          :columns="inventoryColumns"
-          empty-message="لا توجد كميات مسجلة لهذا الفرع."
-        >
-          <template #reservedQuantity="{ data: item }">
-            <AppStatusTableCell
-              :label="String(item.reservedQuantity ?? 0)"
-              severity="warn"
-            />
-          </template>
-          <template #availableQuantity="{ data: item }">
-            <AppStatusTableCell
-              :label="String(item.availableQuantity ?? 0)"
-              severity="success"
-            />
-          </template>
-          <template #soldQuantity="{ data: item }">
-            <AppStatusTableCell
-              :label="String(item.soldQuantity ?? 0)"
-              severity="primary"
-            />
-          </template>
-          <template #stockAlert="{ data: item }">
-            <AppStatusTableCell
-              :label="` ${item.lowStockThreshold}`"
-              severity="danger"
-            />
-          </template>
-        </AppDataTable>
-      </div>
+      <BranchInventoryExpansion
+        v-if="isRowExpanded(data.id)"
+        :branch-id="data.id"
+      />
     </template>
   </AppDataTable>
 </template>
@@ -112,6 +87,10 @@
 import Button from "primevue/button";
 import AppDataTable from "~/components/shared/tables/app-data-table/index.vue";
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
+
+const BranchInventoryExpansion = defineAsyncComponent(() =>
+  import("~/components/dashboard/pages/branches/components/table/BranchInventoryExpansion.vue"),
+);
 
 defineProps({
   branches: { type: Array, default: () => [] },
@@ -130,29 +109,17 @@ const columns = [
   { field: "actions", header: "إجراء", slot: "actions", style: "width: 16rem" },
 ];
 
-const inventoryColumns = [
-  { field: "productName", header: "المنتج" },
-  { field: "physicalQuantity", header: "الكمية الفعلية" },
-  {
-    field: "reservedQuantity",
-    header: "المحجوز",
-    slot: "reservedQuantity",
-  },
- 
-  {
-    field: "soldQuantity",
-    header: "المباع",
-    slot: "soldQuantity",
-  },
-  {
-    field: "availableQuantity",
-    header: "المتاح",
-    slot: "availableQuantity",
-  },
-  {
-    field: "isLowStock",
-    header: "تنبيه المخزون",
-    slot: "stockAlert",
-  },
-];
+const moreProductsCount = (branch) => {
+  const previewLen = (branch.inventoryPreview || []).length;
+  return Math.max(0, Number(branch.productsCount || 0) - previewLen);
+};
+
+const isRowExpanded = (branchId) => Boolean(expandedRows.value?.[branchId]);
+
+/** Only one expansion at a time — opening a row closes any other. */
+const onRowExpand = (event) => {
+  const branchId = event?.data?.id;
+  if (!branchId) return;
+  expandedRows.value = { [branchId]: true };
+};
 </script>

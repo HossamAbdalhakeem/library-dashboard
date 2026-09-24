@@ -1,7 +1,6 @@
 /**
  * Branch API contracts — aligned with BE `toBranchResponse` /
- * `toInventorySummaryItem`.
- * Inventory items nest `product`; flat productId/productName are omitted.
+ * lean inventorySummary preview (no full items on list).
  */
 
 export type NamedRef = {
@@ -12,23 +11,17 @@ export type NamedRef = {
 /** Entity status as returned by the API. */
 export type BranchStatus = "ACTIVE" | "INACTIVE";
 
-/** Nested inventory row from `toInventorySummaryItem`. */
-export type BranchInventoryItem = {
+/** Lean preview row from GET /branches?inventory_summary=true. */
+export type BranchInventoryPreviewItem = {
   product: NamedRef;
   physicalQuantity: number;
-  reservedQuantity: number;
-  availableQuantity: number;
-  soldQuantity: number;
-  lowStockThreshold: number;
-  isLowStock: boolean;
 };
 
 /** Present when GET /branches?inventory_summary=true. */
 export type BranchInventorySummary = {
   productsCount: number;
   alertsCount: number;
-  preview: BranchInventoryItem[];
-  items: BranchInventoryItem[];
+  preview: BranchInventoryPreviewItem[];
 };
 
 /**
@@ -72,16 +65,16 @@ export type BranchStatusPayload = {
   status: BranchStatus;
 };
 
-/** Flattened inventory row after `normalizeInventoryItem`. */
+/** Flattened inventory row after normalize (list preview or expand detail). */
 export type BranchInventoryListItem = {
   productId: string | null;
   productName: string;
   physicalQuantity: number;
-  reservedQuantity: number;
-  availableQuantity: number;
-  soldQuantity: number;
-  lowStockThreshold: number;
-  isLowStock: boolean;
+  reservedQuantity?: number;
+  availableQuantity?: number;
+  soldQuantity?: number;
+  lowStockThreshold?: number;
+  isLowStock?: boolean;
 };
 
 /** List/table row after `normalizeBranchListItem`. */
@@ -96,4 +89,5 @@ export type BranchListItem = {
   alertsCount: number;
   inventoryPreview: BranchInventoryListItem[];
   inventoryItems: BranchInventoryListItem[];
+  inventoryLoading?: boolean;
 };

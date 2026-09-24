@@ -1,4 +1,5 @@
-import { apiFetch, asData, asList, firstRow } from "~/utils/apiFetch";
+import { apiFetch, asData, asList, asPaginated, firstRow } from "~/utils/apiFetch";
+import type { PaginatedResponse } from "~/utils/apiFetch";
 import type {
   InventoryQuery,
   StockQuantityPayload,
@@ -8,6 +9,7 @@ import type {
   StockMutationResponse,
   InventoryAvailability,
 } from "../types/inventory.types";
+import { buildBranchInventoryPageQuery } from "../helpers/inventory-list.helper";
 
 export const inventoryApi = {
   /**
@@ -29,11 +31,16 @@ export const inventoryApi = {
   /**
    * GET /inventory/:branchId
    * → InventoryResponse[] | InventorySummaryResponse when inventory_summary
+   * → PaginatedResponse when include_sold or page / per_page is set
    */
   async getBranchInventory(
     branchId: string,
     params: InventoryQuery = {},
-  ): Promise<InventoryResponse[] | InventorySummaryResponse> {
+  ): Promise<
+    | InventoryResponse[]
+    | InventorySummaryResponse
+    | PaginatedResponse<InventoryResponse>
+  > {
     const response = await apiFetch(`/inventory/${branchId}`, {
       method: "GET",
       params,
@@ -41,7 +48,33 @@ export const inventoryApi = {
     if (params.inventory_summary) {
       return response as InventorySummaryResponse;
     }
+    if (
+      params.include_sold ||
+      params.page != null ||
+      params.per_page != null
+    ) {
+      return asPaginated<InventoryResponse>(response);
+    }
     return asList<InventoryResponse>(response);
+  },
+
+  /**
+   * GET /inventory/:branchId?include_sold&page&per_page
+   * → PaginatedResponse (project list pagination shape)
+   */
+  async getBranchInventoryPage(
+    branchId: string,
+    params: { page?: number; perPage?: number } = {},
+  ): Promise<PaginatedResponse<InventoryResponse>> {
+    return asPaginated<InventoryResponse>(
+      await apiFetch(`/inventory/${branchId}`, {
+        method: "GET",
+        params: buildBranchInventoryPageQuery({
+          page: params.page ?? 1,
+          perPage: params.perPage ?? 10,
+        }),
+      }),
+    );
   },
 
   /** GET /inventory/:branchId?inventory_summary=true → InventorySummaryResponse */

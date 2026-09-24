@@ -47,6 +47,8 @@ export type InventoryResponse = {
   product: InventoryProductResponse;
   branch?: NamedRef | null;
   lowStockThreshold?: number;
+  soldQuantity?: number;
+  isLowStock?: boolean;
 };
 
 /** Preview row inside inventory_summary. */
@@ -110,6 +112,9 @@ export type InventoryQuery = {
   availableOnly?: boolean;
   forReservation?: boolean;
   inventory_summary?: boolean;
+  include_sold?: boolean;
+  page?: number;
+  per_page?: number;
 };
 
 /**

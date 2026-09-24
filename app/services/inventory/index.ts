@@ -22,4 +22,5 @@ export {
   mapInventoryProductOption,
   mapInventoryProductOptions,
   normalizeStockMovement,
+  buildBranchInventoryPageQuery,
 } from "./helpers/inventory-list.helper";

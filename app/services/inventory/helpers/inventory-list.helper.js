@@ -166,3 +166,13 @@ export const normalizeStockMovement = (movement) => ({
   branchName: movement?.branch?.name || "-",
   createdByName: movement?.createdBy?.fullName || "-",
 });
+
+/** Query for paginated branch inventory expand (same shape as expenses/reservations). */
+export const buildBranchInventoryPageQuery = ({
+  page = 1,
+  perPage = 10,
+} = {}) => ({
+  include_sold: true,
+  page,
+  per_page: perPage,
+});

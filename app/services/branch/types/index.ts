@@ -1,7 +1,7 @@
 export type {
   NamedRef,
   BranchStatus,
-  BranchInventoryItem,
+  BranchInventoryPreviewItem,
   BranchInventorySummary,
   BranchResponse,
   BranchQuery,
