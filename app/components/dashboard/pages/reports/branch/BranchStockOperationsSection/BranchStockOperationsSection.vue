@@ -26,7 +26,7 @@ defineOptions({ name: "BranchStockOperationsSection" });
 
 const DailyReportOperationsSection = defineAsyncComponent(() =>
   import(
-    "~/components/dashboard/pages/reports/daily/DailyReportOperationsSection/index.vue"
+    "~/components/dashboard/pages/reports/daily/DailyReportOperationsSection/DailyReportOperationsSection.vue"
   ),
 );
 

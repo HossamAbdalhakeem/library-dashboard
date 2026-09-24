@@ -48,7 +48,7 @@ import Skeleton from "primevue/skeleton";
 import { PRODUCT_TYPE_LABELS, ProductType } from "~/enums/productType";
 import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 import ReportKpiCard from "~/components/shared/admin-page/ReportsSummaryCards/partials/ReportKpiCard.vue";
 import InventoryTable from "./partials/InventoryTable.vue";
 

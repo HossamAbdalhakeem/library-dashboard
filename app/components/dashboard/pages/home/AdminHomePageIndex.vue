@@ -53,41 +53,41 @@ import {
 defineOptions({ name: "AdminHomePageIndex" });
 
 const AdminHomeSalesTrendCard = defineAsyncComponent(() =>
-  import("./components/AdminHomeSalesTrendCard/index.vue"),
+  import("./components/AdminHomeSalesTrendCard/AdminHomeSalesTrendCard.vue"),
 );
 const AdminHomeKpiSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeKpiSection/index.vue"),
+  import("./components/AdminHomeKpiSection/AdminHomeKpiSection.vue"),
 );
 const AdminHomeActionsSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeActionsSection/index.vue"),
+  import("./components/AdminHomeActionsSection/AdminHomeActionsSection.vue"),
 );
 const AdminHomeInsightsSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeInsightsSection/index.vue"),
+  import("./components/AdminHomeInsightsSection/AdminHomeInsightsSection.vue"),
 );
 const AdminHomeRecentOperationsSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeRecentOperationsSection/index.vue"),
+  import("./components/AdminHomeRecentOperationsSection/AdminHomeRecentOperationsSection.vue"),
 );
 const ReportsSummaryCards = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsSummaryCards/index.vue"),
+  import("~/components/shared/admin-page/ReportsSummaryCards/ReportsSummaryCards.vue"),
 );
 const ReportsRevenueSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsRevenueSection/index.vue"),
+  import("~/components/shared/admin-page/ReportsRevenueSection/ReportsRevenueSection.vue"),
 );
 const ReportsReturnsExchangesSection = defineAsyncComponent(() =>
   import(
-    "~/components/shared/admin-page/ReportsReturnsExchangesSection/index.vue"
+    "~/components/shared/admin-page/ReportsReturnsExchangesSection/ReportsReturnsExchangesSection.vue"
   ),
 );
 const ReportsFinancialsSection = defineAsyncComponent(() =>
   import(
-    "~/components/shared/admin-page/ReportsFinancialsSection/index.vue"
+    "~/components/shared/admin-page/ReportsFinancialsSection/ReportsFinancialsSection.vue"
   ),
 );
 const ReportsExpensesSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsExpensesSection/index.vue"),
+  import("~/components/shared/admin-page/ReportsExpensesSection/ReportsExpensesSection.vue"),
 );
 const ReportsInventoryTable = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsInventoryTable/index.vue"),
+  import("~/components/shared/admin-page/ReportsInventoryTable/ReportsInventoryTable.vue"),
 );
 
 const {

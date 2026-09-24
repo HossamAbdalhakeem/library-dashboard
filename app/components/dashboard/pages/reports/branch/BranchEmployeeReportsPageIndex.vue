@@ -48,21 +48,21 @@
 </template>
 
 <script setup>
-import DailyReportFilters from "~/components/dashboard/pages/reports/daily/DailyReportFilters/index.vue";
+import DailyReportFilters from "~/components/dashboard/pages/reports/daily/DailyReportFilters/DailyReportFilters.vue";
 
 defineOptions({ name: "BranchEmployeeReportsPageIndex" });
 
 const BranchReportOverview = defineAsyncComponent(() =>
-  import("./BranchReportOverview/index.vue"),
+  import("./BranchReportOverview/BranchReportOverview.vue"),
 );
 const BranchStudentOperationsSection = defineAsyncComponent(() =>
-  import("./BranchStudentOperationsSection/index.vue"),
+  import("./BranchStudentOperationsSection/BranchStudentOperationsSection.vue"),
 );
 const BranchRefundEventsSection = defineAsyncComponent(() =>
-  import("./BranchRefundEventsSection/index.vue"),
+  import("./BranchRefundEventsSection/BranchRefundEventsSection.vue"),
 );
 const BranchStockOperationsSection = defineAsyncComponent(() =>
-  import("./BranchStockOperationsSection/index.vue"),
+  import("./BranchStockOperationsSection/BranchStockOperationsSection.vue"),
 );
 
 const filterParams = ref(null);

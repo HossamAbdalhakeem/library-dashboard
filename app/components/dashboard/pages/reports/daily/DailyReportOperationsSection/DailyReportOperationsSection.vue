@@ -51,8 +51,8 @@
 
 <script setup>
 import Skeleton from "primevue/skeleton";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
-import ReportsSectionEmpty from "~/components/dashboard/pages/reports/admin/ReportsSectionEmpty/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
+import ReportsSectionEmpty from "~/components/dashboard/pages/reports/admin/ReportsSectionEmpty/ReportsSectionEmpty.vue";
 import AppOperationTypeFilter from "~/components/shared/reports/app-operation-type-filter/index.vue";
 import OperationsTable from "./partials/OperationsTable.vue";
 

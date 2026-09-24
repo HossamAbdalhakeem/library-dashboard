@@ -36,15 +36,15 @@
 </template>
 
 <script setup>
-import DailyReportFilters from "~/components/dashboard/pages/reports/daily/DailyReportFilters/index.vue";
+import DailyReportFilters from "~/components/dashboard/pages/reports/daily/DailyReportFilters/DailyReportFilters.vue";
 
 defineOptions({ name: "CustomerServiceReportsPageIndex" });
 
 const CustomerServiceReportOverview = defineAsyncComponent(() =>
-  import("./CustomerServiceReportOverview/index.vue"),
+  import("./CustomerServiceReportOverview/CustomerServiceReportOverview.vue"),
 );
 const CustomerServiceStudentOperationsSection = defineAsyncComponent(() =>
-  import("./CustomerServiceStudentOperationsSection/index.vue"),
+  import("./CustomerServiceStudentOperationsSection/CustomerServiceStudentOperationsSection.vue"),
 );
 
 const filterParams = ref(null);

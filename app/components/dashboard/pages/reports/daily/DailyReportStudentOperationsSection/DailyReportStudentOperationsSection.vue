@@ -38,8 +38,8 @@
 
 <script setup>
 import Skeleton from "primevue/skeleton";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
-import ReportsSectionEmpty from "~/components/dashboard/pages/reports/admin/ReportsSectionEmpty/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
+import ReportsSectionEmpty from "~/components/dashboard/pages/reports/admin/ReportsSectionEmpty/ReportsSectionEmpty.vue";
 import StudentOperationsTable from "./partials/StudentOperationsTable.vue";
 
 defineOptions({ name: "DailyReportStudentOperationsSection" });

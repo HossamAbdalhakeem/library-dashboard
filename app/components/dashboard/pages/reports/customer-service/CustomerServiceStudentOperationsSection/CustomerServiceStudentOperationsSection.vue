@@ -7,20 +7,21 @@
     :page-size="pageSize"
     :total-records="total"
     :timeline-fetcher="timelineFetcher"
+    show-branch
     @retry="reload"
     @update:page="setPage"
   />
 </template>
 
 <script setup>
-import { branchReportsApi } from "~/services/reports/branch";
+import { customerServiceReportsApi } from "~/services/reports/customer-service";
 import { usePaginatedReportSection } from "~/composables/usePaginatedReportSection";
 
-defineOptions({ name: "BranchStudentOperationsSection" });
+defineOptions({ name: "CustomerServiceStudentOperationsSection" });
 
 const DailyReportStudentOperationsSection = defineAsyncComponent(() =>
   import(
-    "~/components/dashboard/pages/reports/daily/DailyReportStudentOperationsSection/index.vue"
+    "~/components/dashboard/pages/reports/daily/DailyReportStudentOperationsSection/DailyReportStudentOperationsSection.vue"
   ),
 );
 
@@ -33,11 +34,12 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const timelineFetcher = (operationId) =>
-  branchReportsApi.getOperationTimeline(operationId);
+  customerServiceReportsApi.getOperationTimeline(operationId);
 
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
-    (query) => branchReportsApi.getSection("studentOperations", query),
+    (query) =>
+      customerServiceReportsApi.getSection("studentOperations", query),
     {
       params: toRef(props, "params"),
       reloadKey: toRef(props, "reloadKey"),

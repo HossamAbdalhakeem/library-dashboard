@@ -38,7 +38,7 @@ import {
 } from "chart.js";
 import { Line } from "vue-chartjs";
 import Skeleton from "primevue/skeleton";
-import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/index.vue";
+import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
 
