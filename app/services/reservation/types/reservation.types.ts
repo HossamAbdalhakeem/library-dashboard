@@ -89,6 +89,7 @@ export type ReservationQuery = {
   search?: string;
   status?: string;
   academicYearId?: string;
+  branchId?: string;
 };
 
 /** POST /reservations body. */

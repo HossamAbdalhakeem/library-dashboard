@@ -37,7 +37,7 @@
         accent="emerald"
         label="إجمالي المبيعات"
         :value="formatMoney(summary.totalSales, 'locale')"
-        hint="مباشر + تسليم"
+        hint="بيع مباشر + تسليم حجز"
       />
       <ReportKpiCard
         compact

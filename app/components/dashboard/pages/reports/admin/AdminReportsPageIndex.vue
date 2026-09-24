@@ -26,11 +26,6 @@
       :reload-key="reloadKey"
       @loading="setSectionLoading('summary', $event)"
     />
-    <ReportsActivityBreakdownSection
-      :params="reportParams"
-      :reload-key="reloadKey"
-      @loading="setSectionLoading('activityBreakdown', $event)"
-    />
     <ReportsRevenueSection
       :params="reportParams"
       :reload-key="reloadKey"
@@ -90,11 +85,6 @@ import {
 
 const ReportsSummaryCards = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsSummaryCards/index.vue"),
-);
-const ReportsActivityBreakdownSection = defineAsyncComponent(() =>
-  import(
-    "~/components/shared/admin-page/ReportsActivityBreakdownSection/index.vue"
-  ),
 );
 const ReportsRevenueSection = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsRevenueSection/index.vue"),
@@ -163,7 +153,6 @@ const selectedBook = ref(null);
 const reloadKey = ref(0);
 const sectionLoading = reactive({
   summary: false,
-  activityBreakdown: false,
   revenue: false,
   salesTrend: false,
   profitLoss: false,

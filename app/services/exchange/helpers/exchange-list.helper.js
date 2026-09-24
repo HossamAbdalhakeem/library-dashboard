@@ -172,5 +172,6 @@ export const buildEligibleSalesQuery = ({ page, perPage, filters = {} }) => {
   };
   if (filters.search?.trim()) params.search = filters.search.trim();
   if (filters.academicYearId) params.academicYearId = filters.academicYearId;
+  if (filters.branchId) params.branchId = filters.branchId;
   return params;
 };

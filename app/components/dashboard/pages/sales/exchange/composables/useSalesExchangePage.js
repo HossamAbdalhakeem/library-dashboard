@@ -16,7 +16,7 @@ export function useSalesExchangePage() {
   const selectedSale = ref(null);
   const refundOpen = ref(false);
   const exchangeOpen = ref(false);
-  const filters = reactive({ search: "" });
+  const filters = reactive({ search: "", branchId: null });
   const pagination = reactive({
     page: 1,
     perPage: 20,
@@ -59,6 +59,11 @@ export function useSalesExchangePage() {
 
   const onSearch = (value) => {
     filters.search = value;
+    resetPagination();
+    loadData();
+  };
+
+  const onBranchChange = () => {
     resetPagination();
     loadData();
   };
@@ -110,9 +115,11 @@ export function useSalesExchangePage() {
     selectedSale,
     refundOpen,
     exchangeOpen,
+    filters,
     pagination,
     onPage,
     onSearch,
+    onBranchChange,
     openRefund,
     openExchange,
     onFlowDone,

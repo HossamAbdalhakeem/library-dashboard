@@ -4,7 +4,6 @@ import type {
   AdminReportQuery,
   AdminKpisResponse,
   AdminSummaryResponse,
-  AdminActivityBreakdownResponse,
   AdminRevenueResponse,
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
@@ -36,17 +35,6 @@ export const adminReportsApi = {
   ): Promise<AdminSummaryResponse> {
     return asData(
       await apiFetch("/reports/admin/summary", { method: "GET", params }),
-    );
-  },
-
-  async getActivityBreakdown(
-    params: AdminReportQuery = {},
-  ): Promise<AdminActivityBreakdownResponse> {
-    return asData(
-      await apiFetch("/reports/admin/activity-breakdown", {
-        method: "GET",
-        params,
-      }),
     );
   },
 

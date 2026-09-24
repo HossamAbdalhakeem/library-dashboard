@@ -245,6 +245,7 @@ export type EligibleSalesQuery = {
   per_page?: number;
   search?: string;
   academicYearId?: string;
+  branchId?: string;
 };
 
 /** POST /exchanges/preview body. */
