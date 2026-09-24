@@ -31,7 +31,8 @@ function buildNavigation(role) {
         items: [
           // { label: "الطلاب", icon: "pi pi-users", to: "/students" },
           { label: "احجز كتاب", icon: "pi pi-book", to: "/books/reserve" },
-          { label: "التقرير", icon: "pi pi-chart-bar", to: "/reports/customer-service" },
+          // { label: "التقرير", icon: "pi pi-chart-bar", to: "/reports/customer-service" },
+
         ],
       },
     ];

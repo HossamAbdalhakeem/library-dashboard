@@ -1,8 +1,8 @@
 <template>
   <div class="ops-timeline-panel w-full space-y-3 text-right" dir="rtl">
-    <p class="text-sm font-semibold text-white">سجل العملية</p>
+    <p v-if="showTitle" class="text-sm font-semibold text-white">سجل العملية</p>
 
-    <div v-if="loading" class="ops-timeline ops-timeline-skeleton w-[82%] @container">
+    <div v-if="loading" class="ops-timeline ops-timeline-skeleton w-full @container">
       <div
         v-for="i in 3"
         :key="`tl-skel-${i}`"
@@ -79,7 +79,7 @@
       v-else
       :value="timeline"
       align="right"
-      class="ops-timeline w-[82%] @container"
+      class="ops-timeline w-full @container"
       :pt="{
         eventOpposite: { class: '@max-[280px]:hidden' },
         eventContent: { class: '@max-[280px]:text-right!' },
@@ -164,6 +164,7 @@ defineProps({
   timeline: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
   error: { type: String, default: "" },
+  showTitle: { type: Boolean, default: true },
 });
 
 defineEmits(["retry"]);

@@ -34,7 +34,7 @@ export const STUDENT_OPS_METRIC_COLORS = {
 };
 
 export const STUDENT_OPS_COLUMNS = [
-  { key: "expander", expander: true, style: "width: 3rem" },
+  { field: "timeline", header: "", slot: "timeline", style: "width: 3.5rem" },
   { field: "createdAt", header: "التاريخ", slot: "time" },
   { field: "typeLabel", header: "النوع", slot: "type" },
   { field: "statusLabel", header: "الحالة", slot: "status" },
