@@ -20,6 +20,9 @@ export const normalizeReservationCreateResult = ({
   const product = result.product || {};
   const payment = result.payment || {};
   const student = result.student || {};
+  const hasProof = Boolean(
+    payment.image?.hasProof || proofImage,
+  );
 
   return {
     reservationNumber: result.reservationNumber,
@@ -31,7 +34,11 @@ export const normalizeReservationCreateResult = ({
     studentName: student.name || studentName || "-",
     paidAmount: Number(payment.paidAmount ?? 0),
     totalAmount: Number(product.totalAmount ?? 0),
+    method,
     methodLabel: getPaymentMethodLabel(method),
+    paymentId: payment.id || null,
+    hasProof,
+    /** Local upload preview — used only until dialog opens if paymentId missing */
     proofImage: proofImage || "",
   };
 };

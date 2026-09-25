@@ -67,20 +67,12 @@
 
         <div class="flex items-center justify-between gap-3 border-t border-slate-200 pt-3">
           <span class="text-xs text-slate-500">طريقة الدفع</span>
-          <span class="text-sm font-medium text-slate-800">
-            {{ summary.methodLabel }}
-          </span>
-        </div>
-
-        <div
-          v-if="summary.proofImage"
-          class="border-t border-slate-200 pt-3"
-        >
-          <p class="mb-2 text-xs text-slate-500">صورة إثبات الدفع</p>
-          <img
-            :src="summary.proofImage"
-            alt="إثبات الدفع"
-            class="mx-auto max-h-48 w-auto max-w-full rounded-xl border border-slate-200 object-contain"
+          <PaymentProofThumb
+            :method="summary.method"
+            :method-label="summary.methodLabel"
+            :payment-id="summary.paymentId"
+            :has-proof="summary.hasProof"
+            :proof-url="summary.paymentId ? '' : summary.proofImage"
           />
         </div>
 
@@ -111,6 +103,7 @@
 <script setup>
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
+import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 import { formatMoney } from "~/utils/format/money";
 
 defineOptions({ name: "ReservationSuccessDialog" });

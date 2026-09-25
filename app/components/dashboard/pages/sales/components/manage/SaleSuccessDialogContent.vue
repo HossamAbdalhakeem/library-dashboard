@@ -33,11 +33,13 @@
           </div>
         </template>
 
-        <template v-else-if="row.key === 'proof'">
-          <img
-            :src="saleSummary.proofImage"
-            alt="إثبات الدفع"
-            class="mx-auto max-h-48 w-auto max-w-full rounded-xl border border-slate-200 object-contain"
+        <template v-else-if="row.key === 'method'">
+          <PaymentProofThumb
+            :method="saleSummary.method"
+            :method-label="saleSummary.methodLabel"
+            :payment-id="saleSummary.paymentId"
+            :has-proof="saleSummary.hasProof"
+            :proof-url="saleSummary.paymentId ? '' : saleSummary.proofImage"
           />
         </template>
       </SaleSuccessSummaryRow>
@@ -46,6 +48,7 @@
 </template>
 
 <script setup>
+import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 import { formatMoney } from "~/utils/format/money";
 
 defineOptions({ name: "SaleSuccessDialogContent" });
@@ -102,17 +105,8 @@ const summaryRows = computed(() => {
     {
       key: "method",
       label: "طريقة الدفع",
-      value: summary.methodLabel,
     },
   ];
-
-  if (summary.proofImage) {
-    rows.push({
-      key: "proof",
-      label: "صورة إثبات الدفع",
-      stacked: true,
-    });
-  }
 
   rows.push({
     key: "total",

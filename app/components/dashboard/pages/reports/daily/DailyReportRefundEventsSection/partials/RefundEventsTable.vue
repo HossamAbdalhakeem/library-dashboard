@@ -43,9 +43,8 @@
         <PaymentProofThumb
           :method="data.payment.method"
           :method-label="data.payment.methodLabel"
-          :proof-url="data.payment.image.url"
           :has-proof="data.payment.image.hasProof"
-          :payment-id="null"
+          :refund-id="data.payment.image.hasProof ? data.id : null"
         />
       </template>
 

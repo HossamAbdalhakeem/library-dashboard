@@ -86,6 +86,7 @@ export const mapSaleToSuccessSummary = (
 
   return {
     paymentNumber: detail.payment.id,
+    paymentId: detail.payment.id,
     dateTimeLabel: formatDateTime(detail.createdAt),
     productName: product?.name || itemProduct.name || "-",
     teacherName:
@@ -96,8 +97,13 @@ export const mapSaleToSuccessSummary = (
     quantity: item.quantity ?? 0,
     unitPrice: Number(item.unitPrice ?? 0),
     totalAmount: Number(detail.totalAmount ?? 0),
+    method,
     methodLabel:
       detail.payment.methodLabel || getPaymentMethodLabel(method),
+    hasProof: Boolean(
+      needsProof && (detail.payment.image?.hasProof || proofImage),
+    ),
+    /** Local upload preview fallback when paymentId fetch is unavailable */
     proofImage: needsProof ? proofImage || "" : "",
   };
 };
