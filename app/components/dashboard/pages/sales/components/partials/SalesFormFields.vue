@@ -130,17 +130,10 @@
       </div>
     </Field>
 
-    <div
+    <ProductPriceBanner
       v-if="sales.selectedProductOption"
-      class="md:col-span-2 rounded-2xl border border-amber-400/40 bg-gradient-to-l from-amber-500/20 via-orange-500/10 to-slate-900 px-4 py-5 text-center sm:px-6 sm:py-8"
-    >
-      <p class="mb-2 text-sm font-medium text-amber-100/80">مبلغ المنتج</p>
-      <p
-        class="text-3xl font-extrabold tracking-tight text-amber-300 sm:text-4xl md:text-5xl"
-      >
-        {{ formatMoney(sales.requiredAmount) }}
-      </p>
-    </div>
+      :amount="sales.requiredAmount"
+    />
 
     <div class="md:col-span-2">
       <Field
@@ -179,13 +172,13 @@
 import AppInputNumber from "~/components/shared/inputs/app-input-number/index.vue";
 import PaymentFields from "~/components/shared/payment/payment-fields/index.vue";
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
+import ProductPriceBanner from "~/components/shared/product-price-banner/index.vue";
 import AppGlobalSelectProduct from "~/components/shared/selections/app-global-select-product/index.vue";
 import AppGlobalSelectStudent from "~/components/shared/selections/app-global-select-student/index.vue";
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import AppGlobalSelectProductType from "~/components/shared/selections/app-global-select-product-type/index.vue";
 import { Field, ErrorMessage } from "vee-validate";
-import { formatMoney } from "~/utils/format/money";
 
 const props = defineProps({
   sales: { type: Object, required: true },
