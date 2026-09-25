@@ -4,9 +4,9 @@
     dir="rtl"
   >
     <p class="mb-3 font-bold text-white">أداء الفروع</p>
-    <p class="mb-3 text-xs text-slate-400">
+    <!-- <p class="mb-3 text-xs text-slate-400">
       المبيعات بإجمالي البيع · المرتجعات بتاريخ الإرجاع · صافي المبيعات = المبيعات − المرتجعات
-    </p>
+    </p> -->
 
     <div v-if="loading" class="space-y-2">
       <Skeleton v-for="i in 4" :key="`br-${i}`" width="100%" height="2.2rem" />

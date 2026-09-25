@@ -15,10 +15,6 @@
 
     <ExpenseBranchField v-model:branch-id="form.branchId" />
 
-    <ExpenseAcademicYearToggle
-      v-model:link-to-academic-year="form.linkToAcademicYear"
-    />
-
     <ExpenseAmountField
       v-model:amount="form.amount"
       :field-errors="fieldErrors"
@@ -52,7 +48,6 @@
 import { Form } from "vee-validate";
 import ExpenseCategoryField from "./partials/ExpenseCategoryField.vue";
 import ExpenseBranchField from "./partials/ExpenseBranchField.vue";
-import ExpenseAcademicYearToggle from "./partials/ExpenseAcademicYearToggle.vue";
 import ExpenseAmountField from "./partials/ExpenseAmountField.vue";
 import ExpenseDateField from "./partials/ExpenseDateField.vue";
 import ExpenseDescriptionField from "./partials/ExpenseDescriptionField.vue";

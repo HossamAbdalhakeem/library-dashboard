@@ -4,9 +4,9 @@
     dir="rtl"
   >
     <p class="mb-3 font-bold text-white">حركة المنتجات</p>
-    <p class="mb-3 text-xs text-slate-400">
+    <!-- <p class="mb-3 text-xs text-slate-400">
       صافي الفترة: مبيعات بتاريخ البيع − مرتجعات بتاريخ الإرجاع
-    </p>
+    </p> -->
 
     <div v-if="loading && !rows.length" class="space-y-2">
       <Skeleton v-for="i in 5" :key="`prod-${i}`" width="100%" height="2.2rem" />

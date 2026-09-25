@@ -4,7 +4,7 @@
       <div class="min-w-0">
         <h2 class="text-xl font-bold text-white">التقارير</h2>
         <p class="mt-1 text-sm text-slate-400">
-          ملخص المبيعات والأرباح والمصروفات والحجوزات حسب الفلاتر
+          ملخص المبيعات والأرباح والمصروفات والحجوزات  
         </p>
       </div>
       <ReportsFilters

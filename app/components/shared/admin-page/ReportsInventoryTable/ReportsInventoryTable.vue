@@ -5,9 +5,9 @@
   >
     <div class="mb-4">
       <p class="font-bold text-white">المخزون</p>
-      <p class="mt-1 text-xs text-slate-400">
+      <!-- <p class="mt-1 text-xs text-slate-400">
         مستويات المخزون في نهاية الفترة المحددة (الإجمالي / المحجوز / المتاح)
-      </p>
+      </p> -->
     </div>
 
     <div v-if="loading" class="space-y-3">
