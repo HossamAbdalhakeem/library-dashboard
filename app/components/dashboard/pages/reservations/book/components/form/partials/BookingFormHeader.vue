@@ -28,7 +28,7 @@
 defineOptions({ name: "BookingFormHeader" });
 
 defineProps({
-  title: { type: String, default: "احجز كتاب" },
+  title: { type: String, default: "حجز منتج" },
   backTo: { type: String, default: "" },
   isCustomerService: { type: Boolean, default: false },
 });

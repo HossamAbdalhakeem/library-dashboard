@@ -61,11 +61,12 @@
       </div>
 
       <BookReservationPageIndex
-        title="احجز كتاب"
+        title="حجز منتج"
         show-header
         :initial-product="selectedProductId"
         :initial-selection="selectedProduct"
         @hydrating="onFormHydrating"
+        @reset="onFormReset"
       />
     </div>
 
@@ -104,5 +105,10 @@ const onProductSelect = (selection) => {
 
 const onFormHydrating = (value) => {
   hydratingProduct.value = Boolean(value);
+};
+
+const onFormReset = () => {
+  selectedProduct.value = null;
+  hydratingProduct.value = false;
 };
 </script>

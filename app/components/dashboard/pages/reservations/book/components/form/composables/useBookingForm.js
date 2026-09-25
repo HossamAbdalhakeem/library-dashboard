@@ -89,6 +89,7 @@ export function useBookingForm(props, emit) {
     submit.proofRequiredError.value = false;
     submit.paymentFieldsRef.value?.reset?.();
     formKey.value += 1;
+    emit("reset");
   };
 
   const closeSuccessDialog = () => {

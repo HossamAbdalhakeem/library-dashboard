@@ -11,6 +11,7 @@
           :initial-selection="initialSelection"
           :submit-fn="submitReservation"
           @hydrating="$emit('hydrating', $event)"
+          @reset="$emit('reset')"
         >
           <template v-if="$slots['header-actions']" #header-actions>
             <slot name="header-actions" />
@@ -36,7 +37,7 @@ defineProps({
   initialSelection: { type: Object, default: null },
 });
 
-defineEmits(["hydrating"]);
+defineEmits(["hydrating", "reset"]);
 
 const { isCustomerService } = useAuth();
 

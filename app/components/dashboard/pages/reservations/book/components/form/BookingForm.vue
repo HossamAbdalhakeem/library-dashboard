@@ -96,7 +96,7 @@ const ReservationSuccessDialog = defineAsyncComponent(
 );
 
 const props = defineProps({
-  title: { type: String, default: "احجز كتاب" },
+  title: { type: String, default: "حجز منتج" },
   submitLabel: { type: String, default: "تأكيد الحجز" },
   showHeader: { type: Boolean, default: false },
   backTo: { type: String, default: "" },
@@ -106,7 +106,7 @@ const props = defineProps({
   submitFn: { type: Function, required: true },
 });
 
-const emit = defineEmits(["hydrating"]);
+const emit = defineEmits(["hydrating", "reset"]);
 
 const {
   isCustomerService,
