@@ -46,6 +46,8 @@
       <AppGlobalSelectProduct
         v-model="form.productId"
         source="inventory"
+        variant="simple"
+        name-only
         :branch-id="selectedBranchId"
         :inventory-query="inventoryQuery"
         :min-available-quantity="1"

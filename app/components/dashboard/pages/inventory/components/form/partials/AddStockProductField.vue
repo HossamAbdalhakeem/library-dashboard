@@ -4,6 +4,7 @@
       :model-value="productId"
       source="catalog"
       variant="simple"
+      name-only
       placeholder="اختار المنتج ▾"
       :disabled="disabled"
       :invalid="!!error"
