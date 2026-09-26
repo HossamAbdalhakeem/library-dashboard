@@ -38,34 +38,34 @@
     </template>
 
     <template #actions="{ data }">
-      <div class="flex flex-wrap justify-center gap-1">
+      <div class="flex flex-wrap justify-center gap-2">
         <Button
           icon="pi pi-pencil"
           rounded
           text
-          size="small"
           severity="primary"
+          class="!h-11 !w-11 !text-xl"
           title="تعديل"
           aria-label="تعديل"
           @click="$emit('edit', data)"
         />
         <Button
-          icon="pi pi-box"
+          icon="pi pi-plus"
           rounded
           text
-          size="small"
           severity="success"
+          class="!h-11 !w-11 !text-xl"
           title="إضافة منتج"
           aria-label="إضافة منتج"
           data-testid="branch-add-stock"
           @click="$emit('add-stock', data)"
         />
         <Button
-          icon="pi pi-arrow-circle-up"
+          icon="pi pi-minus"
           rounded
           text
-          size="small"
           severity="warning"
+          class="!h-11 !w-11 !text-xl"
           title="سحب منتج"
           aria-label="سحب منتج"
           data-testid="branch-remove-stock"
