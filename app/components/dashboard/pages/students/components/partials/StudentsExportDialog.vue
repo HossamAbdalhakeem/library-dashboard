@@ -17,12 +17,28 @@
         show-clear
       />
 
-      <AppDateRangePicker
-        v-model:from="filters.from"
-        v-model:to="filters.to"
-        label="من / إلى"
-        placeholder="اختر الفترة"
+      <AppGlobalSelectTeacher
+        v-model="filters.teacherId"
+        label="المدرس"
+        placeholder="كل المدرسين"
+        show-clear
+        :exclude-inactive="false"
       />
+
+      <div class="flex flex-col gap-2 text-right">
+        <label class="text-sm font-medium text-slate-700">الفترة</label>
+        <AppPeriodDateFilter
+          :from="filters.from"
+          :to="filters.to"
+          :periods="STUDENT_EXPORT_PERIODS"
+          default-period="day"
+          :academic-year-range="academicYearRange"
+          @update:from="filters.from = $event"
+          @update:to="filters.to = $event"
+          @update:period="filters.period = $event"
+          @change="onPeriodChange"
+        />
+      </div>
 
       <AppGlobalSelectStudent
         v-model="filters.student"
@@ -57,10 +73,14 @@
 <script setup>
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
-import AppDateRangePicker from "~/components/shared/reports/app-date-range-picker/index.vue";
+import AppPeriodDateFilter from "~/components/shared/reports/app-period-date-filter/index.vue";
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
+import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import AppGlobalSelectStudent from "~/components/shared/selections/app-global-select-student/index.vue";
-import { useStudentExport } from "../../composables/useStudentExport";
+import {
+  STUDENT_EXPORT_PERIODS,
+  useStudentExport,
+} from "../../composables/useStudentExport";
 
 defineProps({
   visible: { type: Boolean, default: false },
@@ -68,7 +88,19 @@ defineProps({
 
 const emit = defineEmits(["update:visible", "hide"]);
 
-const { exporting, filters, resetFilters, exportStudents } = useStudentExport();
+const {
+  exporting,
+  filters,
+  academicYearRange,
+  ensureAcademicYears,
+  resetFilters,
+  onPeriodChange,
+  exportStudents,
+} = useStudentExport();
+
+onMounted(() => {
+  ensureAcademicYears();
+});
 
 const onHide = () => {
   resetFilters();
