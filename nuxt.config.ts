@@ -106,9 +106,9 @@ export default defineNuxtConfig({
       // which Nuxt head re-applies on refresh and overrides a saved light preference)
       htmlAttrs: { lang: 'ar', dir: 'rtl' },
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'shortcut icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'apple-touch-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/jpeg', href: '/library-logo.jpeg' },
+        { rel: 'shortcut icon', type: 'image/jpeg', href: '/library-logo.jpeg' },
+        { rel: 'apple-touch-icon', href: '/library-logo.jpeg' },
       ],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
