@@ -41,8 +41,7 @@
       <AppStatusTableCell
         kind="reservation"
         :code="data.status"
-        :label="toTwoLineStatusLabel(data.statusLabel)"
-        class="whitespace-pre-line text-center leading-snug [&_.p-tag-label]:whitespace-pre-line [&_.p-tag-label]:text-center"
+        :label="data.statusLabel"
       />
     </template>
 
@@ -98,14 +97,4 @@ const columns = [
 ];
 
 const isDeliverable = (item) => item?.status === "READY";
-
-/** First word on line 1; remaining words stay together on line 2. */
-const toTwoLineStatusLabel = (label) => {
-  const parts = String(label || "")
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  if (parts.length <= 1) return parts[0] || String(label || "");
-  return `${parts[0]}\n${parts.slice(1).join(" ")}`;
-};
 </script>
