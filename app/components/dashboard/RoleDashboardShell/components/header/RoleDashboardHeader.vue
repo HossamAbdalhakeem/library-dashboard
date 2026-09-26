@@ -15,6 +15,7 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
+        <RoleDashboardHeaderThemeToggle />
         <NotificationBell
           v-if="normalizedRole !== UserRole.CUSTOMER_SERVICE"
         />
@@ -32,6 +33,7 @@
 <script setup>
 import RoleDashboardHeaderMenuButton from "./partials/RoleDashboardHeaderMenuButton.vue";
 import RoleDashboardHeaderUser from "./partials/RoleDashboardHeaderUser.vue";
+import RoleDashboardHeaderThemeToggle from "./partials/RoleDashboardHeaderThemeToggle.vue";
 import { UserRole } from "~/enums/userRole";
 
 const NotificationBell = defineAsyncComponent(() =>
