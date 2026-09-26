@@ -9,6 +9,7 @@ export function useImageUpload(props, emit) {
   const fileMeta = ref("");
   const showCropper = ref(false);
   const cropperMounted = ref(false);
+  const showCameraCapture = ref(false);
   const selectedImage = ref("");
   const isProcessing = ref(false);
   const originalFileName = ref("cropped-image.jpg");
@@ -40,6 +41,13 @@ export function useImageUpload(props, emit) {
   };
 
   const openCamera = () => {
+    errorMessage.value = "";
+    // Prefer getUserMedia dialog — works on laptop webcams and modern phones.
+    // File-input capture= is unreliable on desktop browsers.
+    if (import.meta.client && navigator?.mediaDevices?.getUserMedia) {
+      showCameraCapture.value = true;
+      return;
+    }
     cameraInputRef.value?.click();
   };
 
@@ -97,6 +105,19 @@ export function useImageUpload(props, emit) {
     };
     reader.readAsDataURL(file);
     resetFileInputs();
+  };
+
+  const onCameraCaptured = (file) => {
+    showCameraCapture.value = false;
+    if (!file) return;
+    processSelectedFile(file);
+  };
+
+  const onCameraError = (message) => {
+    if (message) {
+      errorMessage.value = message;
+      emit("error", message);
+    }
   };
 
   const onFileChange = (event) => {
@@ -188,6 +209,7 @@ export function useImageUpload(props, emit) {
 
   onBeforeUnmount(() => {
     revokePreview();
+    showCameraCapture.value = false;
   });
 
   return {
@@ -198,6 +220,7 @@ export function useImageUpload(props, emit) {
     fileMeta,
     showCropper,
     cropperMounted,
+    showCameraCapture,
     selectedImage,
     isProcessing,
     maxSizeLabel,
@@ -206,6 +229,8 @@ export function useImageUpload(props, emit) {
     clear,
     openCropper,
     onFileChange,
+    onCameraCaptured,
+    onCameraError,
     handleCropped,
     handleCropperError,
     handleCropperClose,
