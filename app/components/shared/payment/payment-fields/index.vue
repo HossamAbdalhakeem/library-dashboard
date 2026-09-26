@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="grid gap-4"
-    :class="showImage ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'"
-    dir="rtl"
-  >
+  <div class="grid grid-cols-1 gap-4" dir="rtl">
     <PaymentMethods
       :model-value="method"
       :label="methodLabel"
@@ -20,19 +16,33 @@
         :label="imageLabel"
         :placeholder="imagePlaceholder"
         :max-size-bytes="maxSizeBytes"
+        :show-source-choice="showProofSourceChoice"
         :invalid="imageInvalid || Boolean(imageError)"
         :upload-handler="onImageSelect"
         @update:model-value="onImageFileChange"
         @clear="onImageClear"
         @error="onImageError"
       />
-      <p v-if="uploading" class="text-xs text-primary-600">جاري رفع صورة الإثبات...</p>
-      <p v-if="imageError" class="text-xs text-red-500">{{ imageError }}</p>
       <p
-        v-else-if="imageKey && !uploading"
-        class="truncate text-xs text-emerald-600"
+        v-if="uploading"
+        class="inline-flex items-center justify-end gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-300"
+      >
+        <i class="pi pi-spin pi-spinner text-[11px]" />
+        جاري رفع صورة الإثبات...
+      </p>
+      <p
+        v-else-if="imageError"
+        class="inline-flex items-center justify-end gap-1.5 text-xs text-red-500"
+      >
+        <i class="pi pi-exclamation-circle text-[11px]" />
+        {{ imageError }}
+      </p>
+      <p
+        v-else-if="imageKey"
+        class="inline-flex items-center justify-end gap-1.5 truncate text-xs font-medium text-emerald-600 dark:text-emerald-300"
         :title="imageKey"
       >
+        <i class="pi pi-check-circle text-[11px]" />
         تم رفع الصورة بنجاح
       </p>
     </div>
@@ -86,6 +96,11 @@ const props = defineProps({
     type: String,
     default: "صورة إثبات الدفع مطلوبة لطريقة الدفع المحددة.",
   },
+  /**
+   * When true (e.g. branch employee), non-cash proof shows
+   * «رفع من الجهاز» vs «فتح الكاميرا» before the crop step.
+   */
+  showProofSourceChoice: { type: Boolean, default: false },
 });
 
 const emit = defineEmits([

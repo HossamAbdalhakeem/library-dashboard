@@ -33,34 +33,8 @@
       </div>
     </template>
 
-    <template #paidAmount="{ data }">
-      <span
-        class="rounded-md bg-emerald-500/20 px-2 py-1 text-xs font-bold text-emerald-300"
-      >
-        {{ data.payment?.paidAmountLabel }}
-      </span>
-    </template>
-
-    <template #paymentMethod="{ data }">
-      <PaymentProofThumb
-        :method="data.payment?.method"
-        :method-label="data.payment?.methodLabel"
-        :payment-id="data.payment?.id"
-        :has-proof="data.payment?.image?.hasProof"
-      />
-    </template>
-
-    <template #remainingAmount="{ data }">
-      <span
-        class="rounded-md px-2 py-1 text-xs font-bold"
-        :class="
-          data.payment?.hasRemaining
-            ? 'bg-orange-500/20 text-orange-300'
-            : 'bg-emerald-500/20 text-emerald-300'
-        "
-      >
-        {{ data.payment?.remainingAmountLabel }}
-      </span>
+    <template #paymentSummary="{ data }">
+      <AppPaymentSummaryTableCell :payment="data.payment" />
     </template>
 
     <template #status="{ data }">
@@ -87,7 +61,7 @@
 <script setup>
 import Button from "primevue/button";
 import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
-import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
+import AppPaymentSummaryTableCell from "~/components/shared/tables/app-payment-summary-table-cell/index.vue";
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
 import AppProductTableCell from "~/components/shared/tables/app-product-table-cell/index.vue";
 import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
@@ -113,9 +87,12 @@ const columns = [
   { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },
   { field: "createdByLabel", header: "أنشئ بواسطة", slot: "createdBy" },
-  { field: "paidAmountLabel", header: "المقدم", slot: "paidAmount" },
-  { field: "paymentMethodLabel", header: "طريقة الدفع", slot: "paymentMethod" },
-  { field: "remainingAmountLabel", header: "المتبقي", slot: "remainingAmount" },
+  {
+    field: "paymentSummary",
+    header: "الدفع",
+    slot: "paymentSummary",
+    style: "min-width: 11rem",
+  },
   { field: "actions", header: "إجراء", slot: "actions", style: "width: 7rem" },
 ];
 

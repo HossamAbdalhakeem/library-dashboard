@@ -15,6 +15,8 @@ export type AdminReportQuery = ReportQuery;
 export type AdminReportFilters = {
   branchId?: string;
   productId?: string;
+  teacherId?: string;
+  studyYearId?: string;
   academicYearId?: string;
   /** ISO timestamp: inventory levels reconstructed as of this moment (`to` end). */
   asOf?: string;
@@ -92,47 +94,6 @@ export type AdminPaymentMethodsResponse = AdminSectionBase & {
   paymentsTotal: number;
 };
 
-export type AdminInventoryBucket = {
-  type: string;
-  total: number;
-  reserved: number;
-  available: number;
-};
-
-/** GET /reports/admin/inventory — stock as of selected `to` (end of range). */
-export type AdminInventoryResponse = AdminSectionBase & {
-  section: "inventory";
-  summary: {
-    total: number;
-    reserved: number;
-    available: number;
-    lowStock: number;
-    outOfStock: number;
-  };
-  byType: AdminInventoryBucket[];
-};
-
-export type AdminProductPerformanceRow = {
-  productId: string;
-  productName: string;
-  quantitySold: number;
-  salesAmount: number;
-  profit: number;
-  remainingQuantity: number;
-};
-
-/** GET /reports/admin/products */
-export type AdminProductsResponse = AdminSectionBase & {
-  section: "products";
-  products: AdminProductPerformanceRow[];
-  pagination?: {
-    total: number;
-    current_page: number;
-    per_page: number;
-    to: number;
-  };
-};
-
 export type AdminBranchPerformanceRow = {
   branchId: string;
   branchName: string;
@@ -161,6 +122,8 @@ export type AdminReturnsExchangesResponse = AdminSectionBase & {
 export type AdminExpenseByBranch = {
   branchId: string | null;
   branchName: string;
+  categoryId?: string | null;
+  categoryName?: string;
   amount: number;
 };
 

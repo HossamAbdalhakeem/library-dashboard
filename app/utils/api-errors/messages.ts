@@ -15,7 +15,6 @@ export const API_ERROR_MESSAGES_AR: Record<string, string> = {
   // Access / auth
   ACCESS_ADMIN_REQUIRED: "يتطلب صلاحية مسؤول",
   ACCESS_BRANCH_EMPLOYEE_REQUIRED: "يتطلب صلاحية موظف فرع",
-  ACCESS_CUSTOMER_SERVICE_REQUIRED: "يتطلب صلاحية خدمة العملاء",
   ACCESS_DENIED: "تم رفض الوصول",
   ACCESS_INSUFFICIENT_PERMISSIONS: "صلاحياتك غير كافية لتنفيذ هذا الإجراء",
   AUTHENTICATION_FAILED: "فشل التحقق من الهوية",

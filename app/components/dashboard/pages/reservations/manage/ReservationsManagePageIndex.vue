@@ -2,19 +2,28 @@
   <div class="space-y-6 text-right" dir="rtl">
     <Card>
       <template #title>
-        <span class="text-lg font-bold text-slate-900">الحجوزات</span>
-      </template>
-      <template #content>
-        <div class="mb-5 grid gap-3 md:grid-cols-2">
-          <AppSearchInput placeholder="رقم الحجز / طالب / منتج" @search="onSearch" />
-          <AppGlobalSelectBranch
-            v-model="filters.branchId"
-            label="الفرع"
-            placeholder="كل الفروع"
-            show-clear
-            @change="onBranchChange"
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <span class="text-lg font-bold text-slate-900">الحجوزات</span>
+          <Button
+            v-if="isAdmin"
+            label="تصدير"
+            icon="pi pi-download"
+            severity="secondary"
+            outlined
+            data-testid="reservations-export"
+            @click="openExport"
           />
         </div>
+      </template>
+      <template #content>
+        <ReservationsFilters
+          v-model:branch-id="filters.branchId"
+          v-model:teacher-id="filters.teacherId"
+          v-model:study-year-id="filters.studyYearId"
+          v-model:status="filters.status"
+          @search="onSearch"
+          @change="onFilterChange"
+        />
 
         <ReservationsTable
           :reservations="reservations"
@@ -44,20 +53,26 @@
       @done="onFlowDone"
       @close="onFlowClose"
     />
+
+    <ReservationsExportDialog
+      v-if="exportVisible"
+      v-model:visible="exportVisible"
+    />
   </div>
 </template>
 
 <script setup>
+import Button from "primevue/button";
 import Card from "primevue/card";
 import ReservationsTable from "~/components/dashboard/pages/reservations/components/table/ReservationsTable.vue";
-import AppSearchInput from "~/components/shared/inputs/app-search-input/index.vue";
-import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
+import ReservationsFilters from "~/components/dashboard/pages/reservations/manage/components/filters/ReservationsFilters.vue";
 import {
   reservationApi,
   normalizeReservation,
   buildReservationListQuery,
 } from "~/services/reservation";
 import { useAppToast } from "~/composables/useAppToast";
+import { useAuth } from "~/composables/useAuth";
 
 defineOptions({ name: "ReservationsManagePageIndex" });
 
@@ -67,17 +82,25 @@ const ReservationsCancelFlow = defineAsyncComponent(() =>
 const ReservationsExchangeFlow = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/reservations/manage/components/manage/ReservationsExchangeFlow.vue"),
 );
+const ReservationsExportDialog = defineAsyncComponent(() =>
+  import("~/components/dashboard/pages/reservations/manage/components/partials/ReservationsExportDialog.vue"),
+);
 
 const { showError } = useAppToast();
+const { isAdmin } = useAuth();
 
 const loading = ref(true);
 const selectedReservation = ref(null);
 const reservations = ref([]);
 const cancelOpen = ref(false);
 const exchangeOpen = ref(false);
+const exportVisible = ref(false);
 const filters = reactive({
   search: "",
   branchId: null,
+  teacherId: null,
+  studyYearId: null,
+  status: null,
 });
 const pagination = reactive({
   page: 1,
@@ -85,6 +108,10 @@ const pagination = reactive({
   total: 0,
   first: 0,
 });
+
+const openExport = () => {
+  exportVisible.value = true;
+};
 
 const buildQuery = () =>
   buildReservationListQuery({
@@ -126,7 +153,7 @@ const onSearch = (value) => {
   loadData();
 };
 
-const onBranchChange = () => {
+const onFilterChange = () => {
   resetPagination();
   loadData();
 };

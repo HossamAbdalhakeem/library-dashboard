@@ -155,5 +155,7 @@ export const buildReservationListQuery = ({
   }
   if (filters.academicYearId) params.academicYearId = filters.academicYearId;
   if (filters.branchId) params.branchId = filters.branchId;
+  if (filters.teacherId) params.teacherId = filters.teacherId;
+  if (filters.studyYearId) params.studyYearId = filters.studyYearId;
   return params;
 };

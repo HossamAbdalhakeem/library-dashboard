@@ -173,5 +173,7 @@ export const buildEligibleSalesQuery = ({ page, perPage, filters = {} }) => {
   if (filters.search?.trim()) params.search = filters.search.trim();
   if (filters.academicYearId) params.academicYearId = filters.academicYearId;
   if (filters.branchId) params.branchId = filters.branchId;
+  if (filters.teacherId) params.teacherId = filters.teacherId;
+  if (filters.studyYearId) params.studyYearId = filters.studyYearId;
   return params;
 };

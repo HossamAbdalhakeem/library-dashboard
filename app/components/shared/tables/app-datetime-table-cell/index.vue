@@ -6,18 +6,18 @@
   >
     <span
       v-if="parts.date"
-      class="whitespace-nowrap text-[0.8125rem] font-medium text-neutral-100"
+      class="whitespace-nowrap text-[0.8125rem] font-medium text-[var(--app-text-strong)]"
     >
       {{ parts.date }}
     </span>
     <span
       v-if="parts.time"
-      class="whitespace-nowrap text-xs font-medium tabular-nums text-neutral-400"
+      class="whitespace-nowrap text-xs font-medium tabular-nums text-[var(--app-muted)]"
     >
       {{ parts.time }}
     </span>
   </div>
-  <span v-else class="text-neutral-400">{{ parts.emptyLabel }}</span>
+  <span v-else class="text-[var(--app-muted)]">{{ parts.emptyLabel }}</span>
 </template>
 
 <script setup>

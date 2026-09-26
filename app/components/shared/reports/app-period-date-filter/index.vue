@@ -14,8 +14,11 @@
       </template>
     </Select>
 
-    <!-- Hidden host: only the overlay opens; no extra filter input in the bar -->
-    <div class="period-custom-range-host" aria-hidden="true">
+    <div
+      v-if="allowsCustom"
+      class="period-custom-range-host"
+      aria-hidden="true"
+    >
       <AppDateRangePicker
         ref="customRangeRef"
         label=""
@@ -36,14 +39,30 @@ import AppDateRangePicker from "~/components/shared/reports/app-date-range-picke
 
 defineOptions({ name: "AppPeriodDateFilter" });
 
+const ALL_PERIOD_OPTIONS = [
+  { label: "اليوم", value: "day" },
+  { label: "أمس", value: "yesterday" },
+  { label: "اسبوع", value: "week" },
+  { label: "شهر", value: "month" },
+  { label: "العام الدراسي", value: "year" },
+  { label: "تاريخ مخصص", value: "custom" },
+];
+
 const props = defineProps({
   from: { type: String, default: null },
   to: { type: String, default: null },
-  /** Initial preset when dates are empty: day | week | month | year */
+  /**
+   * Allowed period values. Defaults to admin set (no yesterday).
+   * Branch reports pass: day | yesterday | week
+   */
+  periods: {
+    type: Array,
+    default: () => ["day", "week", "month", "year", "custom"],
+  },
+  /** Initial preset when dates are empty */
   defaultPeriod: {
     type: String,
-    default: "year",
-    validator: (value) => ["day", "week", "month", "year"].includes(value),
+    default: "day",
   },
   /**
    * Academic-year date range used when period = year.
@@ -70,15 +89,19 @@ const emitPeriod = (value) => {
 };
 
 const customRangeRef = ref(null);
-const period = ref(props.defaultPeriod);
 
-const periodOptions = [
-  { label: "اليوم", value: "day" },
-  { label: "اسبوع", value: "week" },
-  { label: "شهر", value: "month" },
-  { label: "العام الدراسي", value: "year" },
-  { label: "تاريخ مخصص", value: "custom" },
-];
+const periodOptions = computed(() =>
+  ALL_PERIOD_OPTIONS.filter((option) => props.periods.includes(option.value)),
+);
+
+const allowsCustom = computed(() => props.periods.includes("custom"));
+
+const resolveDefaultPeriod = () => {
+  if (props.periods.includes(props.defaultPeriod)) return props.defaultPeriod;
+  return periodOptions.value[0]?.value || "day";
+};
+
+const period = ref(resolveDefaultPeriod());
 
 const formatDisplayDate = (iso) => {
   if (!iso) return "";
@@ -100,7 +123,8 @@ const selectedPeriodLabel = computed(() => {
     return customRangeLabel.value || "تاريخ مخصص";
   }
   return (
-    periodOptions.find((option) => option.value === period.value)?.label || ""
+    periodOptions.value.find((option) => option.value === period.value)?.label ||
+    ""
   );
 });
 
@@ -121,8 +145,15 @@ const rangeForPeriod = (value) => {
   const today = startOfToday();
   const to = toIsoDate(today);
 
-  if (value === "day") {
+  if (value === "day" || value === "today") {
     return { from: to, to };
+  }
+
+  if (value === "yesterday") {
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const iso = toIsoDate(yesterday);
+    return { from: iso, to: iso };
   }
 
   if (value === "week") {
@@ -142,7 +173,6 @@ const rangeForPeriod = (value) => {
     if (ayFrom && ayTo) {
       return { from: String(ayFrom).slice(0, 10), to: String(ayTo).slice(0, 10) };
     }
-    // Fallback when academic year dates are unavailable.
     const from = new Date(today.getFullYear(), 0, 1);
     return { from: toIsoDate(from), to };
   }
@@ -165,10 +195,14 @@ const openCustomPicker = async () => {
 };
 
 const onPeriodChange = async (value) => {
-  period.value = value || props.defaultPeriod;
+  period.value = value || resolveDefaultPeriod();
   emitPeriod(period.value);
 
   if (period.value === "custom") {
+    if (!allowsCustom.value) {
+      applyPreset(resolveDefaultPeriod());
+      return;
+    }
     await openCustomPicker();
     return;
   }
@@ -177,6 +211,7 @@ const onPeriodChange = async (value) => {
 };
 
 const onRangeChange = (payload) => {
+  if (!allowsCustom.value) return;
   period.value = "custom";
   emitPeriod("custom");
   emit("change", { ...(payload || {}), period: "custom" });
@@ -186,19 +221,20 @@ const detectPeriodFromProps = () => {
   const from = props.from;
   const to = props.to;
   if (!from || !to) {
-    period.value = props.defaultPeriod;
+    period.value = resolveDefaultPeriod();
     return;
   }
 
-  for (const option of ["day", "week", "month", "year"]) {
-    const range = rangeForPeriod(option);
+  for (const option of periodOptions.value) {
+    if (option.value === "custom") continue;
+    const range = rangeForPeriod(option.value);
     if (range && range.from === from && range.to === to) {
-      period.value = option;
+      period.value = option.value;
       return;
     }
   }
 
-  period.value = "custom";
+  period.value = allowsCustom.value ? "custom" : resolveDefaultPeriod();
 };
 
 onMounted(() => {
@@ -210,12 +246,10 @@ onMounted(() => {
 });
 
 watch(
-  () => [
-    props.academicYearRange?.from,
-    props.academicYearRange?.to,
-  ],
+  () => [props.academicYearRange?.from, props.academicYearRange?.to],
   () => {
     if (period.value !== "year") return;
+    if (!props.periods.includes("year")) return;
     applyPreset("year");
   },
 );

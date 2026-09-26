@@ -11,6 +11,7 @@ export type {
   StudentTransactionResponse,
   StudentQuery,
   StudentTransactionsQuery,
+  StudentExportQuery,
   StudentPayload,
   StudentUpdatePayload,
   StudentDeleteResponse,

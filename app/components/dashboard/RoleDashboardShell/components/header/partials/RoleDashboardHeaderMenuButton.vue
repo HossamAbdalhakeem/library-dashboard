@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="rounded-xl border border-white/10 bg-[#111111] p-2.5 text-slate-200 hover:bg-white/5 lg:hidden"
+    class="rounded-xl border border-white/10 bg-[var(--app-card)] p-2.5 text-[var(--app-text-strong)] hover:bg-[var(--app-overlay-hover)] lg:hidden"
     aria-label="فتح القائمة"
     @click="$emit('open-mobile')"
   >

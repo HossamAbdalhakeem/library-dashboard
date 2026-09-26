@@ -16,7 +16,12 @@ export function useSalesExchangePage() {
   const selectedSale = ref(null);
   const refundOpen = ref(false);
   const exchangeOpen = ref(false);
-  const filters = reactive({ search: "", branchId: null });
+  const filters = reactive({
+    search: "",
+    branchId: null,
+    teacherId: null,
+    studyYearId: null,
+  });
   const pagination = reactive({
     page: 1,
     perPage: 20,
@@ -63,10 +68,14 @@ export function useSalesExchangePage() {
     loadData();
   };
 
-  const onBranchChange = () => {
+  const onFilterChange = () => {
     resetPagination();
     loadData();
   };
+
+  const onBranchChange = onFilterChange;
+  const onTeacherChange = onFilterChange;
+  const onStudyYearChange = onFilterChange;
 
   const openRefund = (item) => {
     if (!item?.saleId || !item?.saleItemId) {
@@ -120,6 +129,8 @@ export function useSalesExchangePage() {
     onPage,
     onSearch,
     onBranchChange,
+    onTeacherChange,
+    onStudyYearChange,
     openRefund,
     openExchange,
     onFlowDone,

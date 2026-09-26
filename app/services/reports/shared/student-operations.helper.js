@@ -18,7 +18,7 @@ import { normalizeOperationKind } from "~/enums/operationKind";
 import { normalizeOperationStatus } from "~/enums/operationStatus";
 
 /**
- * Student-ops / timeline mappers for branch + customer-service reports.
+ * Student-ops / timeline mappers for branch reports.
  * Nested-only: reads API nested shapes (student, product.teacher, product.studyYear).
  * BE student-ops rows send `status`, `createdAt` (+ `date`), and `product.price`.
  */

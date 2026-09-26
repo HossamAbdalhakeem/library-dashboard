@@ -5,18 +5,18 @@
     dir="rtl"
   >
     <p
-      class="m-0 min-w-0 max-w-full whitespace-normal break-words text-right text-sm font-semibold leading-snug text-neutral-100"
+      class="m-0 min-w-0 max-w-full whitespace-normal break-words text-right text-sm font-semibold leading-snug text-[var(--app-text-strong)]"
     >
       {{ student.name }}
     </p>
     <p
       v-if="hasPhone"
-      class="m-0 truncate text-xs leading-tight tabular-nums text-neutral-400"
+      class="m-0 truncate text-xs leading-tight tabular-nums text-[var(--app-muted)]"
     >
       {{ student.phone }}
     </p>
   </div>
-  <span v-else class="text-neutral-400">—</span>
+  <span v-else class="text-[var(--app-muted)]">—</span>
 </template>
 
 <script setup>

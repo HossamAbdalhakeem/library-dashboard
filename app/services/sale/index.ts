@@ -13,6 +13,7 @@ export type {
   SaleExchangeBrief,
   SaleResponse,
   SalePayload,
+  SaleExportQuery,
   SaleTimelineEventType,
   SaleTimelineEvent,
   SaleTimelineResponse,

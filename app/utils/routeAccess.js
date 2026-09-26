@@ -44,7 +44,6 @@ export const canAccessPath = (role, path) => {
 
   if (appRole === UserRole.CUSTOMER_SERVICE) {
     if (isExactOrChild(normalized, "/books/reserve")) return true;
-    if (isExactOrChild(normalized, "/reports/customer-service")) return true;
     return false;
   }
 

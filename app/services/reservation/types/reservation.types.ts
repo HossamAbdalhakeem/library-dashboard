@@ -91,6 +91,8 @@ export type ReservationQuery = {
   status?: string | string[];
   academicYearId?: string;
   branchId?: string;
+  teacherId?: string;
+  studyYearId?: string;
 };
 
 /** POST /reservations body. */

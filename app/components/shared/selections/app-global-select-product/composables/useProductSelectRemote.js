@@ -69,6 +69,7 @@ export function useProductSelectRemote({
         per_page: props.perPage,
         ...(query ? { search: query } : {}),
         ...(props.reservationOnly ? { reservationAllowed: true } : {}),
+        ...(props.catalogQuery || {}),
       };
       const result = await productApi.getProducts(params);
       if (currentRequest !== requestId.value) return;

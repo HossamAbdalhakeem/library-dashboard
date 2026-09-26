@@ -1,5 +1,6 @@
 import {
   apiFetch,
+  apiFetchBlob,
   firstRow,
   asPaginated,
   type PaginatedResponse,
@@ -7,6 +8,7 @@ import {
 import type {
   StudentQuery,
   StudentTransactionsQuery,
+  StudentExportQuery,
   StudentPayload,
   StudentUpdatePayload,
   StudentResponse,
@@ -49,6 +51,14 @@ export const studentApi = {
         params,
       }),
     );
+  },
+
+  /** GET /students/export → CSV blob */
+  async exportStudents(params: StudentExportQuery = {}): Promise<Blob> {
+    return apiFetchBlob("/students/export", {
+      method: "GET",
+      params,
+    });
   },
 
   /** POST /students → StudentResponse | null */

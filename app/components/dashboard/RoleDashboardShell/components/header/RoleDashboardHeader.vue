@@ -1,6 +1,6 @@
 <template>
   <header
-    class="sticky top-0 z-20 border-b border-white/10 bg-black/90 px-3 py-3 backdrop-blur-sm sm:px-6 sm:py-5"
+    class="sticky top-0 z-20 border-b border-white/10 bg-[color-mix(in_srgb,var(--app-bg)_90%,transparent)] px-3 py-3 backdrop-blur-sm sm:px-6 sm:py-5"
   >
     <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
       <div class="flex min-w-0 items-center gap-2 sm:gap-3">
@@ -15,6 +15,7 @@
       </div>
 
       <div class="flex items-center gap-2 sm:gap-3">
+        <RoleDashboardHeaderThemeToggle />
         <NotificationBell
           v-if="normalizedRole !== UserRole.CUSTOMER_SERVICE"
         />
@@ -32,6 +33,7 @@
 <script setup>
 import RoleDashboardHeaderMenuButton from "./partials/RoleDashboardHeaderMenuButton.vue";
 import RoleDashboardHeaderUser from "./partials/RoleDashboardHeaderUser.vue";
+import RoleDashboardHeaderThemeToggle from "./partials/RoleDashboardHeaderThemeToggle.vue";
 import { UserRole } from "~/enums/userRole";
 
 const NotificationBell = defineAsyncComponent(() =>

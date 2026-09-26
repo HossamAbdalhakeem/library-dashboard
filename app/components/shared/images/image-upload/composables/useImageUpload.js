@@ -3,11 +3,13 @@
  */
 export function useImageUpload(props, emit) {
   const inputRef = ref(null);
+  const cameraInputRef = ref(null);
   const previewUrl = ref("");
   const errorMessage = ref("");
   const fileMeta = ref("");
   const showCropper = ref(false);
   const cropperMounted = ref(false);
+  const showCameraCapture = ref(false);
   const selectedImage = ref("");
   const isProcessing = ref(false);
   const originalFileName = ref("cropped-image.jpg");
@@ -38,13 +40,29 @@ export function useImageUpload(props, emit) {
     inputRef.value?.click();
   };
 
+  const openCamera = () => {
+    errorMessage.value = "";
+    // Prefer getUserMedia dialog — works on laptop webcams and modern phones.
+    // File-input capture= is unreliable on desktop browsers.
+    if (import.meta.client && navigator?.mediaDevices?.getUserMedia) {
+      showCameraCapture.value = true;
+      return;
+    }
+    cameraInputRef.value?.click();
+  };
+
+  const resetFileInputs = () => {
+    if (inputRef.value) inputRef.value.value = "";
+    if (cameraInputRef.value) cameraInputRef.value.value = "";
+  };
+
   const clear = () => {
     revokePreview();
     errorMessage.value = "";
     fileMeta.value = "";
     selectedImage.value = "";
     originalFileName.value = "cropped-image.jpg";
-    if (inputRef.value) inputRef.value.value = "";
+    resetFileInputs();
     emit("update:modelValue", null);
     emit("clear");
   };
@@ -56,27 +74,24 @@ export function useImageUpload(props, emit) {
     showCropper.value = true;
   };
 
-  const onFileChange = (event) => {
-    const file = event.target?.files?.[0];
-    if (!file) return;
-
+  const processSelectedFile = (file) => {
     errorMessage.value = "";
 
     if (!file.type.startsWith("image/")) {
       errorMessage.value = "يسمح برفع الصور فقط.";
       emit("error", errorMessage.value);
-      if (inputRef.value) inputRef.value.value = "";
+      resetFileInputs();
       return;
     }
 
     if (file.size > maxBytes.value) {
       errorMessage.value = `حجم الصورة كبير. الحد الأقصى ${maxSizeLabel.value}.`;
       emit("error", errorMessage.value);
-      if (inputRef.value) inputRef.value.value = "";
+      resetFileInputs();
       return;
     }
 
-    originalFileName.value = file.name || "cropped-image.jpg";
+    originalFileName.value = file.name || "camera-photo.jpg";
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -89,8 +104,26 @@ export function useImageUpload(props, emit) {
       emit("error", errorMessage.value);
     };
     reader.readAsDataURL(file);
+    resetFileInputs();
+  };
 
-    if (inputRef.value) inputRef.value.value = "";
+  const onCameraCaptured = (file) => {
+    showCameraCapture.value = false;
+    if (!file) return;
+    processSelectedFile(file);
+  };
+
+  const onCameraError = (message) => {
+    if (message) {
+      errorMessage.value = message;
+      emit("error", message);
+    }
+  };
+
+  const onFileChange = (event) => {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    processSelectedFile(file);
   };
 
   const handleCropped = async ({ blob, dataURL }) => {
@@ -170,28 +203,34 @@ export function useImageUpload(props, emit) {
       errorMessage.value = "";
       fileMeta.value = "";
       selectedImage.value = "";
-      if (inputRef.value) inputRef.value.value = "";
+      resetFileInputs();
     },
   );
 
   onBeforeUnmount(() => {
     revokePreview();
+    showCameraCapture.value = false;
   });
 
   return {
     inputRef,
+    cameraInputRef,
     previewUrl,
     errorMessage,
     fileMeta,
     showCropper,
     cropperMounted,
+    showCameraCapture,
     selectedImage,
     isProcessing,
     maxSizeLabel,
     openPicker,
+    openCamera,
     clear,
     openCropper,
     onFileChange,
+    onCameraCaptured,
+    onCameraError,
     handleCropped,
     handleCropperError,
     handleCropperClose,

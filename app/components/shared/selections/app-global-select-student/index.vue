@@ -253,11 +253,11 @@ onMounted(preloadSuggestions);
 }
 
 .student-search-field--default :deep(.student-search-icon) {
-  color: rgb(71 85 105);
+  color: var(--app-muted-soft);
 }
 
 .student-search-field--dark :deep(.student-search-icon) {
-  color: rgb(148 163 184);
+  color: var(--app-muted);
 }
 
 /* Join input + dropdown as one control (RTL-aware via logical radii) */
@@ -285,20 +285,20 @@ onMounted(preloadSuggestions);
 }
 
 .student-search-field--dark :deep(.student-search-input--dark) {
-  border: 1px solid rgb(51 65 85);
-  background-color: rgb(15 23 42);
-  color: rgb(241 245 249);
+  border: 1px solid var(--app-border-strong);
+  background-color: var(--app-surface);
+  color: var(--app-text-strong);
 }
 
 .student-search-field--dark :deep(.student-search-input--dark::placeholder) {
-  color: rgb(148 163 184);
+  color: var(--app-muted);
 }
 
 .student-search-field--dark :deep(.p-autocomplete .p-autocomplete-dropdown) {
-  border: 1px solid rgb(51 65 85);
+  border: 1px solid var(--app-border-strong);
   border-inline-start: 0;
-  background-color: rgb(30 41 59);
-  color: rgb(226 232 240);
+  background-color: var(--app-elevated);
+  color: var(--app-text-strong);
 }
 
 .student-search-field--default :deep(.p-autocomplete .p-autocomplete-dropdown) {

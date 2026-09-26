@@ -23,7 +23,6 @@ export type {
   DailyReportKind,
   DailyReportSection,
   BranchReportSection,
-  CustomerServiceReportSection,
 } from "./daily-report.types";
 export type {
   ReportQuery,

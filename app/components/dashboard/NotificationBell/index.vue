@@ -3,7 +3,7 @@
     <button
       ref="buttonRef"
       type="button"
-      class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-slate-900 text-slate-200 transition hover:bg-slate-800"
+      class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[var(--app-card)] text-[var(--app-text-strong)] transition hover:bg-[var(--app-overlay-hover)]"
       aria-label="الإشعارات"
       @click="toggle"
     >
@@ -20,12 +20,12 @@
       <div
         v-if="open"
         ref="panelRef"
-        class="fixed z-[10000] w-[22rem] max-w-[85vw] overflow-hidden rounded-2xl border border-white/10 bg-slate-950 shadow-2xl"
+        class="fixed z-[10000] w-[22rem] max-w-[85vw] overflow-hidden rounded-2xl border border-white/10 bg-[var(--app-surface)] shadow-2xl"
         :style="panelStyle"
         dir="rtl"
       >
         <div class="border-b border-white/10 px-4 py-3">
-          <p class="text-sm font-semibold text-white">تنبيهات المخزون</p>
+          <p class="text-sm font-semibold text-[var(--app-text-strong)]">تنبيهات المخزون</p>
         </div>
 
         <div class="max-h-80 overflow-y-auto">
@@ -33,7 +33,7 @@
             <div
               v-for="i in 4"
               :key="i"
-              class="rounded-xl border border-white/5 bg-slate-900/60 p-3"
+              class="rounded-xl border border-white/5 bg-[var(--app-elevated)] p-3"
             >
               <Skeleton width="55%" height="0.85rem" class="mb-2" />
               <Skeleton width="100%" height="0.7rem" class="mb-1.5" />
@@ -54,7 +54,7 @@
             class="flex flex-col gap-1 border-b border-white/5 px-4 py-3 text-right"
           >
             <div class="flex items-start justify-between gap-2">
-              <p class="text-sm font-semibold text-white">{{ item.title }}</p>
+              <p class="text-sm font-semibold text-[var(--app-text-strong)]">{{ item.title }}</p>
               <span
                 class="shrink-0 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-300"
               >

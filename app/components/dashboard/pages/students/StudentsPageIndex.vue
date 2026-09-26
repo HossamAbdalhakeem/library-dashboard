@@ -4,14 +4,26 @@
       <template #title>
         <div class="flex flex-wrap items-center justify-between gap-3">
           <span class="text-lg font-bold text-slate-900">الطلاب</span>
-          <Button
-            label="إضافة طالب جديد"
-            icon="pi pi-user-plus"
-            severity="primary"
-            data-testid="students-create"
-            :disabled="!currentAcademicYearId"
-            @click="openCreate"
-          />
+          <div class="flex flex-wrap items-center gap-2">
+            <Button
+              v-if="isAdmin"
+              label="تصدير"
+              icon="pi pi-download"
+              severity="secondary"
+              outlined
+              data-testid="students-export"
+              :disabled="!currentAcademicYearId"
+              @click="openExport"
+            />
+            <Button
+              label="إضافة طالب جديد"
+              icon="pi pi-user-plus"
+              severity="primary"
+              data-testid="students-create"
+              :disabled="!currentAcademicYearId"
+              @click="openCreate"
+            />
+          </div>
         </div>
       </template>
       <template #content>
@@ -53,6 +65,11 @@
       :student="transactionsStudent"
       @hide="transactionsStudent = null"
     />
+
+    <StudentsExportDialog
+      v-if="exportVisible"
+      v-model:visible="exportVisible"
+    />
   </div>
 </template>
 
@@ -69,6 +86,7 @@ import {
 } from "~/services/student";
 import { useAppToast } from "~/composables/useAppToast";
 import { useAcademicYear } from "~/composables/useAcademicYear";
+import { useAuth } from "~/composables/useAuth";
 
 const StudentForm = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/students/components/form/StudentForm.vue"),
@@ -78,13 +96,20 @@ const StudentTransactionsDialog = defineAsyncComponent(() =>
     "~/components/dashboard/pages/students/components/partials/StudentTransactionsDialog.vue"
   ),
 );
+const StudentsExportDialog = defineAsyncComponent(() =>
+  import(
+    "~/components/dashboard/pages/students/components/partials/StudentsExportDialog.vue"
+  ),
+);
 
 const { showError, showSuccess } = useAppToast();
 const { academicYearId: currentAcademicYearId } = useAcademicYear();
+const { isAdmin } = useAuth();
 const loading = ref(true);
 const deactivating = ref(false);
 const drawerVisible = ref(false);
 const transactionsVisible = ref(false);
+const exportVisible = ref(false);
 const editingItem = ref(null);
 const transactionsStudent = ref(null);
 const students = ref([]);
@@ -165,6 +190,14 @@ const openEdit = (item) => {
 const openTransactions = (item) => {
   transactionsStudent.value = item;
   transactionsVisible.value = true;
+};
+
+const openExport = () => {
+  if (!currentAcademicYearId.value) {
+    showError("اختر العام الدراسي أولاً.");
+    return;
+  }
+  exportVisible.value = true;
 };
 
 const handleSaved = async () => {

@@ -102,14 +102,22 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      htmlAttrs: { class: 'app-dark', lang: 'ar', dir: 'rtl' },
+      // Theme class is owned by useTheme + inline script (avoid static app-dark
+      // which Nuxt head re-applies on refresh and overrides a saved light preference)
+      htmlAttrs: { lang: 'ar', dir: 'rtl' },
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'shortcut icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'apple-touch-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/jpeg', href: '/library-logo.jpeg' },
+        { rel: 'shortcut icon', type: 'image/jpeg', href: '/library-logo.jpeg' },
+        { rel: 'apple-touch-icon', href: '/library-logo.jpeg' },
       ],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      script: [
+        {
+          // Prefer saved theme early to avoid a flash of the wrong scheme
+          children: `(function(){try{var t=localStorage.getItem('app-theme');var r=document.documentElement;if(t==='light')r.classList.remove('app-dark');else r.classList.add('app-dark');}catch(e){document.documentElement.classList.add('app-dark');}})();`,
+        },
       ],
     },
   },
@@ -191,7 +199,8 @@ export default defineNuxtConfig({
       xFrameOptions: 'DENY',
       xXSSProtection: '0',
       permissionsPolicy: {
-        camera: [],
+        // Needed for payment-proof webcam capture (branch / CS flows)
+        camera: ['self'],
         microphone: [],
         geolocation: [],
         'display-capture': [],

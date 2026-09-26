@@ -7,8 +7,6 @@ import type {
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
   AdminPaymentMethodsResponse,
-  AdminInventoryResponse,
-  AdminProductsResponse,
   AdminBranchesResponse,
   AdminReturnsExchangesResponse,
   AdminExpensesResponse,
@@ -62,22 +60,6 @@ export const adminReportsApi = {
         method: "GET",
         params,
       }),
-    );
-  },
-
-  async getInventory(
-    params: AdminReportQuery = {},
-  ): Promise<AdminInventoryResponse> {
-    return asData(
-      await apiFetch("/reports/admin/inventory", { method: "GET", params }),
-    );
-  },
-
-  async getProducts(
-    params: AdminReportQuery = {},
-  ): Promise<AdminProductsResponse> {
-    return asData(
-      await apiFetch("/reports/admin/products", { method: "GET", params }),
     );
   },
 

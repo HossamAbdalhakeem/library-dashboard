@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute bottom-0 left-0 right-0 space-y-3 border-t border-white/10 bg-[#0a0a0a] p-3 sm:p-4"
+    class="absolute bottom-0 left-0 right-0 space-y-3 border-t border-white/10 bg-[var(--app-surface)] p-3 sm:p-4"
   >
     <!-- Hidden for now
     <AcademicYearSwitcher />
@@ -8,7 +8,7 @@
     <button
       type="button"
       data-testid="logout-button"
-      class="flex w-full items-center justify-between rounded-xl bg-red-500/10 px-3 py-3 text-sm font-medium text-red-200 hover:bg-red-500/20"
+      class="flex w-full items-center justify-between rounded-xl bg-red-500/10 px-3 py-3 text-sm font-medium text-red-600 hover:bg-red-500/20 dark:text-red-200"
       @click="$emit('request-logout')"
     >
       <span>تسجيل الخروج</span>

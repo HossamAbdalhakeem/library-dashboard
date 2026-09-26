@@ -88,6 +88,16 @@ export type StudentTransactionsQuery = {
   academicYearId?: string;
 };
 
+/** GET /students/export query params. */
+export type StudentExportQuery = {
+  studyYearId?: string;
+  studentId?: string;
+  teacherId?: string;
+  from?: string;
+  to?: string;
+  academicYearId?: string;
+};
+
 /** POST /students body. */
 export type StudentPayload = {
   name: string;

@@ -44,12 +44,12 @@
           :amount-error="amountError"
           :payment-exclude="paymentExclude"
           :proof-required-error="proofRequiredError"
+          :show-proof-source-choice="showProofSourceChoice"
           @apply-student="applyStudent"
           @clear-student="clearStudent"
           @branch-change="onBranchChange"
           @study-year-change="onStudyYearChange"
           @teacher-change="onTeacherChange"
-          @product-type-change="onProductTypeChange"
           @product-search="onProductSearch"
           @set-payment-fields-ref="setPaymentFieldsRef"
         />
@@ -103,6 +103,7 @@ const props = defineProps({
   initialProduct: { type: [String, Number], default: "" },
   /** Prefill from CS product search (product + optional branch). */
   initialSelection: { type: Object, default: null },
+  showProofSourceChoice: { type: Boolean, default: false },
   submitFn: { type: Function, required: true },
 });
 
@@ -128,7 +129,6 @@ const {
   onBranchChange,
   onStudyYearChange,
   onTeacherChange,
-  onProductTypeChange,
   saving,
   reservationSummary,
   successDialogVisible,

@@ -20,24 +20,6 @@
 
     <Field
       v-slot="{ errorMessage }"
-      v-model="sales.form.studyYearId"
-      name="studyYearId"
-      rules="required"
-    >
-      <div class="flex flex-col gap-2 text-right">
-        <AppGlobalSelectStudyYear
-          v-model="sales.form.studyYearId"
-          label="السنة الدراسية"
-          placeholder="اختر السنة الدراسية"
-          :invalid="!!(errorMessage || fieldErrors.studyYearId)"
-          @change="sales.onStudyYearChange"
-        />
-        <ErrorMessage name="studyYearId" class="text-xs text-red-500" />
-      </div>
-    </Field>
-
-    <Field
-      v-slot="{ errorMessage }"
       v-model="sales.form.teacherId"
       name="teacherId"
       rules="required"
@@ -47,7 +29,6 @@
           v-model="sales.form.teacherId"
           label="المدرس"
           placeholder="اختر المدرس"
-          :disabled="!sales.form.studyYearId"
           :invalid="!!(errorMessage || fieldErrors.teacherId)"
           @change="sales.onTeacherChange"
         />
@@ -57,20 +38,20 @@
 
     <Field
       v-slot="{ errorMessage }"
-      v-model="sales.form.productType"
-      name="productType"
+      v-model="sales.form.studyYearId"
+      name="studyYearId"
       rules="required"
     >
       <div class="flex flex-col gap-2 text-right">
-        <AppGlobalSelectProductType
-          v-model="sales.form.productType"
-          label="نوع المنتج"
-          placeholder="اختر النوع"
+        <AppGlobalSelectStudyYear
+          v-model="sales.form.studyYearId"
+          label="السنة الدراسية"
+          placeholder="اختر السنة الدراسية"
           :disabled="!sales.form.teacherId"
-          :invalid="!!(errorMessage || fieldErrors.productType)"
-          @change="sales.onProductTypeChange"
+          :invalid="!!(errorMessage || fieldErrors.studyYearId)"
+          @change="sales.onStudyYearChange"
         />
-        <ErrorMessage name="productType" class="text-xs text-red-500" />
+        <ErrorMessage name="studyYearId" class="text-xs text-red-500" />
       </div>
     </Field>
 
@@ -148,6 +129,7 @@
           v-model:image="sales.proofFile"
           v-model:image-data-url="sales.proofKey"
           v-model:image-preview-url="sales.proofPreviewUrl"
+          :show-proof-source-choice="showProofSourceChoice"
           :method-invalid="!!(errorMessage || fieldErrors.method)"
           :method-error="errorMessage || ''"
           :image-invalid="sales.proofRequiredError"
@@ -177,8 +159,12 @@ import AppGlobalSelectProduct from "~/components/shared/selections/app-global-se
 import AppGlobalSelectStudent from "~/components/shared/selections/app-global-select-student/index.vue";
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
-import AppGlobalSelectProductType from "~/components/shared/selections/app-global-select-product-type/index.vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { useAuth } from "~/composables/useAuth";
+
+const { isBranchEmployee } = useAuth();
+
+const showProofSourceChoice = computed(() => isBranchEmployee.value);
 
 const props = defineProps({
   sales: { type: Object, required: true },

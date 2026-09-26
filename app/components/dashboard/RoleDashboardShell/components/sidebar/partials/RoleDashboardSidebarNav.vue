@@ -6,16 +6,16 @@
     <div
       v-for="section in navigation"
       :key="section.id"
-      class="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]"
+      class="overflow-hidden rounded-xl border border-white/10 bg-[var(--app-overlay-soft)]"
     >
       <button
         v-if="section.label"
         type="button"
-        class="flex w-full items-center justify-between gap-2 px-3 py-3 text-right transition hover:bg-white/5"
+        class="flex w-full items-center justify-between gap-2 px-3 py-3 text-right transition hover:bg-[var(--app-overlay-hover)]"
         :aria-expanded="openSectionId === section.id"
         @click="$emit('toggle-section', section.id)"
       >
-        <span class="text-xs font-bold tracking-wide text-primary-300">
+        <span class="text-xs font-bold tracking-wide text-primary-700 dark:text-primary-300">
           {{ section.label }}
         </span>
         <span
@@ -36,11 +36,11 @@
           v-for="item in section.items"
           :key="item.to"
           :to="item.to"
-          class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-right text-sm font-medium transition hover:bg-white/5"
+          class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-right text-sm font-medium transition hover:bg-[var(--app-overlay-hover)]"
           :class="
             isActive(item.to)
-              ? 'bg-[#1a1a1a] text-primary-200 ring-1 ring-primary-500/40'
-              : 'text-slate-300'
+              ? 'bg-[var(--app-elevated)] text-primary-700 ring-1 ring-primary-500/40 dark:text-primary-200'
+              : 'text-[var(--app-muted-soft)]'
           "
           @click="$emit('close-mobile')"
         >

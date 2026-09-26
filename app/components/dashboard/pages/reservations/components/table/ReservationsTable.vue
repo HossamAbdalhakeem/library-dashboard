@@ -27,34 +27,8 @@
         />
       </template>
 
-      <template #paidAmountLabel="{ data }">
-        <span
-          class="rounded-md px-2 py-1 text-xs font-bold bg-emerald-500/20 text-emerald-300"
-        >
-          {{ data.payment?.paidAmountLabel }}
-        </span>
-      </template>
-
-      <template #paymentMethod="{ data }">
-        <PaymentProofThumb
-          :method="data.payment?.method"
-          :method-label="data.payment?.methodLabel"
-          :payment-id="data.payment?.id"
-          :has-proof="data.payment?.image?.hasProof"
-        />
-      </template>
-
-      <template #remainingAmountLabel="{ data }">
-        <span
-          class="rounded-md px-2 py-1 text-xs font-bold"
-          :class="
-            data.payment?.hasRemaining
-              ? 'bg-orange-500/20 text-orange-300'
-              : 'bg-emerald-500/20 text-emerald-300'
-          "
-        >
-          {{ data.payment?.remainingAmountLabel }}
-        </span>
+      <template #paymentSummary="{ data }">
+        <AppPaymentSummaryTableCell :payment="data.payment" />
       </template>
 
       <template #status="{ data }">
@@ -66,13 +40,22 @@
       </template>
 
       <template #createdBy="{ data }">
-        <div class="flex flex-col items-center gap-0.5">
+        <div class="flex flex-col items-center gap-1 text-center">
           <span class="text-sm font-medium">{{ data.createdBy?.fullName }}</span>
           <AppStatusTableCell
             v-if="data.createdBy?.roleLabel && data.createdBy.roleLabel !== '-'"
             :label="data.createdBy.roleLabel"
             severity="secondary"
           />
+          <span
+            v-if="data.branchName && data.branchName !== '-'"
+            class="text-xs text-slate-500"
+          >
+            {{ data.branchName }}
+          </span>
+          <span class="text-xs text-slate-500">
+            الكمية: {{ data.quantity ?? 1 }}
+          </span>
         </div>
       </template>
 
@@ -132,7 +115,7 @@ import Button from "primevue/button";
 import AppDataTable from "~/components/shared/tables/app-data-table/index.vue";
 import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
 import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell/index.vue";
-import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
+import AppPaymentSummaryTableCell from "~/components/shared/tables/app-payment-summary-table-cell/index.vue";
 import AppProductTableCell from "~/components/shared/tables/app-product-table-cell/index.vue";
 import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import OperationTimelineDialog from "~/components/shared/dialog/operation-timeline-dialog/index.vue";
@@ -191,12 +174,18 @@ const columns = [
   { field: "createdAt", header: "تاريخ الحجز", slot: "createdAt" },
   { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },
-  { field: "createdByName", header: "أنشئ بواسطة", slot: "createdBy" },
-  { field: "branchName", header: "الفرع" },
-  { field: "quantity", header: "الكمية" },
-  { field: "paidAmountLabel", header: "المقدم", slot: "paidAmountLabel" },
-  { field: "paymentMethodLabel", header: "طريقة الدفع", slot: "paymentMethod" },
-  { field: "remainingAmountLabel", header: "المتبقي", slot: "remainingAmountLabel" },
+  {
+    field: "createdByName",
+    header: "أنشئ بواسطة",
+    slot: "createdBy",
+    style: "min-width: 9rem",
+  },
+  {
+    field: "paymentSummary",
+    header: "الدفع",
+    slot: "paymentSummary",
+    style: "min-width: 11rem",
+  },
   { field: "statusLabel", header: "الحالة", slot: "status" },
   { field: "actions", header: "إجراء", slot: "actions", style: "width: 14rem" },
 ];

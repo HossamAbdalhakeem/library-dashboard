@@ -201,6 +201,17 @@ export const apiFetch = async <T = any>(
   return request<T>(getApiOrigin(), path, options);
 };
 
+/** Binary/file downloads (CSV, etc.) */
+export const apiFetchBlob = async (
+  path: string,
+  options: FetchOptions = {},
+) => {
+  return request<Blob>(getApiOrigin(), path, {
+    ...options,
+    responseType: "blob",
+  });
+};
+
 /** Auth endpoints on the same NestJS API */
 export const authFetch = async <T = any>(
   path: string,

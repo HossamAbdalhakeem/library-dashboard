@@ -139,11 +139,19 @@ export function useProductSelect(props, emit) {
       props.excludeProductId,
       props.minAvailableQuantity,
       JSON.stringify(props.inventoryQuery || {}),
+      JSON.stringify(props.catalogQuery || {}),
       props.reservationOnly,
+      props.autoLoad,
     ],
     () => {
-      if (!props.autoLoad) return;
       if (props.source === "options") return;
+      if (!props.autoLoad) {
+        cancelSearch();
+        searchTerm.value = "";
+        internalOptions.value = [];
+        emit("loaded", []);
+        return;
+      }
       cancelSearch();
       searchTerm.value = "";
       reload("");

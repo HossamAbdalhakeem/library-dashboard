@@ -1,14 +1,7 @@
 <script setup>
-import { useAuth } from "~/composables/useAuth";
-
 definePageMeta({ middleware: ["local-pages"] });
 
-const { isCustomerService } = useAuth();
-
-const resolveDailyReportPath = () =>
-  isCustomerService.value ? "/reports/customer-service" : "/reports/branch";
-
-await navigateTo(resolveDailyReportPath(), { replace: true });
+await navigateTo("/reports/branch", { replace: true });
 </script>
 
 <template>

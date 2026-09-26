@@ -14,22 +14,22 @@
 }
 
 .app-data-table-scroll::-webkit-scrollbar-track {
-  background: #111111;
+  background: var(--app-card);
 }
 
 .app-data-table-scroll::-webkit-scrollbar-thumb {
-  background: #404040;
+  background: var(--app-border-strong);
   border-radius: 999px;
 }
 
 .app-data-table-scroll::-webkit-scrollbar-thumb:hover {
-  background: #525252;
+  background: var(--app-muted);
 }
 
 .app-data-table-wrap :deep(.p-datatable-table-container),
 .app-data-table-wrap :deep(.p-datatable-wrapper),
 .app-data-table-wrap :deep(.p-datatable-table) {
-  background: #111111 !important;
+  background: var(--app-card) !important;
   border: none !important;
   border-collapse: collapse !important;
 }
@@ -43,9 +43,9 @@
 .app-data-table-wrap :deep(.p-datatable-thead > tr > th),
 .app-data-table-wrap :deep(.p-datatable-tbody > tr > td) {
   background: transparent !important;
-  color: #e5e5e5 !important;
+  color: var(--app-text-strong) !important;
   border: none !important;
-  border-bottom: 1px solid #262626 !important;
+  border-bottom: 1px solid var(--app-border) !important;
   padding: 0.85rem 0.75rem !important;
   text-align: center !important;
   vertical-align: middle !important;
@@ -55,14 +55,15 @@
 }
 
 .app-data-table-wrap :deep(.p-datatable-thead > tr > th) {
-  background: #1a1a1a !important;
+  background: var(--app-elevated) !important;
+  color: var(--app-text-strong) !important;
   font-weight: 700 !important;
   white-space: nowrap;
 }
 
 .app-data-table-wrap :deep(.p-datatable-tbody > tr) {
-  background: #111111 !important;
-  color: #e5e5e5 !important;
+  background: var(--app-card) !important;
+  color: var(--app-text-strong) !important;
   transition: background-color 0.15s ease;
 }
 
@@ -72,11 +73,11 @@
 
 .app-data-table-wrap :deep(.p-datatable-tbody > tr:hover > td),
 .app-data-table-wrap :deep(.p-datatable-tbody > tr.p-datatable-row-odd:hover > td) {
-  background: #1a1a1a !important;
+  background: var(--app-elevated) !important;
 }
 
 .app-data-table-wrap :deep(.p-datatable-tbody > tr.p-datatable-row-odd > td) {
-  background: #0a0a0a !important;
+  background: var(--app-row-odd) !important;
 }
 
 /* Expansion rows must wrap and use full width — not table cell nowrap/center rules */
@@ -95,28 +96,28 @@
 .app-data-table-wrap :deep(.p-datatable-empty-message > td),
 .app-data-table-wrap :deep(.p-datatable-emptymessage > td) {
   text-align: center !important;
-  color: #a3a3a3 !important;
+  color: var(--app-muted) !important;
   padding: 2.5rem 1rem !important;
   border: none !important;
   border-bottom: none !important;
   border-top: none !important;
-  background: #111111 !important;
+  background: var(--app-card) !important;
   box-shadow: none !important;
   white-space: normal;
 }
 
 .app-data-table-empty {
   text-align: center;
-  color: #a3a3a3;
+  color: var(--app-muted);
   font-size: 0.875rem;
   padding: 0.5rem 0;
 }
 
 .app-data-table-wrap :deep(.p-paginator) {
-  background: #111111 !important;
+  background: var(--app-card) !important;
   border: none !important;
-  border-top: 1px solid #262626 !important;
-  color: #e5e5e5 !important;
+  border-top: 1px solid var(--app-border) !important;
+  color: var(--app-text) !important;
   padding: 0.75rem !important;
   justify-content: center;
   position: sticky;
@@ -130,7 +131,7 @@
 .app-data-table-wrap :deep(.p-paginator .p-paginator-first),
 .app-data-table-wrap :deep(.p-paginator .p-paginator-last) {
   background: transparent !important;
-  color: #d4d4d4 !important;
+  color: var(--app-muted-soft) !important;
   border: 1px solid transparent !important;
   min-width: 2.25rem;
   height: 2.25rem;
@@ -142,8 +143,8 @@
 .app-data-table-wrap :deep(.p-paginator .p-paginator-next:hover),
 .app-data-table-wrap :deep(.p-paginator .p-paginator-first:hover),
 .app-data-table-wrap :deep(.p-paginator .p-paginator-last:hover) {
-  background: #1a1a1a !important;
-  color: #fafafa !important;
+  background: var(--app-elevated) !important;
+  color: var(--app-text-strong) !important;
 }
 
 /* PrimeVue 4 uses p-paginator-page-selected (not p-highlight) */

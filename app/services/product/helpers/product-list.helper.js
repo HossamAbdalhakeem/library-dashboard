@@ -19,7 +19,6 @@ export const buildProductListQuery = ({ page, perPage, filters = {} }) => {
   };
   if (filters.search?.trim()) params.search = filters.search.trim();
   if (filters.teacherId) params.teacherId = filters.teacherId;
-  if (filters.type) params.type = filters.type;
   if (filters.studyYearId) params.studyYearId = filters.studyYearId;
   return params;
 };

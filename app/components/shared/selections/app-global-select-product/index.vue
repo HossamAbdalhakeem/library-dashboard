@@ -68,6 +68,7 @@ const props = defineProps({
   },
   branchId: { type: [String, Number], default: null },
   inventoryQuery: { type: Object, default: () => ({}) },
+  catalogQuery: { type: Object, default: () => ({}) },
   excludeProductId: { type: [String, Number], default: null },
   minAvailableQuantity: { type: Number, default: 0 },
   reservationOnly: { type: Boolean, default: false },
