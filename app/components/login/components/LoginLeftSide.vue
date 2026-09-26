@@ -1,13 +1,15 @@
 <template>
   <section
-    class="flex items-center justify-center bg-[#111111] p-6 sm:p-8 lg:p-12"
+    class="flex items-center justify-center bg-[var(--app-card)] p-6 sm:p-8 lg:p-12"
   >
     <div class="w-full max-w-md">
       <div class="mb-8 text-right">
-        <p class="text-xs font-semibold tracking-[0.22em] text-neutral-400">
+        <p class="text-xs font-semibold tracking-[0.22em] text-[var(--app-muted)]">
           تسجيل الدخول
         </p>
-        <h2 class="mt-3 text-3xl font-bold text-white">مرحباً بعودتك</h2>
+        <h2 class="mt-3 text-3xl font-bold text-[var(--app-text-strong)]">
+          مرحباً بعودتك
+        </h2>
       </div>
 
       <Form
@@ -18,7 +20,7 @@
       >
         <Field v-slot="{ field, errorMessage }" name="email" rules="required|email">
           <div class="flex flex-col gap-2 text-right">
-            <label class="text-sm font-medium text-neutral-300"
+            <label class="text-sm font-medium text-[var(--app-muted-soft)]"
               >البريد الإلكتروني</label
             >
             <InputText
@@ -40,7 +42,7 @@
           rules="required|min:6"
         >
           <div class="flex flex-col gap-2 text-right">
-            <label class="text-sm font-medium text-neutral-300"
+            <label class="text-sm font-medium text-[var(--app-muted-soft)]"
               >كلمة المرور</label
             >
             <Password
@@ -80,9 +82,9 @@
       </Form>
 
       <div
-        class="mt-8 rounded-2xl border border-white/10 bg-[#0a0a0a] p-4 text-right text-sm text-neutral-400"
+        class="mt-8 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4 text-right text-sm text-[var(--app-muted)]"
       >
-        <p class="font-semibold text-white">بيانات تجريبية:</p>
+        <p class="font-semibold text-[var(--app-text-strong)]">بيانات تجريبية:</p>
         <ul class="mt-2 space-y-2">
           <li>مدير: admin@library.local</li>
           <li>خدمة العملاء: cs1@library.local  /cs2@library.local </li>

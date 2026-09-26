@@ -1,10 +1,10 @@
 <template>
   <div
-    class="flex min-h-screen items-center justify-center bg-black px-4 py-8 sm:px-6 lg:px-8"
+    class="flex min-h-screen items-center justify-center bg-[var(--app-bg)] px-4 py-8 sm:px-6 lg:px-8"
     dir="rtl"
   >
     <div
-      class="mx-auto w-full max-w-6xl overflow-hidden rounded-[28px] border border-white/10 bg-[#111111] shadow-[0_18px_60px_rgba(0,0,0,0.45)]"
+      class="mx-auto w-full max-w-6xl overflow-hidden rounded-[28px] border border-[var(--app-border)] bg-[var(--app-card)] shadow-[0_18px_60px_rgba(0,0,0,0.12)] dark:border-white/10 dark:shadow-[0_18px_60px_rgba(0,0,0,0.45)]"
     >
       <div
         class="grid min-h-[min(760px,calc(100vh-4rem))] lg:grid-cols-[1.05fr_0.95fr]"

@@ -102,8 +102,9 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      // Dark is the default; inline script restores saved preference before paint
-      htmlAttrs: { class: 'app-dark', lang: 'ar', dir: 'rtl' },
+      // Theme class is owned by useTheme + inline script (avoid static app-dark
+      // which Nuxt head re-applies on refresh and overrides a saved light preference)
+      htmlAttrs: { lang: 'ar', dir: 'rtl' },
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'shortcut icon', type: 'image/x-icon', href: '/favicon.ico' },
