@@ -5,7 +5,11 @@
       source="catalog"
       variant="simple"
       placeholder="اختار المنتج ▾"
+      :disabled="disabled"
       :invalid="!!error"
+      :hint="hint"
+      :catalog-query="catalogQuery"
+      :auto-load="canLoad"
       @update:model-value="$emit('update:productId', $event)"
       @select="$emit('select', $event)"
       @loaded="$emit('loaded', $event)"
@@ -19,10 +23,24 @@ import AppGlobalSelectProduct from "~/components/shared/selections/app-global-se
 
 defineOptions({ name: "AddStockProductField" });
 
-defineProps({
+const props = defineProps({
   productId: { type: [String, Number, null], default: null },
   error: { type: String, default: "" },
+  studyYearId: { type: [String, Number, null], default: null },
+  teacherId: { type: [String, Number, null], default: null },
+  disabled: { type: Boolean, default: false },
+  hint: { type: String, default: "" },
 });
 
 defineEmits(["update:productId", "select", "loaded"]);
+
+const canLoad = computed(() => Boolean(props.studyYearId && props.teacherId));
+
+const catalogQuery = computed(() => {
+  if (!canLoad.value) return {};
+  return {
+    studyYearId: props.studyYearId,
+    teacherId: props.teacherId,
+  };
+});
 </script>

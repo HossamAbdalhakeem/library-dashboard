@@ -15,20 +15,13 @@ export function useSalesProductSelection(form) {
   const quantityError = ref("");
 
   const canSelectProduct = computed(
-    () =>
-      Boolean(
-        branchId.value &&
-          form.studyYearId &&
-          form.teacherId &&
-          form.productType,
-      ),
+    () => Boolean(branchId.value && form.studyYearId && form.teacherId),
   );
 
   const productSelectHint = computed(() => {
     if (!branchId.value) return "لا يوجد فرع مرتبط بالمستخدم الحالي.";
-    if (!form.studyYearId) return "اختر السنة الدراسية أولاً.";
     if (!form.teacherId) return "اختر المدرس أولاً.";
-    if (!form.productType) return "اختر نوع المنتج أولاً.";
+    if (!form.studyYearId) return "اختر السنة الدراسية أولاً.";
     return "";
   });
 
@@ -42,13 +35,6 @@ export function useSalesProductSelection(form) {
     if (
       form.teacherId &&
       String(option.teacherId || "") !== String(form.teacherId)
-    ) {
-      return false;
-    }
-    if (
-      form.productType &&
-      String(option.type || "").toUpperCase() !==
-        String(form.productType).toUpperCase()
     ) {
       return false;
     }
@@ -109,7 +95,6 @@ export function useSalesProductSelection(form) {
         availableOnly: true,
         studyYearId: form.studyYearId,
         teacherId: form.teacherId,
-        type: form.productType,
         ...(query ? { search: query } : {}),
       });
       products.value = Array.isArray(items) ? items : items?.data || [];
@@ -131,21 +116,14 @@ export function useSalesProductSelection(form) {
     });
   }, 400);
 
-  const onStudyYearChange = (value) => {
-    form.studyYearId = value || null;
-    form.teacherId = null;
-    form.productType = null;
-    clearProductSelection();
-  };
-
   const onTeacherChange = (value) => {
     form.teacherId = value || null;
-    form.productType = null;
+    form.studyYearId = null;
     clearProductSelection();
   };
 
-  const onProductTypeChange = async (value) => {
-    form.productType = value || null;
+  const onStudyYearChange = async (value) => {
+    form.studyYearId = value || null;
     form.productId = null;
     if (!canSelectProduct.value) {
       products.value = [];
@@ -220,7 +198,6 @@ export function useSalesProductSelection(form) {
     onProductSearch,
     onStudyYearChange,
     onTeacherChange,
-    onProductTypeChange,
     onProductChange,
     validateQuantity,
   };

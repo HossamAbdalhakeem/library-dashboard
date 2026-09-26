@@ -2,7 +2,7 @@ import { mapTimelineEvents } from "~/utils/studentOperationsReport";
 
 /**
  * Loads operation timelines keyed by operation id.
- * Pass a fetcher so branch / customer-service can use their own endpoints.
+ * Pass a fetcher so callers can use their own endpoints.
  */
 export const useOperationTimeline = (fetcher) => {
   const timelineState = reactive({});

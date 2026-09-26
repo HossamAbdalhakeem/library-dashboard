@@ -16,7 +16,7 @@ helpers/*.helper.js
 index.ts          # re-export api + types + helpers
 ```
 
-Reports nest further: `services/reports/{admin|branch|customer-service|shared}/`.  
+Reports nest further: `services/reports/{admin|branch|shared}/`.  
 Example barrel: [`app/services/user/index.ts`](mdc:app/services/user/index.ts).
 
 ## Calling the API

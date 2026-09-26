@@ -42,25 +42,6 @@
 
   <Field
     v-slot="{ errorMessage }"
-    v-model="form.studyYearId"
-    name="studyYearId"
-    rules="required"
-  >
-    <div class="flex flex-col gap-2 text-right">
-      <AppGlobalSelectStudyYear
-        v-model="form.studyYearId"
-        label="السنة الدراسية"
-        placeholder="اختر السنة الدراسية"
-        :label-class="isCustomerService ? 'text-slate-200' : 'text-slate-700'"
-        :invalid="!!(errorMessage || fieldErrors.studyYearId)"
-        @change="$emit('study-year-change', $event)"
-      />
-      <ErrorMessage name="studyYearId" class="text-xs text-red-500" />
-    </div>
-  </Field>
-
-  <Field
-    v-slot="{ errorMessage }"
     v-model="form.teacherId"
     name="teacherId"
     rules="required"
@@ -70,7 +51,6 @@
         v-model="form.teacherId"
         label="المدرس"
         placeholder="اختر المدرس"
-        :disabled="!form.studyYearId"
         :label-class="isCustomerService ? 'text-slate-200' : 'text-slate-700'"
         :invalid="!!(errorMessage || fieldErrors.teacherId)"
         @change="$emit('teacher-change', $event)"
@@ -81,21 +61,21 @@
 
   <Field
     v-slot="{ errorMessage }"
-    v-model="form.productType"
-    name="productType"
+    v-model="form.studyYearId"
+    name="studyYearId"
     rules="required"
   >
     <div class="flex flex-col gap-2 text-right">
-      <AppGlobalSelectProductType
-        v-model="form.productType"
-        label="نوع المنتج"
-        placeholder="اختر النوع"
+      <AppGlobalSelectStudyYear
+        v-model="form.studyYearId"
+        label="السنة الدراسية"
+        placeholder="اختر السنة الدراسية"
         :disabled="!form.teacherId"
         :label-class="isCustomerService ? 'text-slate-200' : 'text-slate-700'"
-        :invalid="!!(errorMessage || fieldErrors.productType)"
-        @change="$emit('product-type-change', $event)"
+        :invalid="!!(errorMessage || fieldErrors.studyYearId)"
+        @change="$emit('study-year-change', $event)"
       />
-      <ErrorMessage name="productType" class="text-xs text-red-500" />
+      <ErrorMessage name="studyYearId" class="text-xs text-red-500" />
     </div>
   </Field>
 
@@ -162,7 +142,6 @@ import AppGlobalSelectStudent from "~/components/shared/selections/app-global-se
 import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
-import AppGlobalSelectProductType from "~/components/shared/selections/app-global-select-product-type/index.vue";
 import { Field, ErrorMessage } from "vee-validate";
 import ProductPriceBanner from "~/components/shared/product-price-banner/index.vue";
 import BookingFormAmountField from "./BookingFormAmountField.vue";
@@ -201,7 +180,6 @@ defineEmits([
   "branch-change",
   "study-year-change",
   "teacher-change",
-  "product-type-change",
   "product-search",
   "set-payment-fields-ref",
 ]);

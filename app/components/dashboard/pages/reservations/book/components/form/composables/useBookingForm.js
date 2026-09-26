@@ -28,7 +28,6 @@ export function useBookingForm(props, emit) {
     branchId: null,
     studyYearId: null,
     teacherId: null,
-    productType: null,
     productId: null,
     amount: null,
     paymentMethod: defaultPaymentMethod.value,
@@ -41,7 +40,6 @@ export function useBookingForm(props, emit) {
     branchId: null,
     studyYearId: null,
     teacherId: null,
-    productType: null,
     productId: null,
     amount: null,
     paymentMethod: defaultPaymentMethod.value,
@@ -75,7 +73,6 @@ export function useBookingForm(props, emit) {
       branchId: null,
       studyYearId: null,
       teacherId: null,
-      productType: null,
       productId: null,
       amount: null,
       paymentMethod: defaultPaymentMethod.value,
@@ -113,7 +110,6 @@ export function useBookingForm(props, emit) {
       }
       form.studyYearId = selection.studyYearId || null;
       form.teacherId = selection.teacherId || null;
-      form.productType = String(selection.type || "").toUpperCase() || null;
       form.productId = selection.productId;
 
       if (products.canSelectProduct.value) {
@@ -140,7 +136,6 @@ export function useBookingForm(props, emit) {
 
       form.studyYearId = product.studyYear?.id || null;
       form.teacherId = product.teacher?.id || null;
-      form.productType = String(product.type || "").toUpperCase() || null;
       form.productId = product.id || props.initialProduct;
 
       if (products.canSelectProduct.value) {
@@ -167,7 +162,7 @@ export function useBookingForm(props, emit) {
     setFieldValue?.("studentPhone", student.phone);
 
     const studentStudyYearId = student.studyYear?.id || null;
-    if (studentStudyYearId && !form.studyYearId) {
+    if (studentStudyYearId && form.teacherId && !form.studyYearId) {
       form.studyYearId = studentStudyYearId;
       setFieldValue?.("studyYearId", studentStudyYearId);
       products.onStudyYearChange(studentStudyYearId);

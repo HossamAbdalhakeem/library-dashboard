@@ -1,6 +1,6 @@
 /**
  * Shared report API contracts — query params, pagination, and nested refs
- * reused by branch + customer-service (and admin query).
+ * reused by branch (and admin query).
  * Dates on the wire are ISO strings (JSON).
  */
 
@@ -13,7 +13,7 @@ import type { OperationStatus } from "~/enums/operationStatus";
 export type ReportQuery = {
   from?: string;
   to?: string;
-  period?: "today" | "day" | "week" | "month" | "year" | "custom" | string;
+  period?: "today" | "day" | "yesterday" | "week" | "month" | "year" | "custom" | string;
   branchId?: string;
   productId?: string;
   academicYearId?: string;

@@ -49,7 +49,6 @@
           @branch-change="onBranchChange"
           @study-year-change="onStudyYearChange"
           @teacher-change="onTeacherChange"
-          @product-type-change="onProductTypeChange"
           @product-search="onProductSearch"
           @set-payment-fields-ref="setPaymentFieldsRef"
         />
@@ -128,7 +127,6 @@ const {
   onBranchChange,
   onStudyYearChange,
   onTeacherChange,
-  onProductTypeChange,
   saving,
   reservationSummary,
   successDialogVisible,

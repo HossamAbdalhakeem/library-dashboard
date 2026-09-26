@@ -21,10 +21,7 @@ export function useBookingProducts({
   const canSelectProduct = computed(
     () =>
       Boolean(
-        resolvedBranchId.value &&
-          form.studyYearId &&
-          form.teacherId &&
-          form.productType,
+        resolvedBranchId.value && form.studyYearId && form.teacherId,
       ),
   );
 
@@ -34,9 +31,8 @@ export function useBookingProducts({
         ? "اختر الفرع أولاً لعرض منتجات الحجز."
         : "لا يوجد فرع مرتبط بالمستخدم الحالي.";
     }
-    if (!form.studyYearId) return "اختر السنة الدراسية أولاً.";
     if (!form.teacherId) return "اختر المدرس أولاً.";
-    if (!form.productType) return "اختر نوع المنتج أولاً.";
+    if (!form.studyYearId) return "اختر السنة الدراسية أولاً.";
     return "";
   });
 
@@ -50,13 +46,6 @@ export function useBookingProducts({
     if (
       form.teacherId &&
       String(option.teacherId || "") !== String(form.teacherId)
-    ) {
-      return false;
-    }
-    if (
-      form.productType &&
-      String(option.type || "").toUpperCase() !==
-        String(form.productType).toUpperCase()
     ) {
       return false;
     }
@@ -121,7 +110,6 @@ export function useBookingProducts({
           forReservation: true,
           studyYearId: form.studyYearId,
           teacherId: form.teacherId,
-          type: form.productType,
           ...(query ? { search: query } : {}),
         },
       );
@@ -158,21 +146,14 @@ export function useBookingProducts({
     }
   };
 
-  const onStudyYearChange = (value) => {
-    form.studyYearId = value || null;
-    form.teacherId = null;
-    form.productType = null;
-    clearProductSelection();
-  };
-
   const onTeacherChange = (value) => {
     form.teacherId = value || null;
-    form.productType = null;
+    form.studyYearId = null;
     clearProductSelection();
   };
 
-  const onProductTypeChange = async (value) => {
-    form.productType = value || null;
+  const onStudyYearChange = async (value) => {
+    form.studyYearId = value || null;
     form.productId = null;
     if (!canSelectProduct.value) {
       inventoryItems.value = [];
@@ -198,6 +179,5 @@ export function useBookingProducts({
     onBranchChange,
     onStudyYearChange,
     onTeacherChange,
-    onProductTypeChange,
   };
 }

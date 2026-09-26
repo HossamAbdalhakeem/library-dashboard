@@ -5,8 +5,8 @@
     <AppPeriodDateFilter
       :from="from"
       :to="to"
-      :academic-year-range="academicYearRange"
-      :default-period="defaultPeriod"
+      :periods="BRANCH_PERIODS"
+      default-period="day"
       wrapper-class="w-full min-w-0 sm:w-72 sm:shrink-0"
       select-class="w-full"
       @update:from="from = $event"
@@ -32,25 +32,21 @@ import { useAuth } from "~/composables/useAuth";
 import {
   todayInputValue,
   buildReportDateRangeParams,
-  fillMissingDateRange,
 } from "~/services/reports/shared";
 
 defineOptions({ name: "DailyReportFilters" });
 
+/** Branch employee reports: today, yesterday, last 7 days only. */
+const BRANCH_PERIODS = ["day", "yesterday", "week"];
+
 defineProps({
   loading: { type: Boolean, default: false },
-  /** day | week | month | year */
-  defaultPeriod: { type: String, default: "day" },
 });
 
 const emit = defineEmits(["change", "refresh"]);
 
 const { isLoggedIn } = useAuth();
-const {
-  academicYearId,
-  academicYearStore,
-  academicYearRange,
-} = useAcademicYear();
+const { academicYearId, academicYearStore } = useAcademicYear();
 
 const from = ref(todayInputValue());
 const to = ref(todayInputValue());
@@ -68,24 +64,13 @@ const emitChange = () => {
 };
 
 const onPeriodChange = ({ from: nextFrom, to: nextTo } = {}) => {
-  from.value = nextFrom || null;
-  to.value = nextTo || nextFrom || null;
-  if (!from.value && !to.value) {
-    const filled = fillMissingDateRange({
-      academicYearRange: academicYearRange.value,
-    });
-    from.value = filled.from;
-    to.value = filled.to;
-  }
+  from.value = nextFrom || todayInputValue();
+  to.value = nextTo || nextFrom || todayInputValue();
   emitChange();
 };
 
 watch(academicYearId, () => {
   if (!ready.value || !isLoggedIn.value) return;
-  if (academicYearRange.value) {
-    from.value = academicYearRange.value.from;
-    to.value = academicYearRange.value.to;
-  }
   emitChange();
 });
 

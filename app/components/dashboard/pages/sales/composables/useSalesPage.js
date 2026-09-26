@@ -28,7 +28,6 @@ export function useSalesPage() {
     studentPhone: "",
     studyYearId: null,
     teacherId: null,
-    productType: null,
     productId: null,
     quantity: 1,
     method: PaymentMethod.CASH,
@@ -40,7 +39,6 @@ export function useSalesPage() {
     studentPhone: "",
     studyYearId: null,
     teacherId: null,
-    productType: null,
     productId: null,
     quantity: 1,
     method: PaymentMethod.CASH,
@@ -69,7 +67,7 @@ export function useSalesPage() {
     setFieldValue?.("studentPhone", student.phone);
 
     const studentStudyYearId = student.studyYear?.id || null;
-    if (studentStudyYearId && !form.studyYearId) {
+    if (studentStudyYearId && form.teacherId && !form.studyYearId) {
       form.studyYearId = studentStudyYearId;
       setFieldValue?.("studyYearId", studentStudyYearId);
       onStudyYearChange(studentStudyYearId);
@@ -126,7 +124,6 @@ export function useSalesPage() {
       studentPhone: "",
       studyYearId: null,
       teacherId: null,
-      productType: null,
       productId: null,
       quantity: 1,
       method: PaymentMethod.CASH,

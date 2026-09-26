@@ -29,11 +29,3 @@ export type {
   BranchOperationTimeline,
   BranchStudentOperationsSection,
 } from "./branch";
-
-export { customerServiceReportsApi } from "./customer-service";
-export type {
-  CustomerServiceReportQuery,
-  CustomerServiceDailySummaryResponse,
-  CustomerServiceSectionResponse,
-  CustomerServiceOperationTimeline,
-} from "./customer-service";

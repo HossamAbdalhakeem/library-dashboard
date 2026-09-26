@@ -16,21 +16,45 @@
     </div>
 
     <div class="flex flex-col gap-2 text-right">
+      <AppGlobalSelectTeacher
+        v-model="form.teacherId"
+        label="المدرس"
+        placeholder="اختر المدرس"
+        :invalid="!!errors.teacherId"
+        @change="onTeacherChange"
+      />
+      <small v-if="errors.teacherId" class="text-xs text-red-500">
+        {{ errors.teacherId }}
+      </small>
+    </div>
+
+    <div class="flex flex-col gap-2 text-right">
+      <AppGlobalSelectStudyYear
+        v-model="form.studyYearId"
+        label="السنة الدراسية"
+        placeholder="اختر السنة الدراسية"
+        :disabled="!form.teacherId"
+        :invalid="!!errors.studyYearId"
+        @change="onStudyYearChange"
+      />
+      <small v-if="errors.studyYearId" class="text-xs text-red-500">
+        {{ errors.studyYearId }}
+      </small>
+    </div>
+
+    <div class="flex flex-col gap-2 text-right">
       <AppGlobalSelectProduct
         v-model="form.productId"
         source="inventory"
         :branch-id="selectedBranchId"
-        :inventory-query="{ availableOnly: true }"
+        :inventory-query="inventoryQuery"
         :min-available-quantity="1"
+        :auto-load="canSelectProduct"
         label="سحبت ايه"
         placeholder="اختار منتجاً من مخزن الفرع ▾"
-        :disabled="!selectedBranchId"
+        :disabled="!canSelectProduct"
         :invalid="!!errors.productId"
-        :hint="
-          !selectedBranchId
-            ? 'اختر الفرع أولاً لعرض منتجات المخزن.'
-            : ''
-        "
+        :hint="productSelectHint"
         @select="onProductSelect"
         @loaded="onProductsLoaded"
       />
@@ -88,6 +112,8 @@ import Button from "primevue/button";
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
 import AppGlobalSelectProduct from "~/components/shared/selections/app-global-select-product/index.vue";
 import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
+import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
+import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import AppInputNumber from "~/components/shared/inputs/app-input-number/index.vue";
 import { inventoryApi } from "~/services/inventory";
 import { useAppToast } from "~/composables/useAppToast";
@@ -107,17 +133,41 @@ const productOptions = ref([]);
 const selectedProductOption = ref(null);
 const errors = reactive({
   branchId: "",
+  studyYearId: "",
+  teacherId: "",
   productId: "",
   quantity: "",
 });
 
 const form = reactive({
   branchId: props.lockedBranchId || null,
+  studyYearId: null,
+  teacherId: null,
   productId: null,
   quantity: null,
 });
 
 const selectedBranchId = computed(() => props.lockedBranchId || form.branchId || null);
+
+const canSelectProduct = computed(() =>
+  Boolean(selectedBranchId.value && form.studyYearId && form.teacherId),
+);
+
+const inventoryQuery = computed(() => {
+  if (!canSelectProduct.value) return { availableOnly: true };
+  return {
+    availableOnly: true,
+    studyYearId: form.studyYearId,
+    teacherId: form.teacherId,
+  };
+});
+
+const productSelectHint = computed(() => {
+  if (!selectedBranchId.value) return "اختر الفرع أولاً لعرض منتجات المخزن.";
+  if (!form.teacherId) return "اختر المدرس أولاً.";
+  if (!form.studyYearId) return "اختر السنة الدراسية أولاً.";
+  return "";
+});
 
 const selectedProduct = computed(() => {
   if (selectedProductOption.value?.value === form.productId) {
@@ -143,6 +193,8 @@ const isFormValid = computed(() => {
   const qty = Number(form.quantity);
   return Boolean(
     branchId &&
+      form.studyYearId &&
+      form.teacherId &&
       form.productId &&
       form.quantity != null &&
       isFiniteNumber(qty) &&
@@ -160,6 +212,15 @@ const toId = (value) => {
     return id != null && id !== "" ? String(id) : null;
   }
   return null;
+};
+
+const clearProduct = () => {
+  form.productId = null;
+  form.quantity = null;
+  selectedProductOption.value = null;
+  productOptions.value = [];
+  errors.productId = "";
+  errors.quantity = "";
 };
 
 const validateQuantity = () => {
@@ -209,11 +270,21 @@ const clampQuantityToAvailable = () => {
 
 const onBranchChange = (value) => {
   form.branchId = toId(value);
-  form.productId = null;
-  form.quantity = null;
-  selectedProductOption.value = null;
-  errors.productId = "";
-  errors.quantity = "";
+  clearProduct();
+};
+
+const onTeacherChange = (value) => {
+  form.teacherId = value || null;
+  form.studyYearId = null;
+  clearProduct();
+  errors.teacherId = "";
+  errors.studyYearId = "";
+};
+
+const onStudyYearChange = (value) => {
+  form.studyYearId = value || null;
+  clearProduct();
+  errors.studyYearId = "";
 };
 
 const onProductsLoaded = (options) => {
@@ -243,9 +314,17 @@ const onQuantityChange = () => {
 const validate = () => {
   const branchId = selectedBranchId.value;
   errors.branchId = branchId ? "" : "الفرع مطلوب.";
+  errors.studyYearId = form.studyYearId ? "" : "السنة الدراسية مطلوبة.";
+  errors.teacherId = form.teacherId ? "" : "المدرس مطلوب.";
   errors.productId = form.productId ? "" : "المنتج مطلوب.";
   const quantityOk = validateQuantity();
-  return !errors.branchId && !errors.productId && quantityOk;
+  return (
+    !errors.branchId &&
+    !errors.studyYearId &&
+    !errors.teacherId &&
+    !errors.productId &&
+    quantityOk
+  );
 };
 
 const submitRemove = async () => {
@@ -261,6 +340,8 @@ const submitRemove = async () => {
 
     form.productId = null;
     form.quantity = null;
+    form.studyYearId = null;
+    form.teacherId = null;
     if (!props.lockedBranchId) form.branchId = null;
     productOptions.value = [];
     selectedProductOption.value = null;
@@ -277,10 +358,9 @@ watch(
   () => props.lockedBranchId,
   (value) => {
     form.branchId = value || null;
-    form.productId = null;
-    form.quantity = null;
-    selectedProductOption.value = null;
-    errors.quantity = "";
+    form.studyYearId = null;
+    form.teacherId = null;
+    clearProduct();
   },
   { immediate: true },
 );
