@@ -5,16 +5,14 @@
         <span class="text-lg font-bold text-slate-900">الحجوزات</span>
       </template>
       <template #content>
-        <div class="mb-5 grid gap-3 md:grid-cols-2">
-          <AppSearchInput placeholder="رقم الحجز / طالب / منتج" @search="onSearch" />
-          <AppGlobalSelectBranch
-            v-model="filters.branchId"
-            label="الفرع"
-            placeholder="كل الفروع"
-            show-clear
-            @change="onBranchChange"
-          />
-        </div>
+        <ReservationsFilters
+          v-model:branch-id="filters.branchId"
+          v-model:teacher-id="filters.teacherId"
+          v-model:study-year-id="filters.studyYearId"
+          v-model:status="filters.status"
+          @search="onSearch"
+          @change="onFilterChange"
+        />
 
         <ReservationsTable
           :reservations="reservations"
@@ -50,8 +48,7 @@
 <script setup>
 import Card from "primevue/card";
 import ReservationsTable from "~/components/dashboard/pages/reservations/components/table/ReservationsTable.vue";
-import AppSearchInput from "~/components/shared/inputs/app-search-input/index.vue";
-import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
+import ReservationsFilters from "~/components/dashboard/pages/reservations/manage/components/filters/ReservationsFilters.vue";
 import {
   reservationApi,
   normalizeReservation,
@@ -78,6 +75,9 @@ const exchangeOpen = ref(false);
 const filters = reactive({
   search: "",
   branchId: null,
+  teacherId: null,
+  studyYearId: null,
+  status: null,
 });
 const pagination = reactive({
   page: 1,
@@ -126,7 +126,7 @@ const onSearch = (value) => {
   loadData();
 };
 
-const onBranchChange = () => {
+const onFilterChange = () => {
   resetPagination();
   loadData();
 };
