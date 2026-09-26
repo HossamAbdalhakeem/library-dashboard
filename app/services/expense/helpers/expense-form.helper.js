@@ -6,7 +6,6 @@ export const emptyExpenseForm = () => ({
   amount: null,
   expenseDate: new Date(),
   description: "",
-  linkToAcademicYear: true,
 });
 
 const toDate = (value) => {
@@ -31,36 +30,31 @@ export const mapExpenseToForm = (expense) => ({
   amount: expense?.amount != null ? Number(expense.amount) : null,
   expenseDate: toDate(expense?.expenseDate),
   description: expense?.description || "",
-  linkToAcademicYear: expense ? Boolean(expense.academicYear?.id) : true,
 });
 
 export const buildExpensePayload = (
   form,
   { existingAcademicYearId, currentAcademicYearId } = {},
 ) => {
-  const payload = {
+  const academicYearId =
+    existingAcademicYearId || currentAcademicYearId || null;
+
+  return {
     categoryId: form.categoryId,
     branchId: form.branchId || null,
     amount: form.amount,
     expenseDate: toIsoDate(form.expenseDate),
     description: form.description || undefined,
-    academicYearId: form.linkToAcademicYear
-      ? existingAcademicYearId || currentAcademicYearId || null
-      : null,
+    academicYearId,
   };
-
-  return payload;
 };
 
 export const validateExpenseForm = (
   form,
   { existingAcademicYearId, currentAcademicYearId } = {},
 ) => {
-  if (
-    form.linkToAcademicYear &&
-    !(existingAcademicYearId || currentAcademicYearId)
-  ) {
-    return "اختر العام الدراسي أولاً أو ألغِ الربط للمصروف العام.";
+  if (!(existingAcademicYearId || currentAcademicYearId)) {
+    return "اختر العام الدراسي أولاً.";
   }
   return null;
 };

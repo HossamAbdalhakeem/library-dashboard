@@ -46,7 +46,6 @@
         :method="data.payment?.method"
         :method-label="data.payment?.methodLabel"
         :payment-id="data.payment?.id"
-        :proof-url="data.payment?.image?.url"
         :has-proof="data.payment?.image?.hasProof"
       />
     </template>

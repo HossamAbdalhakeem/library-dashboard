@@ -36,6 +36,18 @@ export const paymentApi = {
       ),
     );
   },
+
+  /** GET /uploads/refund-screenshot/:refundId → PaymentScreenshotUploadResult */
+  async getRefundScreenshot(
+    refundId: string,
+  ): Promise<PaymentScreenshotUploadResult> {
+    return asData(
+      await apiFetch<PaymentScreenshotUploadResult>(
+        `/uploads/refund-screenshot/${refundId}`,
+        { method: "GET" },
+      ),
+    );
+  },
 };
 
 /** @deprecated Prefer `paymentApi` */

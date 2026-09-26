@@ -85,10 +85,10 @@
         <p class="font-semibold text-white">بيانات تجريبية:</p>
         <ul class="mt-2 space-y-2">
           <li>مدير: admin@library.local</li>
-          <li>خدمة العملاء: cs+098@gmail.com /cs+099@gmail.com</li>
+          <li>خدمة العملاء: cs1@library.local  /cs2@library.local </li>
           <li>
-            موظف فرع: branch+123@gmail.com /
-            branch+547@gmail.com
+            موظف فرع: employee1@library.local  /
+            employee2@library.local 
           </li>
         </ul>
       </div>

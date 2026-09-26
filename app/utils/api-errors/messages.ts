@@ -74,6 +74,7 @@ export const API_ERROR_MESSAGES_AR: Record<string, string> = {
   // Payment
   PAYMENT_METHOD_REQUIRED: "يجب تحديد طريقة الدفع",
   PAYMENT_NOT_FOUND: "الدفعة غير موجودة",
+  REFUND_NOT_FOUND: "عملية الاسترداد غير موجودة",
   PAYMENT_SCREENSHOT_FORBIDDEN: "غير مسموح بالوصول لصورة إثبات الدفع",
   PAYMENT_SCREENSHOT_NOT_FOUND: "صورة إثبات الدفع غير موجودة",
 

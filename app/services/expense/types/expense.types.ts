@@ -62,7 +62,7 @@ export type ExpenseResponse = {
   expenseDate: string;
   category: CategoryRef | null;
   branch: NamedRef | null;
-  academicYear: AcademicYearRef | null;
+  academicYear: AcademicYearRef;
   createdBy: CreatedByRef | null;
   createdAt?: string;
   updatedAt?: string;
@@ -76,14 +76,13 @@ export type ExpenseQuery = {
   branchId?: string | null;
   scope?: "all" | "branch" | "general" | string;
   academicYearId?: string | null;
-  academicYearScope?: "all" | "academic" | "general" | string;
 };
 
 /** POST /expenses body. */
 export type ExpensePayload = {
   categoryId: string;
   branchId?: string | null;
-  academicYearId?: string | null;
+  academicYearId: string;
   amount: number;
   expenseDate: string;
   description?: string;
@@ -93,7 +92,7 @@ export type ExpensePayload = {
 export type ExpenseUpdatePayload = {
   categoryId?: string;
   branchId?: string | null;
-  academicYearId?: string | null;
+  academicYearId?: string;
   amount?: number;
   expenseDate?: string;
   description?: string;

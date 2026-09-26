@@ -120,11 +120,10 @@
     </div>
   </Field>
 
-  <BookingFormPriceBanner
+  <ProductPriceBanner
     v-if="selectedProductOption"
-    :option="selectedProductOption"
-    :price="productDisplayPrice"
-    :is-customer-service="isCustomerService"
+    :amount="productDisplayPrice"
+    :label="selectedProductOption?.priceKindLabel || 'مبلغ المنتج'"
   />
 
   <BookingFormAmountField
@@ -165,7 +164,7 @@ import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import AppGlobalSelectProductType from "~/components/shared/selections/app-global-select-product-type/index.vue";
 import { Field, ErrorMessage } from "vee-validate";
-import BookingFormPriceBanner from "./BookingFormPriceBanner.vue";
+import ProductPriceBanner from "~/components/shared/product-price-banner/index.vue";
 import BookingFormAmountField from "./BookingFormAmountField.vue";
 
 defineOptions({ name: "BookingFormFields" });

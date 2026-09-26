@@ -134,7 +134,6 @@
               :method="item.method"
               :method-label="item.methodLabel"
               :payment-id="item.payment?.id"
-              :proof-url="item.payment?.image?.url"
               :has-proof="item.payment?.image?.hasProof"
             />
           </div>

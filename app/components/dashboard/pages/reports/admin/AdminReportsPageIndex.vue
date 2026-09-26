@@ -4,7 +4,7 @@
       <div class="min-w-0">
         <h2 class="text-xl font-bold text-white">التقارير</h2>
         <p class="mt-1 text-sm text-slate-400">
-          ملخص المبيعات والأرباح والمصروفات والحجوزات حسب الفلاتر
+          ملخص المبيعات والأرباح والمصروفات والحجوزات  
         </p>
       </div>
       <ReportsFilters
@@ -80,7 +80,7 @@ import ReportsFilters from "~/components/dashboard/pages/reports/admin/ReportsFi
 import { useAcademicYear } from "~/composables/useAcademicYear";
 import {
   buildReportDateRangeParams,
-  fillMissingDateRange,
+  todayInputValue,
 } from "~/services/reports/shared";
 
 const ReportsSummaryCards = defineAsyncComponent(() =>
@@ -134,7 +134,7 @@ const normalizePeriod = (value) => {
   const allowed = ["day", "week", "month", "year", "custom"];
   const raw = String(value || "").toLowerCase();
   if (raw === "today") return "day";
-  return allowed.includes(raw) ? raw : "year";
+  return allowed.includes(raw) ? raw : "day";
 };
 
 /** Map UI period presets to backend sales-trend granularity hints. */
@@ -144,9 +144,10 @@ const apiPeriod = (value) => {
   return period;
 };
 
-const dateFrom = ref(null);
-const dateTo = ref(null);
-const selectedPeriod = ref("year");
+const today = todayInputValue();
+const dateFrom = ref(today);
+const dateTo = ref(today);
+const selectedPeriod = ref("day");
 const selectedBranch = ref("all");
 const selectedBook = ref(null);
 
@@ -199,23 +200,20 @@ const onFiltersChange = (payload) => {
     if ("period" in payload) selectedPeriod.value = normalizePeriod(payload.period);
   }
 
-  if (!dateFrom.value && !dateTo.value && academicYearRange.value) {
-    dateFrom.value = academicYearRange.value.from;
-    dateTo.value = academicYearRange.value.to;
-    selectedPeriod.value = "year";
+  if (!dateFrom.value && !dateTo.value) {
+    const fallback = todayInputValue();
+    dateFrom.value = fallback;
+    dateTo.value = fallback;
+    selectedPeriod.value = "day";
   }
 };
 
 const ensureDateRange = () => {
-  const filled = fillMissingDateRange({
-    from: dateFrom.value,
-    to: dateTo.value,
-    academicYearRange: academicYearRange.value,
-  });
-  dateFrom.value = filled.from;
-  dateTo.value = filled.to;
-  if (filled.usedAcademicYear) selectedPeriod.value = "year";
-  else if (filled.usedToday) selectedPeriod.value = "day";
+  if (dateFrom.value && dateTo.value) return;
+  const fallback = todayInputValue();
+  dateFrom.value = dateFrom.value || fallback;
+  dateTo.value = dateTo.value || dateFrom.value || fallback;
+  selectedPeriod.value = "day";
 };
 
 watch(currentAcademicYearId, () => {

@@ -13,11 +13,11 @@ function buildNavigation(role) {
         label: "",
         items: [
           // { label: "الطلاب", icon: "pi pi-users", to: "/students" },
-          { label: "البيع المباشر", icon: "pi pi-shopping-cart", to: "/sales/direct" },
-          { label: "حجز الكتب", icon: "pi pi-book", to: "/reservations" },
-          { label: "تسليم الحجز", icon: "pi pi-check-square", to: "/reservations/deliver" },
+          { label: "بيع المنتجات", icon: "pi pi-shopping-cart", to: "/sales/direct" },
+          { label: "حجز منتج", icon: "pi pi-book", to: "/reservations" },
+          { label: "تسليم الحجوزات", icon: "pi pi-check-square", to: "/reservations/deliver" },
           // { label: "المبيعات / الاستبدال", icon: "pi pi-sync", to: "/sales/exchange" },
-          { label: "التقرير", icon: "pi pi-chart-bar", to: "/reports/branch" },
+          { label: "التقرير اليومي", icon: "pi pi-chart-bar", to: "/reports/branch" },
         ],
       },
     ];
@@ -30,7 +30,7 @@ function buildNavigation(role) {
         label: "",
         items: [
           // { label: "الطلاب", icon: "pi pi-users", to: "/students" },
-          { label: "احجز كتاب", icon: "pi pi-book", to: "/books/reserve" },
+          { label: "حجز منتج", icon: "pi pi-book", to: "/books/reserve" },
           // { label: "التقرير", icon: "pi pi-chart-bar", to: "/reports/customer-service" },
 
         ],

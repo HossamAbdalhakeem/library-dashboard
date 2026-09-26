@@ -6,6 +6,7 @@
       :model-value="book"
       source="catalog"
       variant="simple"
+      name-only
       label=""
       placeholder="اختيار الكتاب"
       show-clear
@@ -28,7 +29,7 @@
       :from="from"
       :to="to"
       :academic-year-range="academicYearRange"
-      default-period="year"
+      default-period="day"
       wrapper-class="w-full min-w-0 lg:w-72 lg:shrink-0"
       select-class="w-full"
       @update:from="emit('update:from', $event)"
@@ -60,7 +61,7 @@ defineProps({
   branch: { type: [String, Number], default: "all" },
   from: { type: String, default: null },
   to: { type: String, default: null },
-  period: { type: String, default: "year" },
+  period: { type: String, default: "day" },
   academicYearRange: { type: Object, default: null },
   loading: { type: Boolean, default: false },
 });

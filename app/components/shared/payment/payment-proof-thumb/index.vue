@@ -31,20 +31,22 @@
           {{ resolvedMethodLabel }}
         </p>
         <div
-          v-if="loading && !resolvedUrl"
-          class="flex h-64 w-full items-center justify-center text-slate-400"
+          class="flex min-h-64 w-full flex-col items-center justify-center gap-3"
         >
-          <i class="pi pi-spin pi-spinner text-2xl" />
+          <template v-if="loading && !resolvedUrl">
+            <Skeleton width="100%" height="16rem" border-radius="12px" />
+            <Skeleton width="40%" height="0.75rem" border-radius="4px" />
+          </template>
+          <img
+            v-else-if="resolvedUrl"
+            :src="resolvedUrl"
+            alt="إثبات الدفع"
+            class="min-h-64 max-h-[70vh] w-full rounded-xl object-contain"
+          />
+          <p v-else class="text-sm text-rose-400">
+            {{ errorMessage || "تعذر عرض صورة الإثبات." }}
+          </p>
         </div>
-        <img
-          v-else-if="resolvedUrl"
-          :src="resolvedUrl"
-          alt="إثبات الدفع"
-          class="max-h-[70vh] w-full rounded-xl object-contain"
-        />
-        <p v-else class="text-sm text-rose-400">
-          {{ errorMessage || "تعذر عرض صورة الإثبات." }}
-        </p>
       </div>
     </Dialog>
   </div>
@@ -52,6 +54,7 @@
 
 <script setup>
 import Dialog from "primevue/dialog";
+import Skeleton from "primevue/skeleton";
 import { paymentApi } from "~/services/payment";
 import {
   getPaymentMethodLabel,
@@ -65,10 +68,15 @@ const props = defineProps({
   method: { type: String, default: "" },
   /** Arabic or display label — optional override */
   methodLabel: { type: String, default: "" },
-  /** Signed URL from API when available */
+  /**
+   * Optional local/upload preview URL (e.g. right after upload).
+   * Prefer paymentId/refundId so lists never depend on pre-signed URLs.
+   */
   proofUrl: { type: String, default: "" },
-  /** Payment UUID — used to fetch a fresh signed URL */
+  /** Payment UUID — fetches signed URL on click */
   paymentId: { type: [String, Number], default: null },
+  /** Refund UUID — fetches signed URL on click (refund proofs) */
+  refundId: { type: [String, Number], default: null },
   /** Explicit flag from API */
   hasProof: { type: Boolean, default: null },
   /** Show method text next to the thumbnail */
@@ -79,7 +87,7 @@ const loading = ref(false);
 const dialogVisible = ref(false);
 const resolvedUrl = ref("");
 const errorMessage = ref("");
-const fetchedForPaymentId = ref(null);
+const fetchedKey = ref(null);
 
 const resolvedMethodLabel = computed(
   () => props.methodLabel || getPaymentMethodLabel(props.method),
@@ -87,12 +95,18 @@ const resolvedMethodLabel = computed(
 
 const isNonCash = computed(() => paymentMethodNeedsProof(props.method));
 
+const resourceKey = computed(() => {
+  if (props.paymentId) return `payment:${props.paymentId}`;
+  if (props.refundId) return `refund:${props.refundId}`;
+  return null;
+});
+
 const canShowProof = computed(() => {
   if (props.hasProof === true) return true;
   if (props.hasProof === false) return false;
   return (
     isNonCash.value &&
-    Boolean(props.proofUrl || props.paymentId)
+    Boolean(props.proofUrl || props.paymentId || props.refundId)
   );
 });
 
@@ -104,25 +118,21 @@ const ensureUrl = async () => {
     return resolvedUrl.value;
   }
 
-  if (
-    props.paymentId &&
-    fetchedForPaymentId.value === props.paymentId &&
-    resolvedUrl.value
-  ) {
+  if (resourceKey.value && fetchedKey.value === resourceKey.value && resolvedUrl.value) {
     return resolvedUrl.value;
   }
 
-  if (!props.paymentId) return "";
+  if (!props.paymentId && !props.refundId) return "";
 
   loading.value = true;
   errorMessage.value = "";
   try {
-    const result = await paymentApi.getPaymentScreenshot(
-      String(props.paymentId),
-    );
+    const result = props.paymentId
+      ? await paymentApi.getPaymentScreenshot(String(props.paymentId))
+      : await paymentApi.getRefundScreenshot(String(props.refundId));
     const url = result?.fileUrl || "";
     resolvedUrl.value = url;
-    fetchedForPaymentId.value = props.paymentId;
+    fetchedKey.value = resourceKey.value;
     if (!url) errorMessage.value = "لا توجد صورة إثبات لهذا الدفع.";
     return url;
   } catch (error) {
@@ -139,14 +149,11 @@ const openPreview = async () => {
 };
 
 watch(
-  () => [props.proofUrl, props.paymentId, props.hasProof],
+  () => [props.proofUrl, props.paymentId, props.refundId, props.hasProof],
   () => {
     resolvedUrl.value = props.proofUrl || "";
-    fetchedForPaymentId.value = null;
+    fetchedKey.value = null;
     errorMessage.value = "";
-    if (canShowProof.value && props.proofUrl) {
-      resolvedUrl.value = props.proofUrl;
-    }
   },
   { immediate: true },
 );
