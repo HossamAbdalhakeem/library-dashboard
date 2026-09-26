@@ -199,7 +199,8 @@ export default defineNuxtConfig({
       xFrameOptions: 'DENY',
       xXSSProtection: '0',
       permissionsPolicy: {
-        camera: [],
+        // Needed for payment-proof webcam capture (branch / CS flows)
+        camera: ['self'],
         microphone: [],
         geolocation: [],
         'display-capture': [],

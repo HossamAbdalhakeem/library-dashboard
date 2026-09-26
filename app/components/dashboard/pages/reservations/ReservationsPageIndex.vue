@@ -1,5 +1,5 @@
 <template>
-  <BookReservationPageIndex show-header />
+  <BookReservationPageIndex show-header show-proof-source-choice />
 </template>
 
 <script setup>
