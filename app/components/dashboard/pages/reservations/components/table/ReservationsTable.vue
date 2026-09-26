@@ -40,13 +40,22 @@
       </template>
 
       <template #createdBy="{ data }">
-        <div class="flex flex-col items-center gap-0.5">
+        <div class="flex flex-col items-center gap-1 text-center">
           <span class="text-sm font-medium">{{ data.createdBy?.fullName }}</span>
           <AppStatusTableCell
             v-if="data.createdBy?.roleLabel && data.createdBy.roleLabel !== '-'"
             :label="data.createdBy.roleLabel"
             severity="secondary"
           />
+          <span
+            v-if="data.branchName && data.branchName !== '-'"
+            class="text-xs text-slate-500"
+          >
+            {{ data.branchName }}
+          </span>
+          <span class="text-xs text-slate-500">
+            الكمية: {{ data.quantity ?? 1 }}
+          </span>
         </div>
       </template>
 
@@ -165,9 +174,12 @@ const columns = [
   { field: "createdAt", header: "تاريخ الحجز", slot: "createdAt" },
   { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },
-  { field: "createdByName", header: "أنشئ بواسطة", slot: "createdBy" },
-  { field: "branchName", header: "الفرع" },
-  { field: "quantity", header: "الكمية" },
+  {
+    field: "createdByName",
+    header: "أنشئ بواسطة",
+    slot: "createdBy",
+    style: "min-width: 9rem",
+  },
   {
     field: "paymentSummary",
     header: "الدفع",
