@@ -241,6 +241,8 @@ export type EligibleSalesQuery = {
   search?: string;
   academicYearId?: string;
   branchId?: string;
+  teacherId?: string;
+  studyYearId?: string;
 };
 
 /** POST /exchanges/preview body. */

@@ -115,6 +115,18 @@ export type SalePayload = {
   proofReference?: string;
 };
 
+/** GET /sales/export query params. */
+export type SaleExportQuery = {
+  from?: string;
+  to?: string;
+  teacherId?: string;
+  studyYearId?: string;
+  branchId?: string;
+  productId?: string;
+  studentId?: string;
+  status?: "COMPLETED" | "PARTIALLY_RETURNED" | "RETURNED";
+};
+
 /** Timeline event types from BE operation timeline. */
 export type SaleTimelineEventType =
   | "CREATED"

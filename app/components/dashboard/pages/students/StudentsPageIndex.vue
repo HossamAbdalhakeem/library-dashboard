@@ -6,6 +6,7 @@
           <span class="text-lg font-bold text-slate-900">الطلاب</span>
           <div class="flex flex-wrap items-center gap-2">
             <Button
+              v-if="isAdmin"
               label="تصدير"
               icon="pi pi-download"
               severity="secondary"
@@ -85,6 +86,7 @@ import {
 } from "~/services/student";
 import { useAppToast } from "~/composables/useAppToast";
 import { useAcademicYear } from "~/composables/useAcademicYear";
+import { useAuth } from "~/composables/useAuth";
 
 const StudentForm = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/students/components/form/StudentForm.vue"),
@@ -102,6 +104,7 @@ const StudentsExportDialog = defineAsyncComponent(() =>
 
 const { showError, showSuccess } = useAppToast();
 const { academicYearId: currentAcademicYearId } = useAcademicYear();
+const { isAdmin } = useAuth();
 const loading = ref(true);
 const deactivating = ref(false);
 const drawerVisible = ref(false);

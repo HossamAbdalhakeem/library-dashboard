@@ -1,5 +1,6 @@
-import { apiFetch, firstRow, asData } from "~/utils/apiFetch";
+import { apiFetch, apiFetchBlob, firstRow, asData } from "~/utils/apiFetch";
 import type {
+  SaleExportQuery,
   SalePayload,
   SaleResponse,
   SaleTimelineResponse,
@@ -21,6 +22,14 @@ export const saleApi = {
     return asData<SaleTimelineResponse>(
       await apiFetch(`/sales/${id}/timeline`, { method: "GET" }),
     );
+  },
+
+  /** GET /sales/export → Excel blob (admin only) */
+  async exportSales(params: SaleExportQuery = {}): Promise<Blob> {
+    return apiFetchBlob("/sales/export", {
+      method: "GET",
+      params,
+    });
   },
 };
 
