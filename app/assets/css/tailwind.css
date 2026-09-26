@@ -232,7 +232,10 @@ textarea {
 .text-slate-400,
 .text-slate-300,
 .text-slate-200,
-.text-slate-100 {
+.text-slate-100,
+.text-neutral-50,
+.text-neutral-100,
+.text-neutral-200 {
   color: var(--app-text-strong) !important;
 }
 
@@ -249,8 +252,38 @@ textarea {
 .text-slate-600,
 .text-slate-700,
 .text-slate-400,
-.text-neutral-400 {
+.text-neutral-300,
+.text-neutral-400,
+.text-neutral-500 {
   color: var(--app-muted-soft) !important;
+}
+
+/*
+ * Pastel *-300 status colors are tuned for dark surfaces.
+ * In light mode, darken them so table badges / KPIs stay readable.
+ */
+:root:not(.app-dark) .text-emerald-300 {
+  color: #047857 !important; /* emerald-700 */
+}
+:root:not(.app-dark) .text-orange-300 {
+  color: #c2410c !important; /* orange-700 */
+}
+:root:not(.app-dark) .text-amber-300 {
+  color: #b45309 !important; /* amber-700 */
+}
+:root:not(.app-dark) .text-rose-300 {
+  color: #be123c !important; /* rose-700 */
+}
+:root:not(.app-dark) .text-red-300 {
+  color: #b91c1c !important; /* red-700 */
+}
+:root:not(.app-dark) .text-sky-300,
+:root:not(.app-dark) .text-blue-300 {
+  color: #1d4ed8 !important; /* blue-700 */
+}
+:root:not(.app-dark) .text-primary-200,
+:root:not(.app-dark) .text-primary-300 {
+  color: #bc7d2c !important; /* primary-700 */
 }
 
 /* Soft white overlays → theme-aware surface hover */

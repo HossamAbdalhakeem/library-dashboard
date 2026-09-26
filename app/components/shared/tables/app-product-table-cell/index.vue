@@ -6,7 +6,7 @@
   >
     <div class="flex max-w-full flex-wrap items-center gap-1.5">
       <p
-        class="m-0 min-w-0 max-w-full whitespace-normal break-words text-right text-sm font-semibold leading-snug text-neutral-100"
+        class="m-0 min-w-0 max-w-full whitespace-normal break-words text-right text-sm font-semibold leading-snug text-[var(--app-text-strong)]"
       >
         {{ product.name }}
       </p>
@@ -20,13 +20,13 @@
     </div>
     <p
       v-if="hasTeacher"
-      class="m-0 truncate text-xs leading-tight text-neutral-400"
+      class="m-0 truncate text-xs leading-tight text-[var(--app-muted)]"
     >
       {{ product.teacherName }}
     </p>
     <p
       v-if="hasStudyYear"
-      class="m-0 truncate text-xs leading-tight text-neutral-400"
+      class="m-0 truncate text-xs leading-tight text-[var(--app-muted)]"
     >
       {{ product.studyYearName }}
     </p>

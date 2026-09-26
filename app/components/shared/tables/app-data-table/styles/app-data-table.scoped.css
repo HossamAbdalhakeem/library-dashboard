@@ -43,7 +43,7 @@
 .app-data-table-wrap :deep(.p-datatable-thead > tr > th),
 .app-data-table-wrap :deep(.p-datatable-tbody > tr > td) {
   background: transparent !important;
-  color: var(--app-text) !important;
+  color: var(--app-text-strong) !important;
   border: none !important;
   border-bottom: 1px solid var(--app-border) !important;
   padding: 0.85rem 0.75rem !important;
@@ -56,13 +56,14 @@
 
 .app-data-table-wrap :deep(.p-datatable-thead > tr > th) {
   background: var(--app-elevated) !important;
+  color: var(--app-text-strong) !important;
   font-weight: 700 !important;
   white-space: nowrap;
 }
 
 .app-data-table-wrap :deep(.p-datatable-tbody > tr) {
   background: var(--app-card) !important;
-  color: var(--app-text) !important;
+  color: var(--app-text-strong) !important;
   transition: background-color 0.15s ease;
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div
     ref="wrapRef"
-    class="app-data-table-wrap overflow-hidden rounded-xl border border-slate-700 bg-slate-900"
+    class="app-data-table-wrap overflow-hidden rounded-xl border border-white/10 bg-[var(--app-card)]"
   >
     <div v-if="loading" class="grid gap-3 p-4">
       <Skeleton

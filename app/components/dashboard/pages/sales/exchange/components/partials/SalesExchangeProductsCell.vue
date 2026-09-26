@@ -5,7 +5,7 @@
       :key="item.saleItemId"
       class="text-sm"
     >
-      <div class="font-medium text-neutral-100">
+      <div class="font-medium text-[var(--app-text-strong)]">
         {{ item.product?.name || "—" }}
       </div>
       <div
