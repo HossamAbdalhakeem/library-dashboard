@@ -1,5 +1,6 @@
 import {
   apiFetch,
+  apiFetchBlob,
   firstRow,
   asData,
   asPaginated,
@@ -129,6 +130,14 @@ export const reservationApi = {
     return asData<ReservationTimelineResponse>(
       await apiFetch(`/reservations/${id}/timeline`, { method: "GET" }),
     );
+  },
+
+  /** GET /reservations/export → Excel blob (admin only) */
+  async exportReservations(params: Record<string, unknown> = {}): Promise<Blob> {
+    return apiFetchBlob("/reservations/export", {
+      method: "GET",
+      params,
+    });
   },
 };
 

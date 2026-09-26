@@ -32,6 +32,7 @@ export const toExportDateRangeIso = ({ from, to } = {}) => ({
  * @param {string} options.successMessage
  * @param {string} options.errorMessage
  * @param {boolean} [options.requireAcademicYear]
+ * @param {"day" | "year" | "custom"} [options.defaultPeriod]
  */
 export function useEntityExport({
   createFilters,
@@ -41,6 +42,7 @@ export function useEntityExport({
   successMessage,
   errorMessage,
   requireAcademicYear = false,
+  defaultPeriod = "day",
 }) {
   const { showError, showSuccess } = useAppToast();
   const {
@@ -53,6 +55,20 @@ export function useEntityExport({
 
   const withPeriodDefaults = (extra = {}) => {
     const today = todayInputValue();
+    if (defaultPeriod === "year") {
+      const from = academicYearRange.value?.from
+        ? String(academicYearRange.value.from).slice(0, 10)
+        : today;
+      const to = academicYearRange.value?.to
+        ? String(academicYearRange.value.to).slice(0, 10)
+        : today;
+      return {
+        ...extra,
+        period: "year",
+        from,
+        to,
+      };
+    }
     return {
       ...extra,
       period: "day",

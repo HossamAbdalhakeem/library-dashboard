@@ -2,7 +2,18 @@
   <div class="space-y-6 text-right" dir="rtl">
     <Card>
       <template #title>
-        <span class="text-lg font-bold text-slate-900">الحجوزات</span>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <span class="text-lg font-bold text-slate-900">الحجوزات</span>
+          <Button
+            v-if="isAdmin"
+            label="تصدير"
+            icon="pi pi-download"
+            severity="secondary"
+            outlined
+            data-testid="reservations-export"
+            @click="openExport"
+          />
+        </div>
       </template>
       <template #content>
         <ReservationsFilters
@@ -42,10 +53,16 @@
       @done="onFlowDone"
       @close="onFlowClose"
     />
+
+    <ReservationsExportDialog
+      v-if="exportVisible"
+      v-model:visible="exportVisible"
+    />
   </div>
 </template>
 
 <script setup>
+import Button from "primevue/button";
 import Card from "primevue/card";
 import ReservationsTable from "~/components/dashboard/pages/reservations/components/table/ReservationsTable.vue";
 import ReservationsFilters from "~/components/dashboard/pages/reservations/manage/components/filters/ReservationsFilters.vue";
@@ -55,6 +72,7 @@ import {
   buildReservationListQuery,
 } from "~/services/reservation";
 import { useAppToast } from "~/composables/useAppToast";
+import { useAuth } from "~/composables/useAuth";
 
 defineOptions({ name: "ReservationsManagePageIndex" });
 
@@ -64,14 +82,19 @@ const ReservationsCancelFlow = defineAsyncComponent(() =>
 const ReservationsExchangeFlow = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/reservations/manage/components/manage/ReservationsExchangeFlow.vue"),
 );
+const ReservationsExportDialog = defineAsyncComponent(() =>
+  import("~/components/dashboard/pages/reservations/manage/components/partials/ReservationsExportDialog.vue"),
+);
 
 const { showError } = useAppToast();
+const { isAdmin } = useAuth();
 
 const loading = ref(true);
 const selectedReservation = ref(null);
 const reservations = ref([]);
 const cancelOpen = ref(false);
 const exchangeOpen = ref(false);
+const exportVisible = ref(false);
 const filters = reactive({
   search: "",
   branchId: null,
@@ -85,6 +108,10 @@ const pagination = reactive({
   total: 0,
   first: 0,
 });
+
+const openExport = () => {
+  exportVisible.value = true;
+};
 
 const buildQuery = () =>
   buildReservationListQuery({
