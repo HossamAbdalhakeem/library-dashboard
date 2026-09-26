@@ -30,10 +30,6 @@
         :params="reportParams"
         :reload-key="reloadKey"
       />
-      <ReportsInventoryTable
-        :params="reportParams"
-        :reload-key="reloadKey"
-      />
     </div>
 
     <AdminHomeSalesTrendCard />
@@ -85,9 +81,6 @@ const ReportsFinancialsSection = defineAsyncComponent(() =>
 );
 const ReportsExpensesSection = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsExpensesSection/ReportsExpensesSection.vue"),
-);
-const ReportsInventoryTable = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsInventoryTable/ReportsInventoryTable.vue"),
 );
 
 const {

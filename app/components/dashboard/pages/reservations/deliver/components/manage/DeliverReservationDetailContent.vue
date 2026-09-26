@@ -43,6 +43,7 @@
         :image="proofFile"
         :image-data-url="proofKey"
         :image-preview-url="proofPreviewUrl"
+        :show-proof-source-choice="showProofSourceChoice"
         method-label="طريقة دفع المبلغ المتبقي"
         image-label="صورة إثبات دفع المتبقي"
         :method-invalid="!!methodError"
@@ -65,8 +66,12 @@
 import PaymentFields from "~/components/shared/payment/payment-fields/index.vue";
 import { PaymentMethod } from "~/enums/paymentMethod";
 import { formatMoney } from "~/utils/format/money";
+import { useAuth } from "~/composables/useAuth";
 
 defineOptions({ name: "DeliverReservationDetailContent" });
+
+const { isBranchEmployee } = useAuth();
+const showProofSourceChoice = computed(() => isBranchEmployee.value);
 
 const DeliverReservationDetailInfoRow = defineAsyncComponent(() =>
   import("../partials/DeliverReservationDetailInfoRow.vue"),

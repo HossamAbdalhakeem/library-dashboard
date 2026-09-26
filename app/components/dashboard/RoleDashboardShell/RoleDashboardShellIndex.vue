@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-black text-slate-100" dir="rtl">
+  <div class="min-h-screen bg-[var(--app-bg)] text-[var(--app-text-strong)]" dir="rtl">
     <div
       v-if="mobileNavOpen"
       class="fixed inset-0 z-30 bg-black/50 lg:hidden"
@@ -36,19 +36,19 @@
           <div
             v-for="stat in stats"
             :key="stat.label"
-            class="rounded-2xl border border-white/10 bg-[#111111] p-4 shadow-sm"
+            class="rounded-2xl border border-white/10 bg-[var(--app-card)] p-4 shadow-sm"
           >
             <div class="flex items-center justify-between gap-2">
-              <p class="text-sm text-slate-400">{{ stat.label }}</p>
+              <p class="text-sm text-[var(--app-muted)]">{{ stat.label }}</p>
               <span
-                class="shrink-0 rounded-lg bg-primary-500/15 px-2 py-1 text-xs font-semibold text-primary-200"
+                class="shrink-0 rounded-lg bg-primary-500/15 px-2 py-1 text-xs font-semibold text-primary-700 dark:text-primary-200"
                 >{{ stat.tag }}</span
               >
             </div>
-            <p class="mt-3 text-2xl font-bold text-white sm:mt-4 sm:text-3xl">
+            <p class="mt-3 text-2xl font-bold text-[var(--app-text-strong)] sm:mt-4 sm:text-3xl">
               {{ stat.value }}
             </p>
-            <p class="mt-2 text-xs text-slate-400">{{ stat.note }}</p>
+            <p class="mt-2 text-xs text-[var(--app-muted)]">{{ stat.note }}</p>
           </div>
         </div>
 

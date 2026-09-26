@@ -4,12 +4,14 @@
       <div class="min-w-0">
         <h2 class="text-xl font-bold text-white">التقارير</h2>
         <p class="mt-1 text-sm text-slate-400">
-          ملخص المبيعات والأرباح والمصروفات والحجوزات  
+          ملخص المبيعات والأرباح والمصروفات والحجوزات
         </p>
       </div>
       <ReportsFilters
         v-model:book="selectedBook"
         v-model:branch="selectedBranch"
+        v-model:teacher="selectedTeacher"
+        v-model:study-year="selectedStudyYear"
         v-model:from="dateFrom"
         v-model:to="dateTo"
         v-model:period="selectedPeriod"
@@ -57,16 +59,6 @@
       :reload-key="reloadKey"
       @loading="setSectionLoading('payments', $event)"
     />
-    <ReportsInventoryTable
-      :params="reportParams"
-      :reload-key="reloadKey"
-      @loading="setSectionLoading('inventory', $event)"
-    />
-    <ReportsProductsSection
-      :params="reportParams"
-      :reload-key="reloadKey"
-      @loading="setSectionLoading('products', $event)"
-    />
     <ReportsBranchesSection
       :params="reportParams"
       :reload-key="reloadKey"
@@ -94,9 +86,6 @@ const ReportsSalesTrendSection = defineAsyncComponent(() =>
     "~/components/dashboard/pages/reports/admin/ReportsSalesTrendSection/ReportsSalesTrendSection.vue"
   ),
 );
-const ReportsInventoryTable = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsInventoryTable/ReportsInventoryTable.vue"),
-);
 const ReportsFinancialsSection = defineAsyncComponent(() =>
   import(
     "~/components/shared/admin-page/ReportsFinancialsSection/ReportsFinancialsSection.vue"
@@ -104,9 +93,6 @@ const ReportsFinancialsSection = defineAsyncComponent(() =>
 );
 const ReportsPaymentsSection = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/reports/admin/ReportsPaymentsSection/ReportsPaymentsSection.vue"),
-);
-const ReportsProductsSection = defineAsyncComponent(() =>
-  import("~/components/dashboard/pages/reports/admin/ReportsProductsSection/ReportsProductsSection.vue"),
 );
 const ReportsBranchesSection = defineAsyncComponent(() =>
   import("~/components/dashboard/pages/reports/admin/ReportsBranchesSection/ReportsBranchesSection.vue"),
@@ -150,6 +136,8 @@ const dateTo = ref(today);
 const selectedPeriod = ref("day");
 const selectedBranch = ref("all");
 const selectedBook = ref(null);
+const selectedTeacher = ref(null);
+const selectedStudyYear = ref(null);
 
 const reloadKey = ref(0);
 const sectionLoading = reactive({
@@ -158,8 +146,6 @@ const sectionLoading = reactive({
   salesTrend: false,
   profitLoss: false,
   payments: false,
-  inventory: false,
-  products: false,
   branches: false,
   returns: false,
   expenses: false,
@@ -176,6 +162,12 @@ const reportParams = computed(() => {
   }
   if (selectedBook.value) {
     extras.productId = selectedBook.value;
+  }
+  if (selectedTeacher.value) {
+    extras.teacherId = selectedTeacher.value;
+  }
+  if (selectedStudyYear.value) {
+    extras.studyYearId = selectedStudyYear.value;
   }
   return buildReportDateRangeParams({
     from: dateFrom.value,

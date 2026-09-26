@@ -3,6 +3,7 @@
  */
 export function useImageUpload(props, emit) {
   const inputRef = ref(null);
+  const cameraInputRef = ref(null);
   const previewUrl = ref("");
   const errorMessage = ref("");
   const fileMeta = ref("");
@@ -38,13 +39,22 @@ export function useImageUpload(props, emit) {
     inputRef.value?.click();
   };
 
+  const openCamera = () => {
+    cameraInputRef.value?.click();
+  };
+
+  const resetFileInputs = () => {
+    if (inputRef.value) inputRef.value.value = "";
+    if (cameraInputRef.value) cameraInputRef.value.value = "";
+  };
+
   const clear = () => {
     revokePreview();
     errorMessage.value = "";
     fileMeta.value = "";
     selectedImage.value = "";
     originalFileName.value = "cropped-image.jpg";
-    if (inputRef.value) inputRef.value.value = "";
+    resetFileInputs();
     emit("update:modelValue", null);
     emit("clear");
   };
@@ -56,27 +66,24 @@ export function useImageUpload(props, emit) {
     showCropper.value = true;
   };
 
-  const onFileChange = (event) => {
-    const file = event.target?.files?.[0];
-    if (!file) return;
-
+  const processSelectedFile = (file) => {
     errorMessage.value = "";
 
     if (!file.type.startsWith("image/")) {
       errorMessage.value = "يسمح برفع الصور فقط.";
       emit("error", errorMessage.value);
-      if (inputRef.value) inputRef.value.value = "";
+      resetFileInputs();
       return;
     }
 
     if (file.size > maxBytes.value) {
       errorMessage.value = `حجم الصورة كبير. الحد الأقصى ${maxSizeLabel.value}.`;
       emit("error", errorMessage.value);
-      if (inputRef.value) inputRef.value.value = "";
+      resetFileInputs();
       return;
     }
 
-    originalFileName.value = file.name || "cropped-image.jpg";
+    originalFileName.value = file.name || "camera-photo.jpg";
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -89,8 +96,13 @@ export function useImageUpload(props, emit) {
       emit("error", errorMessage.value);
     };
     reader.readAsDataURL(file);
+    resetFileInputs();
+  };
 
-    if (inputRef.value) inputRef.value.value = "";
+  const onFileChange = (event) => {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    processSelectedFile(file);
   };
 
   const handleCropped = async ({ blob, dataURL }) => {
@@ -170,7 +182,7 @@ export function useImageUpload(props, emit) {
       errorMessage.value = "";
       fileMeta.value = "";
       selectedImage.value = "";
-      if (inputRef.value) inputRef.value.value = "";
+      resetFileInputs();
     },
   );
 
@@ -180,6 +192,7 @@ export function useImageUpload(props, emit) {
 
   return {
     inputRef,
+    cameraInputRef,
     previewUrl,
     errorMessage,
     fileMeta,
@@ -189,6 +202,7 @@ export function useImageUpload(props, emit) {
     isProcessing,
     maxSizeLabel,
     openPicker,
+    openCamera,
     clear,
     openCropper,
     onFileChange,

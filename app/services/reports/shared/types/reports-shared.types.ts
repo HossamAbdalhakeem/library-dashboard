@@ -16,6 +16,8 @@ export type ReportQuery = {
   period?: "today" | "day" | "yesterday" | "week" | "month" | "year" | "custom" | string;
   branchId?: string;
   productId?: string;
+  teacherId?: string;
+  studyYearId?: string;
   academicYearId?: string;
   page?: number;
   per_page?: number;

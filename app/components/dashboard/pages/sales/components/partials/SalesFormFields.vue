@@ -129,6 +129,7 @@
           v-model:image="sales.proofFile"
           v-model:image-data-url="sales.proofKey"
           v-model:image-preview-url="sales.proofPreviewUrl"
+          :show-proof-source-choice="showProofSourceChoice"
           :method-invalid="!!(errorMessage || fieldErrors.method)"
           :method-error="errorMessage || ''"
           :image-invalid="sales.proofRequiredError"
@@ -159,6 +160,11 @@ import AppGlobalSelectStudent from "~/components/shared/selections/app-global-se
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import { Field, ErrorMessage } from "vee-validate";
+import { useAuth } from "~/composables/useAuth";
+
+const { isBranchEmployee } = useAuth();
+
+const showProofSourceChoice = computed(() => isBranchEmployee.value);
 
 const props = defineProps({
   sales: { type: Object, required: true },

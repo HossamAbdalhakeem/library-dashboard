@@ -20,7 +20,8 @@ defineProps({
 });
 
 const columns = [
-  { field: "branchName", header: "الفرع / النوع" },
+  { field: "branchName", header: "الفرع" },
+  { field: "categoryName", header: "النوع" },
   { field: "amountLabel", header: "المبلغ" },
 ];
 </script>

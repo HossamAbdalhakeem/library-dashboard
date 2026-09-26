@@ -14,6 +14,15 @@
         data-testid="payment-proof-file"
         @change="onFileChange"
       />
+      <input
+        ref="cameraInputRef"
+        type="file"
+        class="hidden"
+        accept="image/*"
+        capture="environment"
+        data-testid="payment-proof-camera"
+        @change="onFileChange"
+      />
 
       <div v-if="previewUrl" class="iu-preview space-y-3">
         <img
@@ -43,6 +52,39 @@
         </div>
 
         <p v-if="fileMeta" class="text-center text-xs text-slate-500">{{ fileMeta }}</p>
+      </div>
+
+      <div
+        v-else-if="showSourceChoice"
+        class="grid gap-2 sm:grid-cols-2"
+      >
+        <button
+          type="button"
+          class="flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-4 text-slate-700 transition hover:border-primary-300 hover:text-slate-900"
+          data-testid="payment-proof-from-device"
+          @click="openPicker"
+        >
+          <i class="pi pi-upload text-2xl" />
+          <span class="text-sm font-medium">رفع من الجهاز</span>
+          <span class="text-center text-xs text-slate-400">
+            اختيار صورة من المعرض
+          </span>
+        </button>
+        <button
+          type="button"
+          class="flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-4 text-slate-700 transition hover:border-primary-300 hover:text-slate-900"
+          data-testid="payment-proof-from-camera"
+          @click="openCamera"
+        >
+          <i class="pi pi-camera text-2xl" />
+          <span class="text-sm font-medium">فتح الكاميرا</span>
+          <span class="text-center text-xs text-slate-400">
+            التقاط صورة بالكاميرا
+          </span>
+        </button>
+        <p class="sm:col-span-2 text-center text-xs text-slate-400">
+          صور فقط — الحد الأقصى {{ maxSizeLabel }}
+        </p>
       </div>
 
       <button
@@ -97,6 +139,8 @@ const props = defineProps({
   modelValue: { type: [Object, File, null], default: null },
   /** Optional async upload; cropper stays open until this resolves */
   uploadHandler: { type: Function, default: null },
+  /** When true, show device upload vs camera capture before crop (e.g. branch staff). */
+  showSourceChoice: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["update:modelValue", "select", "clear", "error", "cropped"]);
@@ -112,6 +156,7 @@ const {
   isProcessing,
   maxSizeLabel,
   openPicker,
+  openCamera,
   clear,
   openCropper,
   onFileChange,

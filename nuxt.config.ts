@@ -102,6 +102,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      // Dark is the default; inline script restores saved preference before paint
       htmlAttrs: { class: 'app-dark', lang: 'ar', dir: 'rtl' },
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -110,6 +111,12 @@ export default defineNuxtConfig({
       ],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      script: [
+        {
+          // Prefer saved theme early to avoid a flash of the wrong scheme
+          children: `(function(){try{var t=localStorage.getItem('app-theme');var r=document.documentElement;if(t==='light')r.classList.remove('app-dark');else r.classList.add('app-dark');}catch(e){document.documentElement.classList.add('app-dark');}})();`,
+        },
       ],
     },
   },

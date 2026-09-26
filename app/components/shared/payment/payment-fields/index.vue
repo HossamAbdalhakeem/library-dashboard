@@ -20,6 +20,7 @@
         :label="imageLabel"
         :placeholder="imagePlaceholder"
         :max-size-bytes="maxSizeBytes"
+        :show-source-choice="showProofSourceChoice"
         :invalid="imageInvalid || Boolean(imageError)"
         :upload-handler="onImageSelect"
         @update:model-value="onImageFileChange"
@@ -86,6 +87,11 @@ const props = defineProps({
     type: String,
     default: "صورة إثبات الدفع مطلوبة لطريقة الدفع المحددة.",
   },
+  /**
+   * When true (e.g. branch employee), non-cash proof shows
+   * «رفع من الجهاز» vs «فتح الكاميرا» before the crop step.
+   */
+  showProofSourceChoice: { type: Boolean, default: false },
 });
 
 const emit = defineEmits([

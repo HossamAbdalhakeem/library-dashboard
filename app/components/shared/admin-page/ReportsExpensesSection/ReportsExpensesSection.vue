@@ -79,6 +79,8 @@ const byBranch = computed(() =>
     : []
   ).map((row) => ({
     ...row,
+    branchName: row.branchName || "عام",
+    categoryName: row.categoryName || row.type || "-",
     amountLabel: formatMoney(row.amount, "locale"),
   })),
 );

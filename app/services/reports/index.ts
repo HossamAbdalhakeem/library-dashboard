@@ -9,8 +9,6 @@ export type {
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
   AdminPaymentMethodsResponse,
-  AdminInventoryResponse,
-  AdminProductsResponse,
   AdminBranchesResponse,
   AdminReturnsExchangesResponse,
   AdminExpensesResponse,

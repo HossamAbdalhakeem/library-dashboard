@@ -16,7 +16,6 @@
       <template #content>
         <ProductsFilters
           v-model:teacher-id="filters.teacherId"
-          v-model:type="filters.type"
           v-model:study-year-id="filters.studyYearId"
           @search="onSearch"
           @change="reloadProducts"
@@ -70,7 +69,6 @@ const products = ref([]);
 const filters = reactive({
   search: "",
   teacherId: null,
-  type: null,
   studyYearId: null,
 });
 const pagination = reactive({

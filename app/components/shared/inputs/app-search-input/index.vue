@@ -76,21 +76,21 @@ const onInput = (value) => {
 }
 
 .search-input-field--default :deep(.search-input-icon) {
-  color: rgb(71 85 105);
+  color: var(--app-muted-soft);
 }
 
 .search-input-field--dark :deep(.search-input-icon) {
-  color: rgb(148 163 184);
+  color: var(--app-muted);
 }
 
 .search-input-text--dark {
   border-radius: 0.75rem;
-  border: 1px solid rgb(51 65 85);
-  background-color: rgb(15 23 42);
-  color: rgb(241 245 249);
+  border: 1px solid var(--app-border-strong);
+  background-color: var(--app-surface);
+  color: var(--app-text-strong);
 }
 
 .search-input-text--dark::placeholder {
-  color: rgb(148 163 184);
+  color: var(--app-muted);
 }
 </style>
