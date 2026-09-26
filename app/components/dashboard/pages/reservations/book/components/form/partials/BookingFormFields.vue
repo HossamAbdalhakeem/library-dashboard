@@ -127,6 +127,7 @@
         v-model:image-data-url="proofKeyModel"
         v-model:image-preview-url="proofPreviewUrlModel"
         :exclude="paymentExclude"
+        :show-proof-source-choice="showProofSourceChoice"
         :method-invalid="!!errorMessage"
         :method-error="errorMessage || ''"
         :image-invalid="proofRequiredError"
@@ -164,6 +165,7 @@ defineProps({
   amountError: { type: String, default: "" },
   paymentExclude: { type: Array, default: () => [] },
   proofRequiredError: { type: Boolean, default: false },
+  showProofSourceChoice: { type: Boolean, default: false },
 });
 
 const selectedStudentModel = defineModel("selectedStudent", { default: null });

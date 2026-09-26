@@ -42,6 +42,7 @@
         kind="reservation"
         :code="data.status"
         :label="data.statusLabel"
+        class="max-w-[5rem] min-w-0 whitespace-normal text-center leading-snug [&_.p-tag-label]:block [&_.p-tag-label]:whitespace-normal [&_.p-tag-label]:text-center"
       />
     </template>
 
@@ -82,7 +83,12 @@ defineEmits(["deliver"]);
 
 const columns = [
   { field: "reservationNumber", header: "رقم الحجز" },
-  { field: "statusLabel", header: "الحالة", slot: "status" },
+  {
+    field: "statusLabel",
+    header: "الحالة",
+    slot: "status",
+    style: "width: 6.5rem",
+  },
   { field: "createdAt", header: "التاريخ والوقت", slot: "createdAt" },
   { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },

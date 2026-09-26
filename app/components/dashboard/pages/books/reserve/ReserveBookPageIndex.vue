@@ -63,6 +63,7 @@
       <BookReservationPageIndex
         title="حجز منتج"
         show-header
+        show-proof-source-choice
         :initial-product="selectedProductId"
         :initial-selection="selectedProduct"
         @hydrating="onFormHydrating"

@@ -9,6 +9,7 @@
           :back-to="backTo"
           :initial-product="initialProduct"
           :initial-selection="initialSelection"
+          :show-proof-source-choice="showProofSourceChoice"
           :submit-fn="submitReservation"
           @hydrating="$emit('hydrating', $event)"
           @reset="$emit('reset')"
@@ -35,6 +36,8 @@ defineProps({
   backTo: { type: String, default: "" },
   initialProduct: { type: [String, Number], default: "" },
   initialSelection: { type: Object, default: null },
+  /** Device vs camera proof picker (e.g. CS reserve book page). */
+  showProofSourceChoice: { type: Boolean, default: false },
 });
 
 defineEmits(["hydrating", "reset"]);
