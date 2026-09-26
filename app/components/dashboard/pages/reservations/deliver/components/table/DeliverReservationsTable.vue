@@ -41,8 +41,8 @@
       <AppStatusTableCell
         kind="reservation"
         :code="data.status"
-        :label="data.statusLabel"
-        class="max-w-[5rem] min-w-0 whitespace-normal text-center leading-snug [&_.p-tag-label]:block [&_.p-tag-label]:whitespace-normal [&_.p-tag-label]:text-center"
+        :label="toTwoLineStatusLabel(data.statusLabel)"
+        class="whitespace-pre-line text-center leading-snug [&_.p-tag-label]:whitespace-pre-line [&_.p-tag-label]:text-center"
       />
     </template>
 
@@ -83,12 +83,7 @@ defineEmits(["deliver"]);
 
 const columns = [
   { field: "reservationNumber", header: "رقم الحجز" },
-  {
-    field: "statusLabel",
-    header: "الحالة",
-    slot: "status",
-    style: "width: 6.5rem",
-  },
+  { field: "statusLabel", header: "الحالة", slot: "status" },
   { field: "createdAt", header: "التاريخ والوقت", slot: "createdAt" },
   { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productCell", header: "المنتج", slot: "product" },
@@ -103,4 +98,14 @@ const columns = [
 ];
 
 const isDeliverable = (item) => item?.status === "READY";
+
+/** First word on line 1; remaining words stay together on line 2. */
+const toTwoLineStatusLabel = (label) => {
+  const parts = String(label || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (parts.length <= 1) return parts[0] || String(label || "");
+  return `${parts[0]}\n${parts.slice(1).join(" ")}`;
+};
 </script>
