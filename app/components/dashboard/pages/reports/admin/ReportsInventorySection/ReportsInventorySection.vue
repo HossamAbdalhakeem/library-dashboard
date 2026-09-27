@@ -16,14 +16,18 @@
       />
     </div>
 
-    <div v-if="loading" class="space-y-2">
+    <p v-if="!searched" class="text-sm text-slate-500">
+      حدد الفلاتر ثم اضغط بحث.
+    </p>
+
+    <div v-else-if="loading" class="space-y-2">
       <Skeleton v-for="i in 4" :key="`inv-${i}`" width="100%" height="2.2rem" />
     </div>
 
     <ReportsSectionError
       v-else-if="error"
       message="تعذر تحميل مخزون المنتجات."
-      @retry="reload"
+      @retry="loadReport"
     />
 
     <p v-else-if="!hasRows" class="text-sm text-slate-500">
@@ -49,7 +53,6 @@ import Button from "primevue/button";
 import Skeleton from "primevue/skeleton";
 import { formatMoney } from "~/utils/format/money";
 import { adminReportsApi } from "~/services/reports/admin";
-import { useAdminReportSection } from "~/composables/useAdminReportSection";
 import { useAppToast } from "~/composables/useAppToast";
 import { triggerBlobDownload } from "~/composables/useEntityExport";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
@@ -58,23 +61,21 @@ import InventoryProductsTable from "./partials/InventoryProductsTable.vue";
 defineOptions({ name: "ReportsInventorySection" });
 
 const props = defineProps({
-  params: { type: Object, default: () => ({}) },
-  reloadKey: { type: Number, default: 0 },
+  params: { type: Object, default: null },
+  searchKey: { type: Number, default: 0 },
 });
 
 const emit = defineEmits(["loading"]);
 const { showError, showSuccess } = useAppToast();
 const exporting = ref(false);
+const loading = ref(false);
+const error = ref(null);
+const branches = ref([]);
+const productRows = ref([]);
+let generation = 0;
 
-const { loading, data, error, reload } = useAdminReportSection(
-  (params) => adminReportsApi.getInventoryByProduct(params),
-  {
-    params: toRef(props, "params"),
-    reloadKey: toRef(props, "reloadKey"),
-    emit,
-    errorMessage: "تعذر تحميل مخزون المنتجات.",
-  },
-);
+const searched = computed(() => props.searchKey > 0);
+const hasRows = computed(() => branches.value.length > 0);
 
 const toProductRow = (product) => ({
   productCell: {
@@ -89,27 +90,44 @@ const toProductRow = (product) => ({
   lowStockThreshold: product.lowStockThreshold,
 });
 
-const branches = computed(() =>
-  (Array.isArray(data.value?.branches) ? data.value.branches : []).map(
-    (branch) => ({
-      branchId: branch.branchId,
-      branchName: branch.branchName,
-      rows: (branch.products || []).map(toProductRow),
-    }),
-  ),
-);
+const setLoading = (value) => {
+  loading.value = value;
+  emit("loading", value);
+};
 
-const productRows = computed(() =>
-  (Array.isArray(data.value?.productsByProduct)
-    ? data.value.productsByProduct
-    : []
-  ).map(toProductRow),
-);
-
-const hasRows = computed(() => branches.value.length > 0);
+const loadReport = async () => {
+  if (!props.params) return;
+  const gen = ++generation;
+  setLoading(true);
+  error.value = null;
+  try {
+    const result = await adminReportsApi.getInventoryByProduct(props.params);
+    if (gen !== generation) return;
+    branches.value = (Array.isArray(result?.branches) ? result.branches : []).map(
+      (branch) => ({
+        branchId: branch.branchId,
+        branchName: branch.branchName,
+        rows: (branch.products || []).map(toProductRow),
+      }),
+    );
+    productRows.value = (
+      Array.isArray(result?.productsByProduct) ? result.productsByProduct : []
+    ).map(toProductRow);
+  } catch (err) {
+    if (gen !== generation) return;
+    branches.value = [];
+    productRows.value = [];
+    error.value = err?.message || "تعذر تحميل مخزون المنتجات.";
+    if (err?.code !== "SESSION_CLEARED" && err?.status !== 401) {
+      showError(error.value);
+    }
+  } finally {
+    if (gen === generation) setLoading(false);
+  }
+};
 
 const onExport = async () => {
-  if (exporting.value || !hasRows.value) return;
+  if (exporting.value || !hasRows.value || !props.params) return;
   exporting.value = true;
   try {
     const blob = await adminReportsApi.exportInventoryByProduct(props.params);
@@ -123,4 +141,12 @@ const onExport = async () => {
     exporting.value = false;
   }
 };
+
+watch(
+  () => props.searchKey,
+  () => {
+    if (!props.searchKey) return;
+    loadReport();
+  },
+);
 </script>

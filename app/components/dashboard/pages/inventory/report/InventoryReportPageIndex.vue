@@ -9,20 +9,17 @@
         v-model:branch="selectedBranch"
         v-model:teacher="selectedTeacher"
         v-model:study-year="selectedStudyYear"
-        v-model:from="dateFrom"
-        v-model:to="dateTo"
-        v-model:period="selectedPeriod"
-        :academic-year-range="academicYearRange"
+        :show-period="false"
+        search-mode
         :loading="loading"
         class="w-full min-w-0"
-        @change="onFiltersChange"
-        @refresh="refresh"
+        @search="onSearch"
       />
     </div>
 
     <ReportsInventorySection
-      :params="reportParams"
-      :reload-key="reloadKey"
+      :params="appliedParams"
+      :search-key="searchKey"
       @loading="loading = $event"
     />
   </div>
@@ -30,7 +27,7 @@
 
 <script setup>
 import ReportsFilters from "~/components/dashboard/pages/reports/admin/ReportsFilters/ReportsFilters.vue";
-import { useAdminReportFilters } from "~/composables/useAdminReportFilters";
+import { useAcademicYear } from "~/composables/useAcademicYear";
 
 const ReportsInventorySection = defineAsyncComponent(() =>
   import(
@@ -40,19 +37,25 @@ const ReportsInventorySection = defineAsyncComponent(() =>
 
 defineOptions({ name: "InventoryReportPageIndex" });
 
+const { academicYearId } = useAcademicYear();
 const loading = ref(false);
-const {
-  academicYearRange,
-  dateFrom,
-  dateTo,
-  selectedPeriod,
-  selectedBranch,
-  selectedBook,
-  selectedTeacher,
-  selectedStudyYear,
-  reloadKey,
-  reportParams,
-  refresh,
-  onFiltersChange,
-} = useAdminReportFilters();
+const selectedBranch = ref("all");
+const selectedBook = ref(null);
+const selectedTeacher = ref(null);
+const selectedStudyYear = ref(null);
+const appliedParams = ref(null);
+const searchKey = ref(0);
+
+const onSearch = () => {
+  const params = {};
+  if (academicYearId.value) params.academicYearId = academicYearId.value;
+  if (selectedBranch.value && selectedBranch.value !== "all") {
+    params.branchId = selectedBranch.value;
+  }
+  if (selectedBook.value) params.productId = selectedBook.value;
+  if (selectedTeacher.value) params.teacherId = selectedTeacher.value;
+  if (selectedStudyYear.value) params.studyYearId = selectedStudyYear.value;
+  appliedParams.value = params;
+  searchKey.value += 1;
+};
 </script>

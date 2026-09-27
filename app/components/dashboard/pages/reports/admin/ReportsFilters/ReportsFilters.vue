@@ -45,6 +45,7 @@
     />
 
     <AppPeriodDateFilter
+      v-if="showPeriod"
       :from="from"
       :to="to"
       :academic-year-range="academicYearRange"
@@ -58,6 +59,16 @@
     />
 
     <Button
+      v-if="searchMode"
+      label="بحث"
+      icon="pi pi-search"
+      severity="primary"
+      class="h-11 shrink-0 self-end"
+      :loading="loading"
+      @click="emit('search')"
+    />
+    <Button
+      v-else
       icon="pi pi-refresh"
       severity="secondary"
       class="h-11 w-11 shrink-0 self-end"
@@ -87,6 +98,10 @@ const props = defineProps({
   period: { type: String, default: "day" },
   academicYearRange: { type: Object, default: null },
   loading: { type: Boolean, default: false },
+  /** Hide the period control. Inventory is a current snapshot, so dates do not apply. */
+  showPeriod: { type: Boolean, default: true },
+  /** Keep dropdown changes local until the search button is pressed. */
+  searchMode: { type: Boolean, default: false },
 });
 
 const emit = defineEmits([
@@ -99,6 +114,7 @@ const emit = defineEmits([
   "update:period",
   "change",
   "refresh",
+  "search",
 ]);
 
 const productCatalogQuery = computed(() => ({
@@ -106,25 +122,29 @@ const productCatalogQuery = computed(() => ({
   ...(props.studyYear ? { studyYearId: props.studyYear } : {}),
 }));
 
+const notifyChange = () => {
+  if (!props.searchMode) emit("change");
+};
+
 const onBookChange = (value) => {
   emit("update:book", value ?? null);
-  emit("change");
+  notifyChange();
 };
 
 const onBranchChange = (value) => {
   emit("update:branch", value);
-  emit("change");
+  notifyChange();
 };
 
 const onTeacherChange = (value) => {
   emit("update:teacher", value ?? null);
   emit("update:book", null);
-  emit("change");
+  notifyChange();
 };
 
 const onStudyYearChange = (value) => {
   emit("update:studyYear", value ?? null);
   emit("update:book", null);
-  emit("change");
+  notifyChange();
 };
 </script>
