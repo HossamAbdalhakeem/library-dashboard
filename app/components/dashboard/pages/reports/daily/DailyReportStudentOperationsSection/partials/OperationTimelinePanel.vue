@@ -1,6 +1,6 @@
 <template>
   <div class="ops-timeline-panel w-full space-y-3 text-right" dir="rtl">
-    <p v-if="showTitle" class="text-sm font-semibold text-white">سجل العملية</p>
+    <p v-if="showTitle" class="text-sm font-semibold text-[var(--app-text-strong)]">سجل العملية</p>
 
     <div v-if="loading" class="ops-timeline ops-timeline-skeleton w-full @container">
       <div
@@ -110,7 +110,7 @@
             <AppDatetimeTableCell :value="item.date" />
           </div>
 
-          <p class="mb-3 font-bold text-white">{{ item.title }}</p>
+          <p class="mb-3 font-bold text-[var(--app-text-strong)]">{{ item.title }}</p>
 
           <ul
             v-if="item.details?.length"

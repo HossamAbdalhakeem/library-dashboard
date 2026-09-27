@@ -2,7 +2,7 @@
   <div class="w-full min-w-0 space-y-6 overflow-x-hidden text-right" dir="rtl">
     <div class="flex w-full min-w-0 flex-col gap-3">
       <div class="min-w-0">
-        <h2 class="text-xl font-bold text-white">التقارير</h2>
+        <h2 class="text-xl font-bold text-[var(--app-text-strong)]">التقارير</h2>
         <p class="mt-1 text-sm text-slate-400">
           ملخص المبيعات والأرباح والمصروفات والحجوزات
         </p>
@@ -27,6 +27,11 @@
       :params="reportParams"
       :reload-key="reloadKey"
       @loading="setSectionLoading('summary', $event)"
+    />
+    <ReportsReservationsSection
+      :params="reportParams"
+      :reload-key="reloadKey"
+      @loading="setSectionLoading('reservations', $event)"
     />
     <ReportsRevenueSection
       :params="reportParams"
@@ -72,6 +77,11 @@ import {
 
 const ReportsSummaryCards = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsSummaryCards/ReportsSummaryCards.vue"),
+);
+const ReportsReservationsSection = defineAsyncComponent(() =>
+  import(
+    "~/components/dashboard/pages/reports/admin/ReportsReservationsSection/ReportsReservationsSection.vue"
+  ),
 );
 const ReportsRevenueSection = defineAsyncComponent(() =>
   import("~/components/shared/admin-page/ReportsRevenueSection/ReportsRevenueSection.vue"),

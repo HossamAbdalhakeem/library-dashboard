@@ -7,7 +7,7 @@
         >
           تقارير الأداء
         </span>
-        <h3 class="text-lg font-bold text-white">أهم المؤشرات</h3>
+        <h3 class="text-lg font-bold text-[var(--app-text-strong)]">أهم المؤشرات</h3>
       </div>
     </div>
 

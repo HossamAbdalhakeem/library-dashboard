@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <p class="font-bold text-white">{{ title }}</p>
+      <p class="font-bold text-[var(--app-text-strong)]">{{ title }}</p>
       <AppGlobalSelectBranch
         :model-value="branchId || 'all'"
         label=""
@@ -21,7 +21,11 @@
     <AdminHomeSalesTrendSkeleton v-if="loading" />
 
     <div v-else class="h-56 w-full">
-      <Line :data="chartData" :options="chartOptions" />
+      <Line
+        :key="isDark ? 'dark' : 'light'"
+        :data="chartData"
+        :options="chartOptions"
+      />
     </div>
   </div>
 </template>
@@ -60,6 +64,7 @@ const props = defineProps({
   lineColor: { type: String, default: "#f5af52" },
 });
 
+const { isDark } = useTheme();
 const loading = ref(true);
 const points = ref([]);
 const branchId = ref(null);
@@ -113,7 +118,7 @@ const chartData = computed(() => ({
         return gradient;
       },
       pointBackgroundColor: props.lineColor,
-      pointBorderColor: "#111111",
+      pointBorderColor: isDark.value ? "#111111" : "#ffffff",
       pointBorderWidth: 2,
       pointRadius: 4,
       pointHoverRadius: 6,
@@ -124,52 +129,70 @@ const chartData = computed(() => ({
   ],
 }));
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      rtl: true,
-      backgroundColor: "rgba(17, 17, 17, 0.95)",
-      titleFont: { family: "Tahoma, Segoe UI, sans-serif" },
-      bodyFont: { family: "Tahoma, Segoe UI, sans-serif" },
-      callbacks: {
-        label(context) {
-          const value = Number(context.parsed.y || 0);
-          return value.toLocaleString("en-US");
+const chartOptions = computed(() => {
+  const tickColor = isDark.value ? "#a3a3a3" : "#52525b";
+  const gridColor = isDark.value
+    ? "rgba(163, 163, 163, 0.18)"
+    : "rgba(82, 82, 91, 0.16)";
+  const axisBorder = isDark.value
+    ? "rgba(64, 64, 64, 0.6)"
+    : "rgba(212, 212, 216, 0.95)";
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        rtl: true,
+        backgroundColor: isDark.value
+          ? "rgba(17, 17, 17, 0.95)"
+          : "rgba(255, 255, 255, 0.96)",
+        titleColor: isDark.value ? "#fafafa" : "#18181b",
+        bodyColor: isDark.value ? "#e5e5e5" : "#3f3f46",
+        borderColor: isDark.value ? "rgba(64, 64, 64, 0.8)" : "#e4e4e7",
+        borderWidth: 1,
+        titleFont: { family: "Tahoma, Segoe UI, sans-serif" },
+        bodyFont: { family: "Tahoma, Segoe UI, sans-serif" },
+        callbacks: {
+          label(context) {
+            const value = Number(context.parsed.y || 0);
+            return value.toLocaleString("en-US");
+          },
         },
       },
     },
-  },
-  scales: {
-    x: {
-      ticks: {
-        color: "#a3a3a3",
-        font: { size: 11, family: "Tahoma, Segoe UI, sans-serif" },
-      },
-      grid: {
-        color: "rgba(163, 163, 163, 0.12)",
-      },
-      border: { color: "rgba(64, 64, 64, 0.6)" },
-    },
-    y: {
-      beginAtZero: true,
-      ticks: {
-        color: "#a3a3a3",
-        font: { size: 11, family: "Tahoma, Segoe UI, sans-serif" },
-        callback(value) {
-          return Number(value).toLocaleString("en-US");
+    scales: {
+      x: {
+        ticks: {
+          color: tickColor,
+          font: { size: 11, family: "Tahoma, Segoe UI, sans-serif" },
         },
+        grid: {
+          color: isDark.value
+            ? "rgba(163, 163, 163, 0.12)"
+            : "rgba(82, 82, 91, 0.08)",
+        },
+        border: { color: axisBorder },
       },
-      grid: {
-        color: "rgba(163, 163, 163, 0.18)",
-        drawBorder: false,
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: tickColor,
+          font: { size: 11, family: "Tahoma, Segoe UI, sans-serif" },
+          callback(value) {
+            return Number(value).toLocaleString("en-US");
+          },
+        },
+        grid: {
+          color: gridColor,
+          drawBorder: false,
+        },
+        border: { color: axisBorder },
       },
-      border: { color: "rgba(64, 64, 64, 0.6)" },
     },
-  },
-};
+  };
+});
 
 onMounted(loadSalesTrend);
 </script>

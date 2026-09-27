@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4 min-w-0">
-      <p class="font-bold text-white">{{ title }}</p>
+      <p class="font-bold text-[var(--app-text-strong)]">{{ title }}</p>
       <p v-if="subtitle" class="mt-1 text-xs text-slate-400">{{ subtitle }}</p>
     </div>
 

@@ -1,7 +1,7 @@
 <template>
   <section class="space-y-3">
     <div>
-      <p class="font-bold text-white">التحليلات</p>
+      <p class="font-bold text-[var(--app-text-strong)]">التحليلات</p>
       <!-- <p class="mt-0.5 text-xs text-slate-400">
         توزيع المدفوعات وأفضل المنتجات
       </p> -->

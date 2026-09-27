@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
-      <p class="font-bold text-white">المبيعات والإيرادات</p>
+      <p class="font-bold text-[var(--app-text-strong)]">المبيعات والإيرادات</p>
     </div>
 
     <div v-if="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-3">

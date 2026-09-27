@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4">
-      <p class="font-bold text-white">الأرباح</p>
+      <p class="font-bold text-[var(--app-text-strong)]">الأرباح</p>
     </div>
 
     <div v-if="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">

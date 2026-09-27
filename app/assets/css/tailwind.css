@@ -285,6 +285,15 @@ textarea {
 :root:not(.app-dark) .text-primary-300 {
   color: #bc7d2c !important; /* primary-700 */
 }
+:root:not(.app-dark) .text-violet-300 {
+  color: #6d28d9 !important; /* violet-700 */
+}
+:root:not(.app-dark) .text-emerald-400 {
+  color: #047857 !important; /* emerald-700 */
+}
+:root:not(.app-dark) .text-rose-400 {
+  color: #be123c !important; /* rose-700 */
+}
 
 /* Soft white overlays → theme-aware surface hover */
 .bg-white\/5,

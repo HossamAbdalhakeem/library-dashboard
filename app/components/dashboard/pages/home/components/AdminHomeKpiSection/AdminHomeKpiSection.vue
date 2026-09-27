@@ -1,7 +1,7 @@
 <template>
   <section class="w-full min-w-0 space-y-3">
     <div>
-      <p class="font-bold text-white">نظرة عامة</p>
+      <p class="font-bold text-[var(--app-text-strong)]">نظرة عامة</p>
 
     </div>
 

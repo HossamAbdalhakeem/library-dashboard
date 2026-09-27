@@ -39,6 +39,8 @@ export const useAdminReportSection = (loader, options = {}) => {
       to: p.to || null,
       branchId: p.branchId || null,
       productId: p.productId || null,
+      teacherId: p.teacherId || null,
+      studyYearId: p.studyYearId || null,
       academicYearId: p.academicYearId || null,
       period: p.period || null,
       page: p.page ?? null,

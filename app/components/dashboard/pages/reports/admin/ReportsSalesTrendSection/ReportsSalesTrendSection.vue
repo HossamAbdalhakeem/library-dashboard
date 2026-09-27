@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4">
-      <p class="font-bold text-white">اتجاه المبيعات</p>
+      <p class="font-bold text-[var(--app-text-strong)]">اتجاه المبيعات</p>
       <p class="mt-1 text-xs text-slate-400">
         {{ granularityLabel }}
       </p>

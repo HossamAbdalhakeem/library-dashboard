@@ -8,7 +8,7 @@
     >
       <div class="min-w-0 flex-1">
         <p class="text-[11px] text-slate-500">العام الدراسي</p>
-        <p class="truncate font-semibold text-white">
+        <p class="truncate font-semibold text-[var(--app-text-strong)]">
           {{ selectedLabel }}
         </p>
       </div>

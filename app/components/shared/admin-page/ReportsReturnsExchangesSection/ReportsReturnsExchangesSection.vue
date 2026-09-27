@@ -3,7 +3,7 @@
     class="w-full min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/80 p-4 backdrop-blur-sm"
     dir="rtl"
   >
-    <p class="mb-3 font-bold text-white">الاستبدال والاسترداد</p>
+    <p class="mb-3 font-bold text-[var(--app-text-strong)]">الاستبدال والاسترداد</p>
 
     <div v-if="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <Skeleton v-for="i in 3" :key="`ret-${i}`" height="4.5rem" />

@@ -3,7 +3,7 @@
     class="w-full min-w-0 overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-4"
     dir="rtl"
   >
-    <p class="mb-3 font-bold text-white">أداء الفروع</p>
+    <p class="mb-3 font-bold text-[var(--app-text-strong)]">أداء الفروع</p>
     <!-- <p class="mb-3 text-xs text-slate-400">
       المبيعات بإجمالي البيع · المرتجعات بتاريخ الإرجاع · صافي المبيعات = المبيعات − المرتجعات
     </p> -->

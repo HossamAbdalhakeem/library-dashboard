@@ -3,7 +3,7 @@
     class="w-full min-w-0 overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-4"
     dir="rtl"
   >
-    <p class="mb-4 text-center font-bold text-white">{{ title }}</p>
+    <p class="mb-4 text-center font-bold text-[var(--app-text-strong)]">{{ title }}</p>
 
     <div
       v-if="!hasData"
@@ -29,7 +29,7 @@
         >
           ● {{ item.label }}: {{ formatMoney(item.amount, "locale") }} — {{ item.percent }}%
         </p>
-        <p class="break-words pt-1 font-bold text-white">
+        <p class="break-words pt-1 font-bold text-[var(--app-text-strong)]">
           {{ totalLabel }}: {{ formatMoney(totalAmount, "locale") }}
         </p>
       </div>
