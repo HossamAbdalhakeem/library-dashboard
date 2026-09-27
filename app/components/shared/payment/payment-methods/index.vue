@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full flex-col gap-3 text-start" dir="rtl">
+  <div class="mx-auto flex w-full max-w-3xl flex-col gap-3 text-start" dir="rtl">
     <div v-if="label || hint">
       <p
         v-if="label"
@@ -16,68 +16,127 @@
     </div>
 
     <div
-      class="grid grid-cols-1 gap-3 sm:grid-cols-3"
+      class="flex flex-col gap-3"
       role="radiogroup"
       :aria-label="label || 'طريقة الدفع'"
       :aria-invalid="invalid || undefined"
+      :aria-describedby="errorMessage ? errorId : undefined"
     >
-      <button
+      <div
         v-for="option in resolvedOptions"
         :key="option.value"
-        type="button"
-        role="radio"
-        class="relative flex min-h-12 w-full items-center gap-3 rounded-2xl border px-3 py-3 text-start transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 sm:min-h-[9.5rem] sm:flex-col sm:justify-center sm:gap-2 sm:px-4 sm:py-5 sm:text-center"
+        class="overflow-hidden rounded-2xl border shadow-sm transition-colors duration-200"
         :class="
           isSelected(option.value)
             ? 'border-primary bg-primary/5 ring-1 ring-primary/20 dark:bg-primary/10'
-            : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500'
+            : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900'
         "
-        :aria-checked="isSelected(option.value)"
-        :data-testid="`payment-method-${option.value}`"
-        @click="onSelect(option.value)"
       >
-        <span
-          class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border sm:absolute sm:start-3 sm:top-3"
+        <button
+          :id="headerId(option.value)"
+          type="button"
+          role="radio"
+          class="flex min-h-16 w-full items-center gap-3 px-4 py-3 text-start transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
           :class="
             isSelected(option.value)
-              ? 'order-last ms-auto border-primary bg-primary text-white sm:order-none sm:ms-0'
-              : 'order-last ms-auto border-slate-300 bg-white text-transparent dark:border-slate-600 dark:bg-slate-900 sm:order-none sm:ms-0'
+              ? ''
+              : 'hover:bg-slate-50 dark:hover:bg-slate-800'
           "
-          aria-hidden="true"
+          :aria-checked="isSelected(option.value)"
+          :aria-expanded="isSelected(option.value)"
+          :aria-controls="panelId(option.value)"
+          :data-testid="`payment-method-${option.value}`"
+          @click="onSelect(option.value)"
         >
-          <i
-            v-if="isSelected(option.value)"
-            class="pi pi-check text-[10px] leading-none"
+          <span
+            class="flex h-11 shrink-0 items-center justify-center rounded-xl"
+            :class="
+              option.logo
+                ? [
+                    'w-auto bg-white px-1.5 ring-1',
+                    isSelected(option.value)
+                      ? 'ring-primary/40'
+                      : 'ring-slate-200 dark:ring-white/15',
+                  ]
+                : isSelected(option.value)
+                  ? 'size-11 bg-primary/10 text-primary-700 dark:bg-primary/15 dark:text-primary-200'
+                  : 'size-11 bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-100'
+            "
+          >
+            <img
+              v-if="option.logo"
+              :src="option.logo"
+              alt=""
+              class="h-7 w-auto object-contain"
+            />
+            <PaymentIcon v-else :name="option.icon" class="size-5" />
+          </span>
+
+          <span class="min-w-0 flex-1">
+            <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">
+              {{ option.label }}
+            </span>
+            <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+              {{ option.description }}
+            </span>
+          </span>
+
+          <span
+            class="flex size-5 shrink-0 items-center justify-center rounded-full"
+            :class="
+              isSelected(option.value)
+                ? 'bg-primary text-primary-950'
+                : 'border border-slate-300 bg-white dark:border-slate-600 dark:bg-slate-900'
+            "
+            aria-hidden="true"
+          >
+            <PaymentIcon
+              v-if="isSelected(option.value)"
+              name="check"
+              class="size-3"
+            />
+          </span>
+
+          <PaymentIcon
+            name="chevron-down"
+            class="size-4 shrink-0 text-slate-400 transition-transform duration-200 motion-reduce:transition-none"
+            :class="isSelected(option.value) ? 'rotate-180' : ''"
           />
-        </span>
+        </button>
 
-        <span
-          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11"
-          :class="
-            isSelected(option.value)
-              ? 'bg-primary/15 text-primary-700 dark:text-primary-200'
-              : 'bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-100'
-          "
+        <div
+          v-if="hasPanel"
+          :id="panelId(option.value)"
+          role="region"
+          :aria-labelledby="headerId(option.value)"
+          class="grid transition-[grid-template-rows] duration-200 ease-out motion-reduce:transition-none"
+          :class="isSelected(option.value) ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
         >
-          <i :class="['pi text-base', option.icon]" />
-        </span>
-
-        <span class="min-w-0 flex-1 sm:flex-none">
-          <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">
-            {{ option.label }}
-          </span>
-          <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
-            {{ option.description }}
-          </span>
-        </span>
-      </button>
+          <div class="min-h-0 overflow-hidden">
+            <div
+              class="transition-opacity duration-200 motion-reduce:transition-none"
+              :class="isSelected(option.value) ? 'opacity-100' : 'opacity-0'"
+              :inert="!isSelected(option.value)"
+            >
+              <slot
+                name="panel"
+                :method="option.value"
+                :open="isSelected(option.value)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <p v-if="errorMessage" class="text-xs text-red-500">{{ errorMessage }}</p>
+    <p v-if="errorMessage" :id="errorId" class="text-xs text-red-500">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 
 <script setup>
+import PaymentIcon from "~/components/shared/payment/payment-icon/index.vue";
 import {
   PaymentMethod,
   PAYMENT_METHOD_OPTIONS,
@@ -88,15 +147,16 @@ defineOptions({ name: "PaymentMethods" });
 
 const METHOD_UI = {
   [PaymentMethod.CASH]: {
-    icon: "pi-money-bill",
+    icon: "banknote",
     description: "الدفع نقداً",
   },
   [PaymentMethod.WALLET]: {
-    icon: "pi-wallet",
-    description: "الدفع عبر المحفظة",
+    icon: "wallet",
+    description: "الدفع بالمحفظة الإلكترونية",
   },
   [PaymentMethod.INSTAPAY]: {
-    icon: "pi-send",
+    icon: "instapay",
+    logo: "/images/instapay.svg",
     description: "الدفع عبر إنستاباي",
   },
 };
@@ -112,6 +172,14 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
+
+const slots = useSlots();
+const uid = useId();
+const hasPanel = computed(() => Boolean(slots.panel));
+
+const headerId = (value) => `payment-method-${uid}-${value}`;
+const panelId = (value) => `payment-panel-${uid}-${value}`;
+const errorId = `payment-method-error-${uid}`;
 
 const resolvedOptions = computed(() => {
   const base =
@@ -132,6 +200,7 @@ const resolvedOptions = computed(() => {
         value,
         description: option.description || ui.description,
         icon: ui.icon,
+        logo: ui.logo || "",
       };
     })
     .filter((option) => option.value && !excluded.has(option.value));

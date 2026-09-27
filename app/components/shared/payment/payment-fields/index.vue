@@ -9,36 +9,48 @@
       :invalid="methodInvalid"
       :error-message="methodError"
       @update:model-value="onMethodChange"
-    />
-
-    <div
-      v-if="showImageWhen !== 'never'"
-      class="pay-fold"
-      :class="{ 'is-open': showImage }"
     >
-      <div class="pay-fold-body" :inert="!showImage">
-        <div class="pay-fold-content">
+      <template #panel="{ method: panelMethod }">
+        <div
+          v-if="showsCashNoteFor(panelMethod)"
+          class="border-t border-primary/20 px-4 pb-4 pt-3"
+        >
+          <div
+            class="flex items-center gap-2 rounded-lg bg-primary/5 px-3 py-2.5 text-sm text-primary-800 dark:bg-primary/10 dark:text-primary-200"
+          >
+            <PaymentIcon name="circle-check" class="size-4 shrink-0" />
+            <span>الدفع نقداً لا يحتاج إثبات دفع.</span>
+          </div>
+        </div>
+
+        <div
+          v-else-if="showsProofFor(panelMethod) && panelMethod === normalizedMethod"
+          class="flex flex-col gap-3 border-t border-primary/20 px-4 pb-4 pt-3"
+        >
           <div class="flex items-start justify-between gap-3">
             <div>
               <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {{ imageLabel }}
               </p>
               <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                ارفع صورة أو لقطة لعملية الدفع.
+                ارفع لقطة شاشة أو صورة.
               </p>
             </div>
             <p
               v-if="uploading"
               class="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-primary-700 dark:text-primary-200"
             >
-              <i class="pi pi-spin pi-spinner text-[11px]" />
+              <span
+                class="size-3 animate-spin rounded-full border-2 border-primary/30 border-t-primary"
+                aria-hidden="true"
+              />
               جاري الرفع
             </p>
           </div>
 
           <ImageUpload
-            class="mt-3"
             :model-value="image"
+            :preview-src="imagePreviewUrl"
             label=""
             bare
             :error="uploading ? '' : imageError"
@@ -52,61 +64,14 @@
             @error="onImageError"
           />
         </div>
-      </div>
-    </div>
-
-    <div class="pay-fold" :class="{ 'is-open': showCashNote }">
-      <div class="pay-fold-body">
-        <div class="pay-fold-content">
-          <p class="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-            <i class="pi pi-check-circle text-primary" aria-hidden="true" />
-            <span>الدفع نقداً لا يحتاج صورة إثبات.</span>
-          </p>
-        </div>
-      </div>
-    </div>
+      </template>
+    </PaymentMethods>
   </div>
 </template>
 
-<style scoped>
-.pay-fold {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.48s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pay-fold.is-open {
-  grid-template-rows: 1fr;
-}
-
-.pay-fold-body {
-  min-height: 0;
-  overflow: hidden;
-}
-
-.pay-fold-content {
-  opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.28s ease,
-    transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pay-fold.is-open .pay-fold-content {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pay-fold,
-  .pay-fold-content {
-    transition: none;
-  }
-}
-</style>
-
 <script setup>
 import PaymentMethods from "~/components/shared/payment/payment-methods/index.vue";
+import PaymentIcon from "~/components/shared/payment/payment-icon/index.vue";
 import { paymentApi } from "~/services/payment";
 import {
   PaymentMethod,
@@ -189,6 +154,15 @@ const showImage = computed(() => {
 });
 
 const showCashNote = computed(() => !showImage.value && !isNonCash.value);
+
+const showsProofFor = (panelMethod) => {
+  if (!showImage.value) return false;
+  if (props.showImageWhen === "always") return true;
+  return paymentMethodNeedsProof(panelMethod);
+};
+
+const showsCashNoteFor = (panelMethod) =>
+  showCashNote.value && panelMethod === PaymentMethod.CASH;
 
 const imageRequired = computed(() => {
   if (props.requireImageWhen === "always") return true;

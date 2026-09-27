@@ -117,6 +117,11 @@ const props = defineProps({
   bare: { type: Boolean, default: false },
   /** Parent-owned message. Shown instead of the internal one so it is not repeated. */
   error: { type: String, default: "" },
+  /**
+   * Existing remote or signed preview. Restores the proof image when this
+   * uploader remounts after switching between wallet and InstaPay.
+   */
+  previewSrc: { type: String, default: "" },
 });
 
 const emit = defineEmits([
