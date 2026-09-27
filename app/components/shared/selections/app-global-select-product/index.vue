@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 text-right" :class="wrapperClass" data-testid="select-product">
+  <div class="flex flex-col gap-2 text-right" :class="wrapperClass">
     <label v-if="label" class="text-sm font-medium" :class="labelClass">{{ label }}</label>
 
     <Select
@@ -16,7 +16,6 @@
       :invalid="invalid"
       class="w-full product-select"
       :class="{ 'p-invalid': invalid }"
-      data-testid="select-product-trigger"
       @filter="onFilter"
       @update:model-value="onUpdate"
     >

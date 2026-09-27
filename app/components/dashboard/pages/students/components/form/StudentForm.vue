@@ -13,7 +13,6 @@
           v-bind="field"
           v-model="form.name"
           class="w-full"
-          data-testid="student-name"
           :class="{ 'p-invalid': errorMessage || fieldErrors.name }"
         />
         <ErrorMessage name="name" class="text-xs text-red-500" />
@@ -57,7 +56,6 @@
         :label="isEdit ? 'حفظ التعديل' : 'إضافة'"
         :loading="saving"
         :valid="meta.valid"
-        data-testid="student-submit"
       />
     </div>
   </Form>

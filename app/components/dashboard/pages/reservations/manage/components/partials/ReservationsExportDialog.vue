@@ -18,7 +18,6 @@
           option-label="label"
           option-value="value"
           class="w-full"
-          data-testid="reservations-export-mode"
         />
       </div>
 
@@ -72,7 +71,6 @@
           placeholder="كل الحالات"
           show-clear
           class="w-full"
-          data-testid="reservations-export-status"
         />
       </div>
 
@@ -106,7 +104,6 @@
           icon="pi pi-download"
           severity="primary"
           :loading="exporting"
-          data-testid="reservations-export-confirm"
           @click="onExport"
         />
       </div>

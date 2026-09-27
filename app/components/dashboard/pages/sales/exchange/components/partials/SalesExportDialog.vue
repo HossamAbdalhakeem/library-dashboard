@@ -59,7 +59,6 @@
           option-value="value"
           placeholder="اختر الحالة"
           class="w-full"
-          data-testid="sales-export-status"
         />
       </div>
 
@@ -93,7 +92,6 @@
           icon="pi pi-download"
           severity="primary"
           :loading="exporting"
-          data-testid="sales-export-confirm"
           @click="onExport"
         />
       </div>

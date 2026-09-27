@@ -62,7 +62,6 @@
           icon="pi pi-download"
           severity="primary"
           :loading="exporting"
-          data-testid="students-export-confirm"
           @click="onExport"
         />
       </div>

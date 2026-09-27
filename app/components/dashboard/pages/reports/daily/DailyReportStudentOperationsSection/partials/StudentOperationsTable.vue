@@ -88,7 +88,6 @@
           size="small"
           severity="secondary"
           title="السجل"
-          data-testid="operation-timeline-open"
           aria-label="السجل"
           @click="openTimeline(data)"
         />

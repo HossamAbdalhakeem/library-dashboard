@@ -11,7 +11,6 @@
       :label="isEdit ? 'حفظ التعديل' : 'إضافة'"
       :loading="loading"
       :valid="valid"
-      dataTestid="expense-submit"
     />
   </div>
 </template>

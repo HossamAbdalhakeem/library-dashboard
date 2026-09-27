@@ -13,7 +13,6 @@
       <button
         type="button"
         class="group relative flex flex-col items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white px-3 py-5 text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/60 dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-primary-400/50"
-        data-testid="payment-proof-from-device"
         @click="$emit('pick-device')"
       >
         <span
@@ -32,7 +31,6 @@
       <button
         type="button"
         class="group relative flex flex-col items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white px-3 py-5 text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-emerald-400/50"
-        data-testid="payment-proof-from-camera"
         @click="$emit('pick-camera')"
       >
         <span

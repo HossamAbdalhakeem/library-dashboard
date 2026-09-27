@@ -8,7 +8,6 @@
             label="إضافة مصروف"
             icon="pi pi-plus"
             severity="primary"
-            data-testid="expenses-create"
             @click="openCreate"
           />
         </div>

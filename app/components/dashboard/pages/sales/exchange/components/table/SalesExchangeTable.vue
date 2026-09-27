@@ -66,7 +66,6 @@
           size="small"
           severity="secondary"
           title="السجل"
-          data-testid="sale-timeline-open"
           aria-label="السجل"
           @click="openTimeline(data)"
         />

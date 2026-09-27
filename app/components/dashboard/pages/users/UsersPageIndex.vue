@@ -8,7 +8,6 @@
             label="إضافة مستخدم"
             icon="pi pi-plus"
             severity="primary"
-            data-testid="users-create"
             @click="openCreate"
           />
         </div>

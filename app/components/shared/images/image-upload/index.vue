@@ -20,7 +20,6 @@
         type="file"
         class="hidden"
         accept="image/*"
-        data-testid="payment-proof-file"
         @change="onFileChange"
       />
       <input
@@ -29,7 +28,6 @@
         class="hidden"
         accept="image/*"
         capture="environment"
-        data-testid="payment-proof-camera"
         @change="onFileChange"
       />
 

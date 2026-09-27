@@ -7,7 +7,6 @@
     -->
     <button
       type="button"
-      data-testid="logout-button"
       class="flex w-full items-center justify-between rounded-xl bg-red-500/10 px-3 py-3 text-sm font-medium text-red-600 hover:bg-red-500/20 dark:text-red-200"
       @click="$emit('request-logout')"
     >

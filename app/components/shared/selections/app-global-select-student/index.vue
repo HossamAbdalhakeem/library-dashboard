@@ -2,7 +2,6 @@
   <div
     class="flex flex-col gap-2 text-right"
     :class="wrapperClass"
-    data-testid="select-student"
   >
     <label v-if="label" class="text-sm font-medium" :class="labelClass">{{ label }}</label>
 
@@ -27,11 +26,6 @@
           :class="variant === 'dark' ? 'student-search-autocomplete--dark' : ''"
           :input-class="inputClasses"
           :invalid="invalid"
-          :pt="{
-            pcInputText: {
-              root: { 'data-testid': 'select-student-input' },
-            },
-          }"
           @complete="onComplete"
           @item-select="onItemSelect"
           @update:model-value="onInput"

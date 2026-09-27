@@ -38,7 +38,6 @@
           class="group relative flex min-h-[6.75rem] flex-col items-center justify-center gap-1.5 rounded-xl border px-2 py-3 text-center transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/60"
           :class="isSelected(option.value) ? option.selectedClass : option.idleClass"
           :aria-checked="isSelected(option.value)"
-          :data-testid="`payment-method-${option.value}`"
           @click="onSelect(option.value)"
         >
           <span
