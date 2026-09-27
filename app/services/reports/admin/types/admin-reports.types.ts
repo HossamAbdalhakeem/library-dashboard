@@ -141,6 +141,38 @@ export type AdminReservationBranchGroup = {
   products: AdminReservationProductRow[];
 };
 
+export type AdminSalesProductRow = {
+  productId: string;
+  name: string;
+  teacherName: string;
+  studyYearName: string;
+  price: number;
+  count: number;
+  quantity: number;
+  salesAmount: number;
+  returnsAmount: number;
+  netAmount: number;
+};
+
+export type AdminSalesBranchGroup = {
+  branchId: string;
+  branchName: string;
+  count: number;
+  quantity: number;
+  salesAmount: number;
+  returnsAmount: number;
+  netAmount: number;
+  products: AdminSalesProductRow[];
+};
+
+/** GET /reports/admin/sales-by-product */
+export type AdminSalesByProductResponse = AdminSectionBase & {
+  section: "sales-by-product";
+  branches: AdminSalesBranchGroup[];
+  /** Present when the page branch filter is all branches. */
+  productsByProduct: AdminSalesProductRow[] | null;
+};
+
 /** GET /reports/admin/reservations-by-product */
 export type AdminReservationsByProductResponse = AdminSectionBase & {
   section: "reservations-by-product";

@@ -63,10 +63,11 @@ function buildNavigation(role) {
       ],
     },
     {
-      id: "operations",
-      label: "العمليات",
+      id: "sales",
+      label: "المبيعات",
       items: [
-        { label: "المبيعات", icon: "pi pi-shopping-cart", to: "/sales/exchange" },
+        { label: "إدارة المبيعات", icon: "pi pi-shopping-cart", to: "/sales/exchange" },
+        { label: "تقرير المبيعات", icon: "pi pi-chart-line", to: "/sales/report" },
       ],
     },
     {
