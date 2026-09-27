@@ -28,6 +28,17 @@ export const RESERVATION_EXPORT_STATUS_OPTIONS = [
   },
 ];
 
+export const RESERVATION_EXPORT_MODE_OPTIONS = [
+  {
+    label: "تفاصيل الحجوزات",
+    value: "detail",
+  },
+  {
+    label: "إجمالي المنتج لكل فرع",
+    value: "by_product",
+  },
+];
+
 export function useReservationsExport() {
   const exportState = useEntityExport({
     createFilters: () => ({
@@ -37,6 +48,7 @@ export function useReservationsExport() {
       productId: null,
       student: null,
       status: "WAITING_FOR_STOCK",
+      mode: "detail",
     }),
     buildQuery: (filters) => ({
       ...(filters.studyYearId ? { studyYearId: filters.studyYearId } : {}),
@@ -45,10 +57,14 @@ export function useReservationsExport() {
       ...(filters.productId ? { productId: filters.productId } : {}),
       ...(filters.student?.id ? { studentId: filters.student.id } : {}),
       ...(filters.status ? { status: filters.status } : {}),
+      mode: filters.mode || "detail",
       ...toExportDateRangeIso(filters),
     }),
     exportRequest: (query) => reservationApi.exportReservations(query),
-    filename: "reservations-export.xls",
+    filename: (filters) =>
+      filters.mode === "by_product"
+        ? "reservations-by-product.xls"
+        : "reservations-export.xls",
     successMessage: "تم تصدير الحجوزات بنجاح.",
     errorMessage: "تعذر تصدير الحجوزات.",
     defaultPeriod: "year",

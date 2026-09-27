@@ -10,6 +10,18 @@
     @hide="onHide"
   >
     <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2 text-right">
+        <label class="text-sm font-medium text-slate-700">نوع التصدير</label>
+        <Select
+          v-model="filters.mode"
+          :options="RESERVATION_EXPORT_MODE_OPTIONS"
+          option-label="label"
+          option-value="value"
+          class="w-full"
+          data-testid="reservations-export-mode"
+        />
+      </div>
+
       <AppGlobalSelectStudyYear
         v-model="filters.studyYearId"
         label="السنة الدراسية"
@@ -114,6 +126,7 @@ import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-se
 import AppGlobalSelectStudent from "~/components/shared/selections/app-global-select-student/index.vue";
 import { EXPORT_PERIODS } from "~/composables/useEntityExport";
 import {
+  RESERVATION_EXPORT_MODE_OPTIONS,
   RESERVATION_EXPORT_STATUS_OPTIONS,
   useReservationsExport,
 } from "../../composables/useReservationsExport";

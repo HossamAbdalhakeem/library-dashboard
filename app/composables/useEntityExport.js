@@ -28,7 +28,7 @@ export const toExportDateRangeIso = ({ from, to } = {}) => ({
  * @param {() => Record<string, unknown>} options.createFilters
  * @param {(filters: Record<string, unknown>, ctx: { academicYearId: string | null }) => Record<string, unknown>} options.buildQuery
  * @param {(query: Record<string, unknown>) => Promise<Blob>} options.exportRequest
- * @param {string} options.filename
+ * @param {string | ((filters: Record<string, unknown>) => string)} options.filename
  * @param {string} options.successMessage
  * @param {string} options.errorMessage
  * @param {boolean} [options.requireAcademicYear]
@@ -93,6 +93,9 @@ export function useEntityExport({
     if (to) filters.to = to || from;
   };
 
+  const resolveFilename = () =>
+    typeof filename === "function" ? filename(filters) : filename;
+
   const runExport = async () => {
     if (exporting.value) return false;
 
@@ -112,7 +115,7 @@ export function useEntityExport({
         academicYearId: academicYearId.value,
       });
       const blob = await exportRequest(query);
-      triggerBlobDownload(blob, filename);
+      triggerBlobDownload(blob, resolveFilename());
       showSuccess(successMessage);
       return true;
     } catch (error) {
