@@ -1,43 +1,75 @@
 <template>
-  <div class="flex w-full flex-col gap-2 text-right" dir="rtl">
-    <label
-      v-if="label"
-      class="text-sm font-medium text-slate-700 dark:text-slate-200"
-    >
-      {{ label }}
-    </label>
+  <div class="flex w-full flex-col gap-3 text-start" dir="rtl">
+    <div v-if="label || hint">
+      <p
+        v-if="label"
+        class="text-sm font-semibold text-slate-900 dark:text-slate-100"
+      >
+        {{ label }}
+      </p>
+      <p
+        v-if="hint"
+        class="mt-0.5 text-xs text-slate-500 dark:text-slate-400"
+      >
+        {{ hint }}
+      </p>
+    </div>
 
     <div
-      class="grid gap-1 rounded-xl p-1 md:w-max md:self-start lg:w-full"
-      :class="[
-        resolvedOptions.length <= 2 ? 'grid-cols-2 lg:grid-cols-1' : 'grid-cols-3 lg:grid-cols-1',
-        invalid
-          ? 'bg-red-500/10 ring-1 ring-red-400/70'
-          : 'bg-slate-100 dark:bg-white/[0.06]',
-      ]"
+      class="grid grid-cols-1 gap-3 sm:grid-cols-3"
       role="radiogroup"
       :aria-label="label || 'طريقة الدفع'"
+      :aria-invalid="invalid || undefined"
     >
       <button
         v-for="option in resolvedOptions"
         :key="option.value"
         type="button"
         role="radio"
-        class="flex min-h-[4.6rem] flex-col items-center justify-center gap-1.5 rounded-xl px-1.5 py-2.5 text-center text-xs font-semibold leading-snug transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 md:min-h-11 md:flex-row md:justify-center md:gap-2 md:px-4 md:py-2 md:text-sm lg:justify-start lg:px-3"
-        :class="isSelected(option.value) ? option.selectedClass : option.idleClass"
+        class="relative flex min-h-12 w-full items-center gap-3 rounded-2xl border px-3 py-3 text-start transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 sm:min-h-[9.5rem] sm:flex-col sm:justify-center sm:gap-2 sm:px-4 sm:py-5 sm:text-center"
+        :class="
+          isSelected(option.value)
+            ? 'border-primary bg-primary/5 ring-1 ring-primary/20 dark:bg-primary/10'
+            : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500'
+        "
         :aria-checked="isSelected(option.value)"
         :data-testid="`payment-method-${option.value}`"
         @click="onSelect(option.value)"
       >
         <span
-          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-300"
+          class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border sm:absolute sm:start-3 sm:top-3"
           :class="
-            isSelected(option.value) ? option.iconSelectedClass : option.iconClass
+            isSelected(option.value)
+              ? 'order-last ms-auto border-primary bg-primary text-white sm:order-none sm:ms-0'
+              : 'order-last ms-auto border-slate-300 bg-white text-transparent dark:border-slate-600 dark:bg-slate-900 sm:order-none sm:ms-0'
+          "
+          aria-hidden="true"
+        >
+          <i
+            v-if="isSelected(option.value)"
+            class="pi pi-check text-[10px] leading-none"
+          />
+        </span>
+
+        <span
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11"
+          :class="
+            isSelected(option.value)
+              ? 'bg-primary/15 text-primary-700 dark:text-primary-200'
+              : 'bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-100'
           "
         >
-          <i :class="['pi text-sm', option.icon]" />
+          <i :class="['pi text-base', option.icon]" />
         </span>
-        <span>{{ option.label }}</span>
+
+        <span class="min-w-0 flex-1 sm:flex-none">
+          <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">
+            {{ option.label }}
+          </span>
+          <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">
+            {{ option.description }}
+          </span>
+        </span>
       </button>
     </div>
 
@@ -56,36 +88,23 @@ defineOptions({ name: "PaymentMethods" });
 
 const METHOD_UI = {
   [PaymentMethod.CASH]: {
-    icon: "pi-wallet",
-    idleClass:
-      "text-slate-600 hover:bg-white/80 dark:text-slate-300 dark:hover:bg-white/10",
-    selectedClass: "bg-sky-500 text-white shadow-md shadow-sky-500/25",
-    iconClass: "bg-slate-200/80 text-slate-600 dark:bg-white/10 dark:text-slate-200",
-    iconSelectedClass: "bg-white/20 text-white",
+    icon: "pi-money-bill",
+    description: "الدفع نقداً",
   },
   [PaymentMethod.WALLET]: {
-    icon: "pi-mobile",
-    idleClass:
-      "text-slate-600 hover:bg-white/80 dark:text-slate-300 dark:hover:bg-white/10",
-    selectedClass: "bg-emerald-500 text-white shadow-md shadow-emerald-500/25",
-    iconClass:
-      "bg-slate-200/80 text-slate-600 dark:bg-white/10 dark:text-slate-200",
-    iconSelectedClass: "bg-white/20 text-white",
+    icon: "pi-wallet",
+    description: "الدفع عبر المحفظة",
   },
   [PaymentMethod.INSTAPAY]: {
     icon: "pi-send",
-    idleClass:
-      "text-slate-600 hover:bg-white/80 dark:text-slate-300 dark:hover:bg-white/10",
-    selectedClass: "bg-orange-500 text-white shadow-md shadow-orange-500/25",
-    iconClass:
-      "bg-slate-200/80 text-slate-600 dark:bg-white/10 dark:text-slate-200",
-    iconSelectedClass: "bg-white/20 text-white",
+    description: "الدفع عبر إنستاباي",
   },
 };
 
 const props = defineProps({
   modelValue: { type: String, default: PaymentMethod.CASH },
   label: { type: String, default: "طريقة الدفع" },
+  hint: { type: String, default: "" },
   options: { type: Array, default: null },
   exclude: { type: Array, default: () => [] },
   invalid: { type: Boolean, default: false },
@@ -111,7 +130,8 @@ const resolvedOptions = computed(() => {
       return {
         label: option.label,
         value,
-        ...ui,
+        description: option.description || ui.description,
+        icon: ui.icon,
       };
     })
     .filter((option) => option.value && !excluded.has(option.value));

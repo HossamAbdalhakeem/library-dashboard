@@ -47,12 +47,19 @@ export function useBookingSubmit({
     reservationSummary.value = null;
   };
 
-  const handleSubmit = async () => {
-    amountError.value = "";
+  const flagMissingProof = () => {
     proofRequiredError.value = false;
-
     if (paymentFieldsRef.value && !paymentFieldsRef.value.validate()) {
       proofRequiredError.value = true;
+      return true;
+    }
+    return false;
+  };
+
+  const handleSubmit = async () => {
+    amountError.value = "";
+
+    if (flagMissingProof()) {
       return;
     }
 
@@ -118,6 +125,7 @@ export function useBookingSubmit({
     paymentFieldsRef,
     closeSuccessDialog,
     handleSubmit,
+    flagMissingProof,
     showError,
   };
 }

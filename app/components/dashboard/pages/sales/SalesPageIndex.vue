@@ -11,6 +11,7 @@
           :key="sales.formKey"
           :initial-values="sales.formInitialValues"
           @submit="sales.submitSale"
+          @invalid-submit="sales.flagMissingProof"
         >
           <SalesFormFields
             :sales="sales"

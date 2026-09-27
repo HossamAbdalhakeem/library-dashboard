@@ -139,12 +139,19 @@ export function useSalesPage() {
     formKey.value += 1;
   };
 
-  const submitSale = async () => {
+  const flagMissingProof = () => {
     proofRequiredError.value = false;
-    quantityError.value = "";
-
     if (paymentFieldsRef.value && !paymentFieldsRef.value.validate()) {
       proofRequiredError.value = true;
+      return true;
+    }
+    return false;
+  };
+
+  const submitSale = async () => {
+    quantityError.value = "";
+
+    if (flagMissingProof()) {
       return;
     }
 
@@ -218,6 +225,7 @@ export function useSalesPage() {
     closeSuccessDialog,
     resetForm,
     submitSale,
+    flagMissingProof,
     setPaymentFieldsRef,
     ...productSelection,
   });

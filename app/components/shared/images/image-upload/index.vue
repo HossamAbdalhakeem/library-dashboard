@@ -22,6 +22,7 @@
         type="file"
         class="hidden"
         accept="image/*"
+        aria-label="رفع صورة إثبات الدفع"
         @change="onFileChange"
       />
       <input
@@ -30,6 +31,7 @@
         class="hidden"
         accept="image/*"
         capture="environment"
+        aria-label="التقاط صورة إثبات الدفع بالكاميرا"
         @change="onFileChange"
       />
 

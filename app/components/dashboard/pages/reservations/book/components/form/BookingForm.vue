@@ -23,6 +23,7 @@
         :initial-values="formInitialValues"
         class="grid gap-4 md:grid-cols-2"
         @submit="handleSubmit"
+        @invalid-submit="flagMissingProof"
       >
         <BookingFormFields
           v-model:selected-student="selectedStudent"
@@ -58,7 +59,7 @@
           <FormSubmitButton
             :label="submitLabel"
             :loading="saving"
-            :valid="meta.valid"
+            :valid="meta.valid && bookingPaymentReady"
             button-class="min-w-[220px]"
           />
         </div>
@@ -76,6 +77,7 @@
 
 <script setup>
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
+import { paymentMethodNeedsProof } from "~/enums/paymentMethod";
 import { Form } from "vee-validate";
 import { useBookingForm } from "./composables/useBookingForm";
 
@@ -138,6 +140,7 @@ const {
   paymentFieldsRef,
   closeSuccessDialog,
   handleSubmit,
+  flagMissingProof,
   validateStudentSelection,
   applyStudent,
   clearStudent,
@@ -146,4 +149,9 @@ const {
 const setPaymentFieldsRef = (el) => {
   paymentFieldsRef.value = el || null;
 };
+
+const bookingPaymentReady = computed(() => {
+  if (!paymentMethodNeedsProof(form.paymentMethod)) return true;
+  return Boolean(proofKey.value);
+});
 </script>

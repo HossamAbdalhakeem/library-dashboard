@@ -1,92 +1,69 @@
 <template>
-  <div
-    class="overflow-hidden rounded-2xl border transition lg:grid lg:grid-cols-[15.5rem_minmax(0,1fr)] lg:items-center lg:gap-5 lg:p-5"
-    :class="
-      methodInvalid || (showImage && imageError)
-        ? 'border-red-400/70 bg-red-500/5'
-        : 'border-slate-200 bg-white dark:border-white/10 dark:bg-slate-950/40'
-    "
-    dir="rtl"
-  >
-    <div class="p-3 lg:p-0">
-      <p
-        v-if="methodLabel"
-        class="mb-2 text-sm font-medium text-slate-700 dark:text-slate-200"
-      >
-        {{ methodLabel }}
-      </p>
+  <div class="flex flex-col gap-3" dir="rtl">
+    <PaymentMethods
+      :model-value="method"
+      :label="methodLabel"
+      :hint="methodHint"
+      :options="options"
+      :exclude="exclude"
+      :invalid="methodInvalid"
+      :error-message="methodError"
+      @update:model-value="onMethodChange"
+    />
 
-      <PaymentMethods
-        :model-value="method"
-        label=""
-        :options="options"
-        :exclude="exclude"
-        :invalid="methodInvalid"
-        :error-message="methodError"
-        @update:model-value="onMethodChange"
-      />
-    </div>
-
-    <div class="min-w-0">
     <div
       v-if="showImageWhen !== 'never'"
       class="pay-fold"
       :class="{ 'is-open': showImage }"
     >
       <div class="pay-fold-body" :inert="!showImage">
-        <div class="pay-fold-content px-3 pb-3 lg:p-0">
-          <div class="rounded-2xl px-3 py-3" :class="proofToneClass">
-            <div class="mb-2.5 flex items-center justify-between gap-2">
-              <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">
+        <div class="pay-fold-content">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 {{ imageLabel }}
               </p>
-              <p
-                v-if="uploading"
-                class="inline-flex items-center gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-300"
-              >
-                <i class="pi pi-spin pi-spinner text-[11px]" />
-                جاري الرفع
-              </p>
-              <p
-                v-else-if="imageKey"
-                class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-300"
-              >
-                <i class="pi pi-check-circle text-[11px]" />
-                تم الرفع
+              <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                ارفع صورة أو لقطة لعملية الدفع.
               </p>
             </div>
-
-            <ImageUpload
-              :model-value="image"
-              label=""
-              bare
-              :error="uploading ? '' : imageError"
-              :placeholder="imagePlaceholder"
-              :max-size-bytes="maxSizeBytes"
-              :show-source-choice="showProofSourceChoice"
-              :invalid="imageInvalid || Boolean(imageError)"
-              :upload-handler="onImageSelect"
-              @update:model-value="onImageFileChange"
-              @clear="onImageClear"
-              @error="onImageError"
-            />
+            <p
+              v-if="uploading"
+              class="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-primary-700 dark:text-primary-200"
+            >
+              <i class="pi pi-spin pi-spinner text-[11px]" />
+              جاري الرفع
+            </p>
           </div>
+
+          <ImageUpload
+            class="mt-3"
+            :model-value="image"
+            label=""
+            bare
+            :error="uploading ? '' : imageError"
+            :placeholder="imagePlaceholder"
+            :max-size-bytes="maxSizeBytes"
+            show-source-choice
+            :invalid="Boolean(imageError)"
+            :upload-handler="onImageSelect"
+            @update:model-value="onImageFileChange"
+            @clear="onImageClear"
+            @error="onImageError"
+          />
         </div>
       </div>
     </div>
 
     <div class="pay-fold" :class="{ 'is-open': showCashNote }">
       <div class="pay-fold-body">
-        <div class="pay-fold-content px-3 pb-3 lg:p-0">
-          <div
-            class="flex items-center justify-center gap-2 py-0.5 text-xs font-medium text-sky-700 dark:text-sky-200"
-          >
-            <i class="pi pi-check-circle text-sky-500" />
-            <span>لا يحتاج صورة إثبات</span>
-          </div>
+        <div class="pay-fold-content">
+          <p class="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <i class="pi pi-check-circle text-primary" aria-hidden="true" />
+            <span>الدفع نقداً لا يحتاج صورة إثبات.</span>
+          </p>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -154,6 +131,7 @@ const props = defineProps({
   /** Temporary signed URL for immediate preview (optional) */
   imagePreviewUrl: { type: String, default: "" },
   methodLabel: { type: String, default: "طريقة الدفع" },
+  methodHint: { type: String, default: "اختر طريقة الدفع المناسبة." },
   imageLabel: { type: String, default: "صورة إثبات الدفع" },
   imagePlaceholder: { type: String, default: "ارفع صورة المحفظة / إنستاباي" },
   options: { type: Array, default: null },
@@ -198,9 +176,6 @@ const maxSizeBytes = computed(() =>
 const internalImageError = ref("");
 const uploading = ref(false);
 
-/** Permanent object key stored on the payment */
-const imageKey = computed(() => props.imageDataUrl);
-
 const normalizedMethod = computed(() =>
   normalizePaymentMethod(props.method),
 );
@@ -214,16 +189,6 @@ const showImage = computed(() => {
 });
 
 const showCashNote = computed(() => !showImage.value && !isNonCash.value);
-
-const proofToneClass = computed(() => {
-  if (normalizedMethod.value === PaymentMethod.INSTAPAY) {
-    return "bg-orange-500/10";
-  }
-  if (normalizedMethod.value === PaymentMethod.WALLET) {
-    return "bg-emerald-500/10";
-  }
-  return "bg-sky-500/10";
-});
 
 const imageRequired = computed(() => {
   if (props.requireImageWhen === "always") return true;

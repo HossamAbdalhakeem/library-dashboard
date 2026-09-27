@@ -1,34 +1,33 @@
 <template>
-  <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-2 dark:border-white/10 dark:bg-white/[0.04]">
-    <img
-      :src="previewUrl"
-      alt="معاينة الصورة"
-      class="h-16 w-16 shrink-0 rounded-lg object-cover"
-    />
-
-    <div class="min-w-0 flex-1">
-      <p
-        v-if="fileMeta"
-        class="truncate text-xs text-slate-500 dark:text-slate-400"
+  <div class="flex flex-col gap-2">
+    <div
+      class="relative aspect-[16/10] w-full max-w-lg overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800"
+    >
+      <img
+        :src="previewUrl"
+        alt="صورة إثبات الدفع"
+        class="h-full w-full object-contain"
+      />
+      <button
+        type="button"
+        class="absolute end-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/75 text-white transition hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        aria-label="إزالة صورة الإثبات"
+        @click="$emit('clear')"
       >
-        {{ fileMeta }}
+        <i class="pi pi-times text-xs" aria-hidden="true" />
+      </button>
+    </div>
+
+    <div class="flex items-center justify-between gap-3">
+      <p class="truncate text-xs text-slate-500 dark:text-slate-400">
+        {{ fileMeta || "صورة إثبات الدفع" }}
       </p>
-      <div class="mt-1.5 flex flex-wrap gap-1.5">
-        <button type="button" class="iu-action" @click="$emit('crop')">
-          <i class="pi pi-crop" />
+      <div class="flex shrink-0 items-center gap-2">
+        <button type="button" class="iu-link" @click="$emit('crop')">
           قص
         </button>
-        <button type="button" class="iu-action" @click="$emit('change')">
-          <i class="pi pi-refresh" />
-          تغيير
-        </button>
-        <button
-          type="button"
-          class="iu-action iu-action--danger"
-          @click="$emit('clear')"
-        >
-          <i class="pi pi-trash" />
-          إزالة
+        <button type="button" class="iu-link" aria-label="تغيير الصورة" @click="$emit('change')">
+          تغيير الصورة
         </button>
       </div>
     </div>
@@ -48,35 +47,23 @@ defineEmits(["crop", "change", "clear"]);
 </script>
 
 <style scoped>
-.iu-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: 999px;
-  border: 1px solid rgb(226 232 240);
-  background: white;
-  color: rgb(51 65 85);
+.iu-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: rgb(180 83 9);
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
 }
 
-.iu-action--danger {
-  border-color: rgb(254 202 202);
-  background: rgb(254 242 242);
-  color: rgb(185 28 28);
+.iu-link:focus-visible {
+  outline: 2px solid rgb(245 175 82 / 0.7);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
-:global(.app-dark) .iu-action {
-  border-color: rgb(255 255 255 / 0.12);
-  background: rgb(15 23 42);
-  color: rgb(226 232 240);
-}
-
-:global(.app-dark) .iu-action--danger {
-  border-color: rgb(248 113 113 / 0.4);
-  background: rgb(127 29 29 / 0.35);
-  color: rgb(254 202 202);
+:global(.app-dark) .iu-link {
+  color: rgb(252 211 77);
 }
 </style>
