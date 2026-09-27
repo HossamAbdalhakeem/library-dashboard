@@ -1,37 +1,37 @@
 <template>
-  <div class="iu-preview p-3">
+  <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-2 dark:border-white/10 dark:bg-white/[0.04]">
     <img
       :src="previewUrl"
       alt="معاينة الصورة"
-      class="mx-auto max-h-44 rounded-xl object-contain shadow-sm"
-      :style="aspectRatio ? { aspectRatio: String(aspectRatio) } : undefined"
+      class="h-16 w-16 shrink-0 rounded-lg object-cover"
     />
 
-    <div class="iu-hover-overlay">
-      <button type="button" class="iu-hover-action" @click="$emit('crop')">
-        <i class="pi pi-crop" />
-        <span>قص</span>
-      </button>
-      <button type="button" class="iu-hover-action" @click="$emit('change')">
-        <i class="pi pi-pencil" />
-        <span>تغيير</span>
-      </button>
-      <button
-        type="button"
-        class="iu-hover-action iu-hover-action--danger"
-        @click="$emit('clear')"
+    <div class="min-w-0 flex-1">
+      <p
+        v-if="fileMeta"
+        class="truncate text-xs text-slate-500 dark:text-slate-400"
       >
-        <i class="pi pi-trash" />
-        <span>إزالة</span>
-      </button>
+        {{ fileMeta }}
+      </p>
+      <div class="mt-1.5 flex flex-wrap gap-1.5">
+        <button type="button" class="iu-action" @click="$emit('crop')">
+          <i class="pi pi-crop" />
+          قص
+        </button>
+        <button type="button" class="iu-action" @click="$emit('change')">
+          <i class="pi pi-refresh" />
+          تغيير
+        </button>
+        <button
+          type="button"
+          class="iu-action iu-action--danger"
+          @click="$emit('clear')"
+        >
+          <i class="pi pi-trash" />
+          إزالة
+        </button>
+      </div>
     </div>
-
-    <p
-      v-if="fileMeta"
-      class="mt-2 text-center text-xs text-slate-500 dark:text-slate-400"
-    >
-      {{ fileMeta }}
-    </p>
   </div>
 </template>
 
@@ -48,48 +48,35 @@ defineEmits(["crop", "change", "clear"]);
 </script>
 
 <style scoped>
-.iu-preview {
-  position: relative;
-  display: block;
-  width: 100%;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-.iu-hover-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  background: rgba(0, 0, 0, 0.45);
-  pointer-events: none;
-}
-
-.iu-preview:hover .iu-hover-overlay,
-.iu-preview:focus-within .iu-hover-overlay {
-  display: flex;
-  pointer-events: auto;
-}
-
-.iu-hover-action {
+.iu-action {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.75rem;
+  gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #1f2937;
-  border: none;
-  font-size: 0.78rem;
-  font-weight: 500;
+  border: 1px solid rgb(226 232 240);
+  background: white;
+  color: rgb(51 65 85);
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.iu-hover-action--danger {
-  background: rgba(220, 38, 38, 0.92);
-  color: #fff;
+.iu-action--danger {
+  border-color: rgb(254 202 202);
+  background: rgb(254 242 242);
+  color: rgb(185 28 28);
+}
+
+:global(.app-dark) .iu-action {
+  border-color: rgb(255 255 255 / 0.12);
+  background: rgb(15 23 42);
+  color: rgb(226 232 240);
+}
+
+:global(.app-dark) .iu-action--danger {
+  border-color: rgb(248 113 113 / 0.4);
+  background: rgb(127 29 29 / 0.35);
+  color: rgb(254 202 202);
 }
 </style>

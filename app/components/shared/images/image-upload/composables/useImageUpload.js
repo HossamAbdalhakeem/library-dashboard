@@ -113,11 +113,8 @@ export function useImageUpload(props, emit) {
     processSelectedFile(file);
   };
 
-  const onCameraError = (message) => {
-    if (message) {
-      errorMessage.value = message;
-      emit("error", message);
-    }
+  const onCameraError = () => {
+    // The camera dialog already shows this message.
   };
 
   const onFileChange = (event) => {
