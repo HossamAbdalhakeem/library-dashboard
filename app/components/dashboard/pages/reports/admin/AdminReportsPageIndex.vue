@@ -43,11 +43,6 @@
       :reload-key="reloadKey"
       @loading="setSectionLoading('profitLoss', $event)"
     />
-    <ReportsExpensesSection
-      :params="reportParams"
-      :reload-key="reloadKey"
-      @loading="setSectionLoading('expenses', $event)"
-    />
 
     <ReportsSalesTrendSection
       :params="reportParams"
@@ -102,9 +97,6 @@ const ReportsReturnsExchangesSection = defineAsyncComponent(() =>
     "~/components/shared/admin-page/ReportsReturnsExchangesSection/ReportsReturnsExchangesSection.vue"
   ),
 );
-const ReportsExpensesSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsExpensesSection/ReportsExpensesSection.vue"),
-);
 
 defineOptions({ name: "AdminReportsPageIndex" });
 
@@ -148,7 +140,6 @@ const sectionLoading = reactive({
   payments: false,
   branches: false,
   returns: false,
-  expenses: false,
 });
 
 const anyLoading = computed(() => Object.values(sectionLoading).some(Boolean));

@@ -11,7 +11,6 @@ export type {
   AdminPaymentMethodsResponse,
   AdminBranchesResponse,
   AdminReturnsExchangesResponse,
-  AdminExpensesResponse,
   AdminGeneralSummary,
   AdminGeneralTopProduct,
   AdminGeneralRecentOperation,

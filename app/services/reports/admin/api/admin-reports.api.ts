@@ -9,7 +9,6 @@ import type {
   AdminPaymentMethodsResponse,
   AdminBranchesResponse,
   AdminReturnsExchangesResponse,
-  AdminExpensesResponse,
   AdminGeneralSummary,
   AdminGeneralPaymentMethod,
   AdminGeneralTopProduct,
@@ -79,14 +78,6 @@ export const adminReportsApi = {
         method: "GET",
         params,
       }),
-    );
-  },
-
-  async getExpenses(
-    params: AdminReportQuery = {},
-  ): Promise<AdminExpensesResponse> {
-    return asData(
-      await apiFetch("/reports/admin/expenses", { method: "GET", params }),
     );
   },
 

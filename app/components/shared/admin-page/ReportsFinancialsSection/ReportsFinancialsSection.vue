@@ -7,8 +7,8 @@
       <p class="font-bold text-white">الأرباح</p>
     </div>
 
-    <div v-if="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <Skeleton v-for="i in 4" :key="`fin-${i}`" height="4.5rem" />
+    <div v-if="loading" class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <Skeleton v-for="i in 5" :key="`fin-${i}`" height="4.5rem" />
     </div>
 
     <ReportsSectionError
@@ -18,7 +18,7 @@
     />
 
     <template v-else>
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <ReportsFinancialMetricCard
           v-for="metric in metrics"
           :key="metric.key"
@@ -86,6 +86,13 @@ const metrics = computed(() => [
     value: formatMoney(financials.value.grossProfit, "locale"),
     accent: "sky",
     icon: "pi-chart-bar",
+  },
+  {
+    key: "totalExpenses",
+    label: "إجمالي المصروفات",
+    value: formatMoney(financials.value.totalExpenses, "locale"),
+    accent: "amber",
+    icon: "pi-wallet",
   },
   {
     key: "netProfit",

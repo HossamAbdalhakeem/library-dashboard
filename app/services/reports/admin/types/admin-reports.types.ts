@@ -119,30 +119,6 @@ export type AdminReturnsExchangesResponse = AdminSectionBase & {
   refundedAmount: number;
 };
 
-export type AdminExpenseByBranch = {
-  branchId: string | null;
-  branchName: string;
-  categoryId?: string | null;
-  categoryName?: string;
-  amount: number;
-};
-
-export type AdminExpenseByType = {
-  type: string;
-  amount: number;
-};
-
-/** GET /reports/admin/expenses */
-export type AdminExpensesResponse = AdminSectionBase & {
-  section: "expenses";
-  totalExpenses: number;
-  salesRelatedExpenses: number;
-  generalExpenses: number;
-  expensesByBranch: AdminExpenseByBranch[];
-  expensesByType: AdminExpenseByType[];
-  count: number;
-};
-
 // --- Home /reports/general/* ---
 
 /** GET /reports/general/summary */
