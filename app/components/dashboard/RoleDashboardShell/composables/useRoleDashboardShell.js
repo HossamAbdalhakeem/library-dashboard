@@ -55,10 +55,17 @@ function buildNavigation(role) {
       ],
     },
     {
+      id: "reservations",
+      label: "الحجوزات",
+      items: [
+        { label: "إدارة الحجوزات", icon: "pi pi-book", to: "/reservations/manage" },
+        { label: "تقرير الحجوزات", icon: "pi pi-chart-line", to: "/reservations/report" },
+      ],
+    },
+    {
       id: "operations",
       label: "العمليات",
       items: [
-        { label: "الحجوزات", icon: "pi pi-book", to: "/reservations/manage" },
         { label: "المبيعات", icon: "pi pi-shopping-cart", to: "/sales/exchange" },
       ],
     },

@@ -1,4 +1,4 @@
-import { apiFetch, asData } from "~/utils/apiFetch";
+import { apiFetch, apiFetchBlob, asData } from "~/utils/apiFetch";
 import { buildGeneralSalesTrendQuery } from "../helpers/admin-reports.helper";
 import type {
   AdminReportQuery,
@@ -9,6 +9,7 @@ import type {
   AdminPaymentMethodsResponse,
   AdminBranchesResponse,
   AdminReturnsExchangesResponse,
+  AdminReservationsByProductResponse,
   AdminGeneralSummary,
   AdminGeneralPaymentMethod,
   AdminGeneralTopProduct,
@@ -79,6 +80,26 @@ export const adminReportsApi = {
         params,
       }),
     );
+  },
+
+  async getReservationsByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<AdminReservationsByProductResponse> {
+    return asData(
+      await apiFetch("/reports/admin/reservations-by-product", {
+        method: "GET",
+        params,
+      }),
+    );
+  },
+
+  async exportReservationsByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<Blob> {
+    return apiFetchBlob("/reports/admin/reservations-by-product/export", {
+      method: "GET",
+      params,
+    });
   },
 
   // --- Home /reports/general/* ---

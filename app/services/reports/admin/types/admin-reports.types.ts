@@ -119,6 +119,36 @@ export type AdminReturnsExchangesResponse = AdminSectionBase & {
   refundedAmount: number;
 };
 
+export type AdminReservationProductRow = {
+  productId: string;
+  name: string;
+  teacherName: string;
+  studyYearName: string;
+  price: number;
+  count: number;
+  paidAmount: number;
+  remainingAmount: number;
+  waitingCount: number;
+};
+
+export type AdminReservationBranchGroup = {
+  branchId: string;
+  branchName: string;
+  count: number;
+  paidAmount: number;
+  remainingAmount: number;
+  waitingCount: number;
+  products: AdminReservationProductRow[];
+};
+
+/** GET /reports/admin/reservations-by-product */
+export type AdminReservationsByProductResponse = AdminSectionBase & {
+  section: "reservations-by-product";
+  branches: AdminReservationBranchGroup[];
+  /** Present when the page branch filter is all branches. */
+  productsByBook: AdminReservationProductRow[] | null;
+};
+
 // --- Home /reports/general/* ---
 
 /** GET /reports/general/summary */
