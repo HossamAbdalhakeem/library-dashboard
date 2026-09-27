@@ -1,9 +1,6 @@
 <template>
-  <section
-    class="w-full min-w-0 overflow-hidden rounded-xl border border-white/10 bg-slate-900 p-4"
-    dir="rtl"
-  >
-    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <section class="flex w-full min-w-0 flex-col gap-4" dir="rtl">
+    <div class="flex flex-wrap items-center justify-between gap-3">
       <p class="font-bold text-[var(--app-text-strong)]">مخزون المنتجات</p>
       <Button
         label="تصدير"
@@ -34,14 +31,25 @@
       لا توجد كميات مسجلة.
     </p>
 
-    <div v-else class="space-y-6">
-      <div v-for="branch in branches" :key="branch.branchId" class="space-y-2">
-        <p class="font-semibold text-white">{{ branch.branchName }}</p>
+    <div v-else class="flex flex-col gap-4">
+      <div
+        v-for="branch in branches"
+        :key="branch.branchId"
+        class="space-y-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] p-4"
+      >
+        <p class="text-base font-semibold text-[var(--app-text-strong)]">
+          {{ branch.branchName }}
+        </p>
         <InventoryProductsTable :rows="branch.rows" show-threshold />
       </div>
 
-      <div v-if="productRows.length" class="space-y-2">
-        <p class="font-semibold text-white">كل الفروع حسب المنتج</p>
+      <div
+        v-if="productRows.length"
+        class="space-y-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] p-4"
+      >
+        <p class="text-base font-semibold text-[var(--app-text-strong)]">
+          كل الفروع حسب المنتج
+        </p>
         <InventoryProductsTable :rows="productRows" />
       </div>
     </div>
