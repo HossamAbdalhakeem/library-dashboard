@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5"
+    class="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-2"
   >
     <div class="flex min-w-0 items-center gap-3">
       <div class="shrink-0 overflow-hidden rounded-xl  p-1.5">
