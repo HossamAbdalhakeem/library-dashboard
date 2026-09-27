@@ -35,8 +35,11 @@ export function useAuth() {
   const roleLabel = computed(() => getUserRoleLabel(role.value));
   const layoutName = computed(() => getLayoutForUserRole(role.value));
 
+  const logout = () => authStore.logout();
+
   return {
     authStore,
+    logout,
     user,
     token,
     role,

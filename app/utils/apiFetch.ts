@@ -1,3 +1,4 @@
+import { useAuth } from "~/composables/useAuth";
 import { useLocalStorage } from "~/composables/useLocalStorage";
 import { resolveApiErrorMessage } from "~/utils/api-errors/messages";
 
@@ -30,6 +31,29 @@ export const getApiOrigin = () => {
 };
 
 const PUBLIC_PATHS = ["/auth/login"];
+
+/** Backend code for a rejected bearer token (invalid or failed auth). */
+const AUTH_SESSION_END_CODE = "AUTHENTICATION_FAILED";
+
+let endingSession = false;
+
+const endSession = async () => {
+  if (endingSession) return;
+  endingSession = true;
+
+  try {
+    await useAuth().logout();
+  } catch (error) {
+    console.error("Failed to end session after authentication failure", error);
+    try {
+      await navigateTo("/login");
+    } catch {
+      // Navigation can be unavailable during early boot.
+    }
+  } finally {
+    endingSession = false;
+  }
+};
 
 const isPublicPath = (path: string) => {
   const normalized = String(path || "").split("?")[0] || "";
@@ -189,7 +213,13 @@ const request = async <T = any>(
       }),
     });
   } catch (error) {
-    throw toApiError(error);
+    const apiError = toApiError(error);
+
+    if (apiError.code === AUTH_SESSION_END_CODE && !isPublicPath(path)) {
+      await endSession();
+    }
+
+    throw apiError;
   }
 };
 
