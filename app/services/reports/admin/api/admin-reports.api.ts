@@ -11,6 +11,7 @@ import type {
   AdminReturnsExchangesResponse,
   AdminReservationsByProductResponse,
   AdminSalesByProductResponse,
+  AdminInventoryByProductResponse,
   AdminGeneralSummary,
   AdminGeneralPaymentMethod,
   AdminGeneralTopProduct,
@@ -118,6 +119,26 @@ export const adminReportsApi = {
     params: AdminReportQuery = {},
   ): Promise<Blob> {
     return apiFetchBlob("/reports/admin/sales-by-product/export", {
+      method: "GET",
+      params,
+    });
+  },
+
+  async getInventoryByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<AdminInventoryByProductResponse> {
+    return asData(
+      await apiFetch("/reports/admin/inventory-by-product", {
+        method: "GET",
+        params,
+      }),
+    );
+  },
+
+  async exportInventoryByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<Blob> {
+    return apiFetchBlob("/reports/admin/inventory-by-product/export", {
       method: "GET",
       params,
     });

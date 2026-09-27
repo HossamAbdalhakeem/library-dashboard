@@ -13,5 +13,4 @@ export type {
 export {
   mapInventoryProductOption,
   mapInventoryProductOptions,
-  buildBranchInventoryPageQuery,
 } from "./helpers/inventory-list.helper";

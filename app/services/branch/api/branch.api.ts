@@ -1,6 +1,5 @@
 import { apiFetch, firstRow, asList } from "~/utils/apiFetch";
 import type {
-  BranchQuery,
   BranchPayload,
   BranchUpdatePayload,
   BranchStatusPayload,
@@ -9,7 +8,9 @@ import type {
 
 export const branchApi = {
   /** GET /branches → BranchResponse[] */
-  async getBranches(params: BranchQuery = {}): Promise<BranchResponse[]> {
+  async getBranches(
+    params: Record<string, string | number | boolean | undefined> = {},
+  ): Promise<BranchResponse[]> {
     return asList<BranchResponse>(
       await apiFetch("/branches", { method: "GET", params }),
     );

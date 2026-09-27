@@ -133,9 +133,7 @@ const loadData = async () => {
 
   loading.value = true;
   try {
-    const branchList = await branchApi.getBranches({
-      inventory_summary: true,
-    });
+    const branchList = await branchApi.getBranches();
 
     branches.value = branchList.map(normalizeBranchListItem);
   } catch (error) {

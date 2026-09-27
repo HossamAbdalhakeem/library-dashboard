@@ -71,6 +71,13 @@ function buildNavigation(role) {
       ],
     },
     {
+      id: "inventory",
+      label: "المخزن",
+      items: [
+        { label: "تقرير المخزن", icon: "pi pi-box", to: "/inventory/report" },
+      ],
+    },
+    {
       id: "finance",
       label: "المالية والتقارير",
       items: [

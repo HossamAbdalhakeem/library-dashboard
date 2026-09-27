@@ -2,6 +2,8 @@
   <AppDataTable
     :value="rows"
     :columns="columns"
+    paginator
+    :rows="15"
     empty-message="لا توجد حجوزات بانتظار المخزون خلال الفترة المحددة."
   >
     <template #product="{ data }">

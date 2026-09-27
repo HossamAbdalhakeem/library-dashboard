@@ -6,8 +6,6 @@ import type {
   InventoryResponse,
   StockMutationResponse,
 } from "../types/inventory.types";
-import { buildBranchInventoryPageQuery } from "../helpers/inventory-list.helper";
-
 export const inventoryApi = {
   async getBranchInventory(
     branchId: string,
@@ -25,21 +23,6 @@ export const inventoryApi = {
       return asPaginated<InventoryResponse>(response);
     }
     return asList<InventoryResponse>(response);
-  },
-
-  async getBranchInventoryPage(
-    branchId: string,
-    params: { page?: number; perPage?: number } = {},
-  ): Promise<PaginatedResponse<InventoryResponse>> {
-    return asPaginated<InventoryResponse>(
-      await apiFetch(`/inventory/${branchId}`, {
-        method: "GET",
-        params: buildBranchInventoryPageQuery({
-          page: params.page ?? 1,
-          perPage: params.perPage ?? 10,
-        }),
-      }),
-    );
   },
 
   /** POST /inventory/:branchId/:productId/add → StockMutationResponse | null */

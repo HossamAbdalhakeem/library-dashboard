@@ -165,6 +165,35 @@ export type AdminSalesBranchGroup = {
   products: AdminSalesProductRow[];
 };
 
+export type AdminInventoryProductRow = {
+  productId: string;
+  name: string;
+  teacherName: string;
+  studyYearName: string;
+  price: number;
+  physicalQuantity: number;
+  reservedQuantity: number;
+  availableQuantity: number;
+  lowStockThreshold: number | null;
+};
+
+export type AdminInventoryBranchGroup = {
+  branchId: string;
+  branchName: string;
+  physicalQuantity: number;
+  reservedQuantity: number;
+  availableQuantity: number;
+  products: AdminInventoryProductRow[];
+};
+
+/** GET /reports/admin/inventory-by-product */
+export type AdminInventoryByProductResponse = AdminSectionBase & {
+  section: "inventory-by-product";
+  branches: AdminInventoryBranchGroup[];
+  /** Present when the page branch filter is all branches. */
+  productsByProduct: AdminInventoryProductRow[] | null;
+};
+
 /** GET /reports/admin/sales-by-product */
 export type AdminSalesByProductResponse = AdminSectionBase & {
   section: "sales-by-product";
