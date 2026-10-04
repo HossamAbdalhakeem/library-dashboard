@@ -26,7 +26,7 @@
           {{ data.createdBy?.fullName }}
         </span>
         <span
-          class="rounded-md bg-slate-700/80 px-2 py-0.5 text-[11px] text-slate-300"
+          class="rounded-md border border-[var(--app-border)] bg-[var(--app-elevated)] px-2 py-0.5 text-[11px] font-medium text-[var(--app-text-strong)]"
         >
           {{ data.createdBy?.roleLabel }}
         </span>
@@ -49,7 +49,6 @@
       <Button
         label="تسليم"
         size="small"
-        data-testid="deliver-reservation-action"
         class="rounded-lg bg-[#f5af52] px-4 py-2 text-sm font-bold text-white"
         :disabled="!isDeliverable(data)"
         @click="$emit('deliver', data)"

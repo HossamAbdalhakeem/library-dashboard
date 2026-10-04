@@ -14,13 +14,14 @@ import {
   normalizeOperationActivity,
   OperationActivity,
 } from "~/enums/operationActivity";
-import { normalizeOperationKind } from "~/enums/operationKind";
+import { normalizeOperationKind, OperationKind } from "~/enums/operationKind";
 import { normalizeOperationStatus } from "~/enums/operationStatus";
+import { visibleFeeAmount } from "~/utils/payment-fee";
 
 /**
  * Student-ops / timeline mappers for branch reports.
  * Nested-only: reads API nested shapes (student, product.teacher, product.studyYear).
- * BE student-ops rows send `status`, `createdAt` (+ `date`), and `product.price`.
+ * BE student-ops rows send `status`, `statusTrail`, `createdAt` (+ `date`), and `product.price`.
  */
 
 export const STUDENT_OPS_METRIC_COLORS = {
@@ -99,12 +100,21 @@ export const mapStudentOperationRows = (rows) =>
       activityKey,
       typeLabel: getOperationActivityLabel(activityKey) || activityKey,
       typeColor: getOperationActivityColor(activityKey),
+      operationNumber: row.operationNumber || null,
+      reservationNumber:
+        typeKey === OperationKind.RESERVATION
+          ? row.operationNumber || null
+          : null,
       studentName: row.student?.name || "-",
       phone: row.student?.phone || "",
       branchName: row.branch?.name || "-",
       productObj: toProductCell(row.product),
       totalAmount: moneyOrDash(row.totalAmount),
       paidAmount: moneyOrDash(row.paidAmount),
+      feeNote:
+        visibleFeeAmount(row.feeAmount) != null
+          ? moneyOrDash(row.feeAmount)
+          : null,
       deliveryPaidNote: showDeliveryPaidNote
         ? moneyOrDash(activityPaidRaw)
         : null,
@@ -113,6 +123,7 @@ export const mapStudentOperationRows = (rows) =>
       statusKey,
       statusLabel: getOperationStatusLabel(statusKey) || "—",
       statusColor: getOperationStatusColor(statusKey),
+      statusTrail: Array.isArray(row.statusTrail) ? row.statusTrail : [],
     };
   });
 
@@ -138,6 +149,24 @@ const formatProductLine = (product) => {
 const pushLine = (lines, value) => {
   if (value == null || value === "") return;
   lines.push(value);
+};
+
+/** Detail line that the timeline panel can tint (e.g. a damaged return item). */
+const pushDamagedLine = (lines, value) => {
+  if (value == null || value === "") return;
+  lines.push({ text: value, damaged: true });
+};
+
+const itemIsDamaged = (item, returnDamaged) => {
+  if (item?.damaged === true) return true;
+  if (item?.damaged === false) return false;
+  return Boolean(returnDamaged);
+};
+
+const pushFeeLine = (lines, data) => {
+  const fee = visibleFeeAmount(data?.feeAmount);
+  if (fee == null) return;
+  pushLine(lines, `رسوم التحويل: ${moneyOrDash(fee)}`);
 };
 
 const productUnitPrice = (product) => {
@@ -199,12 +228,14 @@ const detailsForCreated = (data) => {
   if (data.remaining != null) {
     pushLine(lines, `المتبقي: ${moneyOrDash(data.remaining)}`);
   }
+  pushFeeLine(lines, data);
   return lines;
 };
 
 const detailsForPayment = (data) => {
   const lines = [];
   if (data.amount != null) pushLine(lines, moneyOrDash(data.amount));
+  pushFeeLine(lines, data);
   return lines;
 };
 
@@ -247,26 +278,36 @@ const detailsForRefund = (data) => {
 const detailsForReturn = (data) => {
   const lines = [];
   const items = Array.isArray(data.items) ? data.items : [];
+  const returnDamaged = Boolean(data.damaged);
 
   if (items.length) {
     for (const item of items) {
+      const damaged = itemIsDamaged(item, returnDamaged);
+      const push = damaged ? pushDamagedLine : pushLine;
       const productLine = formatProductLine(item.product);
-      if (productLine) pushLine(lines, `المنتج: ${productLine}`);
-      if (item.quantity != null) pushLine(lines, `الكمية: ${item.quantity}`);
+      if (productLine) push(lines, `المنتج: ${productLine}`);
+      if (item.quantity != null) push(lines, `الكمية: ${item.quantity}`);
       if (item.refundAmount != null) {
-        pushLine(lines, `مبلغ الصنف: ${moneyOrDash(item.refundAmount)}`);
+        push(lines, `مبلغ الصنف: ${moneyOrDash(item.refundAmount)}`);
       }
     }
   } else {
+    const push = returnDamaged ? pushDamagedLine : pushLine;
     const productLine = formatProductLine(data.product);
-    if (productLine) pushLine(lines, `المنتج: ${productLine}`);
-    if (data.quantity != null) pushLine(lines, `الكمية: ${data.quantity}`);
+    if (productLine) push(lines, `المنتج: ${productLine}`);
+    if (data.quantity != null) push(lines, `الكمية: ${data.quantity}`);
   }
 
   if (data.amount != null) {
     pushLine(lines, `مبلغ المرتجع: ${moneyOrDash(data.amount)}`);
   }
   return lines;
+};
+
+const returnEventIsDamaged = (data) => {
+  if (data?.damaged === true) return true;
+  const items = Array.isArray(data?.items) ? data.items : [];
+  return items.some((item) => item?.damaged === true);
 };
 
 const detailsForDeliveredOrCompleted = (data) => {
@@ -276,6 +317,7 @@ const detailsForDeliveredOrCompleted = (data) => {
   const qty = reconcileQuantity(data.quantity, unit, data.paid ?? data.total);
   if (qty != null) pushLine(lines, `الكمية: ${qty}`);
   if (data.paid != null) pushLine(lines, `المدفوع: ${moneyOrDash(data.paid)}`);
+  pushFeeLine(lines, data);
   return lines;
 };
 
@@ -318,6 +360,7 @@ export const mapTimelineEvents = (payload) => {
       title: getTimelineEventLabel(type, source, data),
       date: event.date,
       actorName: event.actor?.name || null,
+      damaged: type === "RETURN" && returnEventIsDamaged(data),
       details: buildTimelineEventDetails(event),
       method,
       methodLabel:

@@ -45,6 +45,8 @@ export type ReportNamedRef = {
 export type ReportPaymentMethod = {
   method: PaymentMethod;
   amount: number;
+  /** Transfer fees collected on this method. Separate from amount. */
+  feesAmount?: number;
 };
 
 /** Nested payment summary (proof image) on classic daily rows / timeline. */
@@ -86,6 +88,12 @@ export type ReportBranchRef = ReportNamedRef;
 /** Report-only lifecycle status on student-ops / timeline. */
 export type ReportOperationStatus = OperationStatus | string;
 
+/** One step in the student-ops status column. `at` is null on the first step. */
+export type ReportStudentOperationStatusTrailStep = {
+  status: ReportOperationStatus;
+  at: string | null;
+};
+
 /** @deprecated Prefer `OperationKind` from `~/enums/operationKind`. */
 export type ReportOperationKind = OperationKind;
 
@@ -108,10 +116,19 @@ export type ReportStudentOperationRow = {
   quantity: number;
   totalAmount: number;
   paidAmount: number;
+  /** Transfer fee on the operation. Separate from paidAmount. */
+  feeAmount?: number;
   remainingAmount: number;
   /** Money collected for this day's activity (e.g. remaining at delivery). */
   activityPaidAmount: number;
+  /** Status at the end of the viewed day. The column renders `statusTrail` instead. */
   status: ReportOperationStatus;
+  /**
+   * Statuses reached through the viewed day.
+   * One step: that day's latest status (`at` null).
+   * Later steps: a change on a following day, with `at` set.
+   */
+  statusTrail?: ReportStudentOperationStatusTrailStep[];
   operationNumber: string | null;
   createdBy: ReportCreatedByRef | null;
   branch: ReportBranchRef | null;

@@ -14,7 +14,7 @@ defineOptions({ name: "ReportsFinancialDetailRow" });
 defineProps({
   label: { type: String, required: true },
   value: { type: [Number, String], default: "" },
-  valueClass: { type: String, default: "text-white" },
+  valueClass: { type: String, default: "text-[var(--app-text-strong)]" },
   hint: { type: String, default: "" },
 });
 </script>

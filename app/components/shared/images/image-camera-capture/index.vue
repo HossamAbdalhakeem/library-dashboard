@@ -10,7 +10,10 @@
     :dismissable-mask="false"
     :draggable="false"
     :pt="{
-      root: { class: 'overflow-hidden rounded-3xl border border-white/10 bg-slate-950 shadow-2xl' },
+      root: {
+        class:
+          'overflow-hidden rounded-3xl border border-white/10 bg-slate-950 shadow-2xl md:!w-[380px] md:!max-w-[380px]',
+      },
       content: { class: '!p-0 bg-slate-950' },
     }"
     @show="onDialogShow"
@@ -18,7 +21,12 @@
     @update:visible="onVisibleUpdate"
   >
     <div class="relative overflow-hidden bg-slate-950 text-white" dir="rtl">
-      <CameraCaptureHeader :disabled="starting" @close="close" />
+      <CameraCaptureHeader
+        :disabled="starting"
+        :title="title"
+        :subtitle="subtitle"
+        @close="close"
+      />
 
       <CameraCapturePreview
         :starting="starting"
@@ -60,6 +68,8 @@ defineOptions({ name: "ImageCameraCapture" });
 
 defineProps({
   visible: { type: Boolean, default: false },
+  title: { type: String, default: "التقاط صورة الإثبات" },
+  subtitle: { type: String, default: "وجّه الكاميرا ثم اضغط التقاط" },
 });
 
 const emit = defineEmits(["update:visible", "captured", "error"]);

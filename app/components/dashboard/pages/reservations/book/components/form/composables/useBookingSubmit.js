@@ -1,6 +1,7 @@
 import {
   paymentMethodNeedsProof,
 } from "~/enums/paymentMethod";
+import { feeAmountForRequest } from "~/utils/payment-fee";
 import { useAppToast } from "~/composables/useAppToast";
 import {
   buildCreateReservationPayload,
@@ -26,6 +27,7 @@ export function useBookingSubmit({
   const saving = ref(false);
   const reservationSummary = ref(null);
   const successDialogVisible = ref(false);
+  const confirmDialogVisible = ref(false);
   const proofFile = ref(null);
   const proofKey = ref("");
   const proofPreviewUrl = ref("");
@@ -47,12 +49,33 @@ export function useBookingSubmit({
     reservationSummary.value = null;
   };
 
-  const handleSubmit = async () => {
-    amountError.value = "";
+  const flagMissingProof = () => {
     proofRequiredError.value = false;
-
     if (paymentFieldsRef.value && !paymentFieldsRef.value.validate()) {
       proofRequiredError.value = true;
+      return true;
+    }
+    return false;
+  };
+
+  const resolvedFeeAmount = () =>
+    feeAmountForRequest({
+      method: form.paymentMethod,
+      enabled: form.feeEnabled,
+      amount: form.feeAmount,
+    });
+
+  const requestSubmit = () => {
+    amountError.value = "";
+    if (flagMissingProof()) return;
+    if (!validateDepositAmount()) return;
+    confirmDialogVisible.value = true;
+  };
+
+  const handleSubmit = async () => {
+    amountError.value = "";
+
+    if (flagMissingProof()) {
       return;
     }
 
@@ -83,6 +106,7 @@ export function useBookingSubmit({
           branchId: form.branchId || undefined,
           proofReference:
             needsProof && proofKey.value ? proofKey.value : undefined,
+          feeAmount: resolvedFeeAmount(),
         }),
       );
 
@@ -91,6 +115,9 @@ export function useBookingSubmit({
         selectedProduct: product,
         studentName: form.studentName,
         method,
+        paidAmount: deposit,
+        totalAmount: Number(product?.displayPrice || 0),
+        feeAmount: resolvedFeeAmount(),
         proofImage: needsProof ? proofPreviewUrl.value || "" : "",
       });
 
@@ -99,6 +126,7 @@ export function useBookingSubmit({
       }
 
       reservationSummary.value = summary;
+      confirmDialogVisible.value = false;
       successDialogVisible.value = true;
     } catch (error) {
       showError(error?.message || "تعذر تسجيل الحجز.");
@@ -111,13 +139,17 @@ export function useBookingSubmit({
     saving,
     reservationSummary,
     successDialogVisible,
+    confirmDialogVisible,
     proofFile,
     proofKey,
     proofPreviewUrl,
     proofRequiredError,
     paymentFieldsRef,
     closeSuccessDialog,
+    requestSubmit,
+    resolvedFeeAmount,
     handleSubmit,
+    flagMissingProof,
     showError,
   };
 }

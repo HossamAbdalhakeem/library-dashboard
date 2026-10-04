@@ -5,10 +5,10 @@ import type {
 } from "../types/return.types";
 
 export const returnApi = {
-  /** POST /returns → ReturnResponse | null */
+  /** POST /admin-api/returns → ReturnResponse | null */
   async createReturn(payload: ReturnPayload): Promise<ReturnResponse | null> {
     return firstRow<ReturnResponse>(
-      await apiFetch("/returns", {
+      await apiFetch("/admin-api/returns", {
         method: "POST",
         body: payload,
       }),

@@ -23,6 +23,7 @@ export type {
   BranchStockOperationRow,
   BranchStockOperationsSection,
   BranchRefundKind,
+  BranchRefundSettlement,
   BranchRefundRow,
   BranchRefundsSection,
   BranchStudentOperationsSection,

@@ -1,12 +1,11 @@
 <template>
-  <div class="grid gap-4 md:grid-cols-2">
+  <div class="sales-form grid w-full min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
     <Field
       v-slot="{ errorMessage }"
-      class="md:col-span-2"
       name="studentId"
       :rules="sales.validateStudentSelection"
     >
-      <div class="flex flex-col gap-2 text-right">
+      <div class="flex w-full min-w-0 flex-col gap-2 text-right md:col-span-2">
         <AppGlobalSelectStudent
           v-model="sales.selectedStudent"
           :invalid="!!(errorMessage || fieldErrors.studentId)"
@@ -24,7 +23,7 @@
       name="teacherId"
       rules="required"
     >
-      <div class="flex flex-col gap-2 text-right">
+      <div class="flex w-full min-w-0 flex-col gap-2 text-right">
         <AppGlobalSelectTeacher
           v-model="sales.form.teacherId"
           label="المدرس"
@@ -42,7 +41,7 @@
       name="studyYearId"
       rules="required"
     >
-      <div class="flex flex-col gap-2 text-right">
+      <div class="flex w-full min-w-0 flex-col gap-2 text-right">
         <AppGlobalSelectStudyYear
           v-model="sales.form.studyYearId"
           label="السنة الدراسية"
@@ -62,7 +61,7 @@
       label="المنتج"
       rules="required"
     >
-      <div class="flex flex-col gap-2 text-right">
+      <div class="flex w-full min-w-0 flex-col gap-2 text-right">
         <AppGlobalSelectProduct
           v-model="sales.form.productId"
           :options="sales.productOptions"
@@ -84,8 +83,8 @@
       name="quantity"
       rules="required|min_value:1"
     >
-      <div class="flex flex-col gap-2 text-right">
-        <div class="flex items-center justify-between gap-2">
+      <div class="flex w-full min-w-0 flex-col gap-2 text-right">
+        <div class="flex min-w-0 flex-wrap items-center justify-between gap-2">
           <label class="text-sm font-medium text-slate-700">الكمية</label>
           <span
             v-if="sales.selectedProductOption"
@@ -96,7 +95,6 @@
         </div>
         <AppInputNumber
           v-model="sales.form.quantity"
-          data-testid="sale-quantity"
           :min="1"
           :max="sales.maxQuantity"
           :max-fraction-digits="0"
@@ -116,7 +114,7 @@
       :amount="sales.requiredAmount"
     />
 
-    <div class="md:col-span-2">
+    <div class="w-full min-w-0 md:col-span-2">
       <Field
         v-slot="{ errorMessage }"
         v-model="sales.form.method"
@@ -129,7 +127,9 @@
           v-model:image="sales.proofFile"
           v-model:image-data-url="sales.proofKey"
           v-model:image-preview-url="sales.proofPreviewUrl"
-          :show-proof-source-choice="showProofSourceChoice"
+          v-model:fee-enabled="sales.feeEnabled"
+          v-model:fee-amount="sales.feeAmount"
+          show-fee
           :method-invalid="!!(errorMessage || fieldErrors.method)"
           :method-error="errorMessage || ''"
           :image-invalid="sales.proofRequiredError"
@@ -138,13 +138,12 @@
       </Field>
     </div>
 
-    <div class="md:col-span-2 flex justify-center">
+    <div class="flex w-full min-w-0 justify-center md:col-span-2">
       <FormSubmitButton
-        data-testid="sale-submit"
         label="تأكيد البيع"
         :loading="sales.saving"
-        :valid="meta.valid"
-        button-class="min-w-[200px]"
+        :valid="meta.valid && paymentCanContinue"
+        button-class="w-full min-w-0 sm:w-auto sm:min-w-[200px]"
       />
     </div>
   </div>
@@ -160,11 +159,7 @@ import AppGlobalSelectStudent from "~/components/shared/selections/app-global-se
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import { Field, ErrorMessage } from "vee-validate";
-import { useAuth } from "~/composables/useAuth";
-
-const { isBranchEmployee } = useAuth();
-
-const showProofSourceChoice = computed(() => isBranchEmployee.value);
+import { paymentMethodNeedsProof } from "~/enums/paymentMethod";
 
 const props = defineProps({
   sales: { type: Object, required: true },
@@ -176,4 +171,23 @@ const props = defineProps({
 const setPaymentFieldsRef = (el) => {
   props.sales.setPaymentFieldsRef?.(el);
 };
+
+const paymentCanContinue = computed(() => {
+  if (!paymentMethodNeedsProof(props.sales.form.method)) return true;
+  return Boolean(props.sales.proofKey);
+});
 </script>
+
+<style scoped>
+.sales-form :deep(.p-select),
+.sales-form :deep(.p-autocomplete),
+.sales-form :deep(.p-inputnumber),
+.sales-form :deep(.p-iconfield) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sales-form :deep(.p-select-label) {
+  min-width: 0;
+}
+</style>

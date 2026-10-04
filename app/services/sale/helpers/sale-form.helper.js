@@ -4,6 +4,7 @@ import {
   normalizePaymentMethod,
   PaymentMethod,
 } from "~/enums/paymentMethod";
+import { assignFeeAmount, visibleFeeAmount } from "~/utils/payment-fee";
 
 /**
  * Build create body matching CreateSaleDto.
@@ -20,6 +21,8 @@ export const buildSalePayload = (form) => {
   if (form.proofReference) {
     payload.proofReference = String(form.proofReference).trim();
   }
+
+  assignFeeAmount(payload, payload.method, form.feeAmount);
 
   return payload;
 };
@@ -38,6 +41,7 @@ export const normalizeSaleDetail = (sale = {}) => {
     id: sale.id,
     status: sale.status,
     totalAmount: sale.totalAmount,
+    feeAmount: visibleFeeAmount(sale.feeAmount),
     createdAt: sale.createdAt,
     student: student
       ? {
@@ -62,8 +66,14 @@ export const normalizeSaleDetail = (sale = {}) => {
         url: image.url || null,
         hasProof: Boolean(image.hasProof),
       },
+      feeAmount: visibleFeeAmount(payment.feeAmount),
     },
-    payments: Array.isArray(sale.payments) ? sale.payments : [],
+    payments: (Array.isArray(sale.payments) ? sale.payments : []).map(
+      (entry) => ({
+        ...entry,
+        feeAmount: visibleFeeAmount(entry?.feeAmount),
+      }),
+    ),
     returns: Array.isArray(sale.returns) ? sale.returns : [],
     exchanges: Array.isArray(sale.exchanges) ? sale.exchanges : [],
   };
@@ -75,7 +85,7 @@ export const normalizeSaleDetail = (sale = {}) => {
  */
 export const mapSaleToSuccessSummary = (
   sale,
-  { product, studentName, proofImage, needsProof } = {},
+  { product, studentName, proofImage, needsProof, feeAmount } = {},
 ) => {
   const detail = normalizeSaleDetail(sale);
   if (!detail?.id || !detail.payment?.id) return null;
@@ -97,6 +107,9 @@ export const mapSaleToSuccessSummary = (
     quantity: item.quantity ?? 0,
     unitPrice: Number(item.unitPrice ?? 0),
     totalAmount: Number(detail.totalAmount ?? 0),
+    feeAmount: visibleFeeAmount(
+      detail.feeAmount ?? detail.payment?.feeAmount ?? feeAmount,
+    ),
     method,
     methodLabel:
       detail.payment.methodLabel || getPaymentMethodLabel(method),

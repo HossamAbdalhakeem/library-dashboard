@@ -1,41 +1,56 @@
 <template>
-  <div class="iu-preview p-3">
-    <img
-      :src="previewUrl"
-      alt="معاينة الصورة"
-      class="mx-auto max-h-44 rounded-xl object-contain shadow-sm"
-      :style="aspectRatio ? { aspectRatio: String(aspectRatio) } : undefined"
-    />
-
-    <div class="iu-hover-overlay">
-      <button type="button" class="iu-hover-action" @click="$emit('crop')">
-        <i class="pi pi-crop" />
-        <span>قص</span>
-      </button>
-      <button type="button" class="iu-hover-action" @click="$emit('change')">
-        <i class="pi pi-pencil" />
-        <span>تغيير</span>
-      </button>
+  <div class="flex flex-col gap-3">
+    <div
+      class="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800"
+    >
+      <img
+        :src="previewUrl"
+        alt="إثبات الدفع"
+        class="aspect-video w-full object-contain"
+      />
       <button
         type="button"
-        class="iu-hover-action iu-hover-action--danger"
+        class="absolute end-2 top-2 flex size-8 items-center justify-center rounded-full bg-slate-900/80 text-white transition-colors hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        aria-label="إزالة صورة الإثبات"
         @click="$emit('clear')"
       >
-        <i class="pi pi-trash" />
-        <span>إزالة</span>
+        <PaymentIcon name="x" class="size-3.5" />
       </button>
     </div>
 
-    <p
-      v-if="fileMeta"
-      class="mt-2 text-center text-xs text-slate-500 dark:text-slate-400"
-    >
-      {{ fileMeta }}
-    </p>
+    <div class="flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <p class="text-sm font-medium text-slate-900 dark:text-slate-100">
+          لقطة إثبات الدفع
+        </p>
+        <p
+          v-if="fileMeta"
+          class="truncate text-xs text-slate-500 dark:text-slate-400"
+        >
+          {{ fileMeta }}
+        </p>
+      </div>
+      <div class="flex shrink-0 items-center gap-2">
+        <button type="button" class="iu-link" @click="$emit('crop')">
+          قص
+        </button>
+        <button
+          type="button"
+          class="iu-link inline-flex items-center gap-1.5"
+          aria-label="تغيير الصورة"
+          @click="$emit('change')"
+        >
+          <PaymentIcon name="upload" class="size-3.5" />
+          تغيير الصورة
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import PaymentIcon from "~/components/shared/payment/payment-icon/index.vue";
+
 defineOptions({ name: "ImageUploadPreview" });
 
 defineProps({
@@ -48,48 +63,23 @@ defineEmits(["crop", "change", "clear"]);
 </script>
 
 <style scoped>
-.iu-preview {
-  position: relative;
-  display: block;
-  width: 100%;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-
-.iu-hover-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  background: rgba(0, 0, 0, 0.45);
-  pointer-events: none;
-}
-
-.iu-preview:hover .iu-hover-overlay,
-.iu-preview:focus-within .iu-hover-overlay {
-  display: flex;
-  pointer-events: auto;
-}
-
-.iu-hover-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  color: #1f2937;
-  border: none;
-  font-size: 0.78rem;
-  font-weight: 500;
+.iu-link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #bc7d2c;
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
+  border-radius: 0.375rem;
 }
 
-.iu-hover-action--danger {
-  background: rgba(220, 38, 38, 0.92);
-  color: #fff;
+.iu-link:focus-visible {
+  outline: 2px solid rgb(245 175 82 / 0.7);
+  outline-offset: 2px;
+}
+
+:global(.app-dark) .iu-link {
+  color: #f9ddb2;
 }
 </style>

@@ -3,27 +3,48 @@
  * Leaf entity: camelCase scalars only.
  */
 
+/** Entity status as returned by the API. */
+export type StudyYearStatus = "ACTIVE" | "INACTIVE";
+
 /**
  * Stable response from:
- * GET /study-years, GET /study-years/:id,
- * POST /study-years, PATCH /study-years/:id
+ * GET /admin-api/study-years,
+ * POST /admin-api/study-years,
+ * PATCH /admin-api/study-years/:id,
+ * PATCH /admin-api/study-years/:id/status
  */
 export type StudyYearResponse = {
   id: string;
   name: string;
+  status: StudyYearStatus | string;
   createdAt?: string;
   updatedAt?: string;
 };
 
-/** GET /study-years query params. */
+/** GET /admin-api/study-years query params. */
 export type StudyYearQuery = Record<string, unknown>;
 
-/** POST /study-years body. */
+/** POST /admin-api/study-years body. */
 export type StudyYearPayload = {
   name: string;
 };
 
-/** PATCH /study-years/:id body. */
+/** PATCH /admin-api/study-years/:id body. Rename does not change status. */
 export type StudyYearUpdatePayload = {
   name?: string;
+};
+
+/** PATCH /admin-api/study-years/:id/status body. */
+export type StudyYearStatusPayload = {
+  status: StudyYearStatus;
+};
+
+/** List/table row after `normalizeStudyYearListItem`. */
+export type StudyYearListItem = {
+  id: string;
+  name: string;
+  status: StudyYearStatus | string;
+  statusLabel: string;
+  createdAt?: string;
+  updatedAt?: string;
 };

@@ -11,7 +11,8 @@
     </p>
     <p
       v-if="hasPhone"
-      class="m-0 truncate text-xs leading-tight tabular-nums text-[var(--app-muted)]"
+      dir="ltr"
+      class="m-0 w-full truncate text-right text-xs leading-tight tabular-nums text-[var(--app-muted)]"
     >
       {{ student.phone }}
     </p>

@@ -1,8 +1,8 @@
 <template>
-  <section dir="rtl">
+  <section class="h-full min-w-0" dir="rtl">
     <div
       v-if="loading"
-      class="rounded-xl border border-white/10 bg-slate-900 p-4"
+      class="h-full rounded-xl border border-white/10 bg-slate-900 p-4"
     >
       <Skeleton width="8rem" height="1rem" class="mb-3" />
       <Skeleton width="100%" height="6rem" />

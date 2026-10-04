@@ -18,7 +18,8 @@ export type TeacherStatus = "ACTIVE" | "INACTIVE";
 /**
  * Stable response from:
  * GET /teachers, GET /teachers/:id,
- * POST /teachers, PATCH /teachers/:id, PATCH /teachers/:id/status
+ * POST /teachers, POST /teachers/:id/activate,
+ * PATCH /teachers/:id, PATCH /teachers/:id/status
  */
 export type TeacherResponse = {
   id: string;

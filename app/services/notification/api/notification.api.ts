@@ -5,12 +5,12 @@ import type {
 } from "../types/notification.types";
 
 export const notificationApi = {
-  /** GET /notifications → NotificationResponse[] */
+  /** GET /admin-api/notifications → NotificationResponse[] */
   async getNotifications(
     params: NotificationQuery = {},
   ): Promise<NotificationResponse[]> {
     return asList<NotificationResponse>(
-      await apiFetch("/notifications", { method: "GET", params }),
+      await apiFetch("/admin-api/notifications", { method: "GET", params }),
     );
   },
 };

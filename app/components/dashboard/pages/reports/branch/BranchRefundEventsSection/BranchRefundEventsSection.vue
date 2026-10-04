@@ -7,6 +7,7 @@
     :page-size="pageSize"
     :total-records="total"
     :total-amount="totalAmount"
+    :total-collected-amount="totalCollectedAmount"
     @retry="reload"
     @update:page="setPage"
   />
@@ -33,12 +34,15 @@ const props = defineProps({
 const emit = defineEmits(["loading"]);
 
 const totalAmount = ref(0);
+const totalCollectedAmount = ref(0);
 
 const { loading, rows, error, total, page, setPage, reload } =
   usePaginatedReportSection(
     async (query) => {
       const payload = await branchReportsApi.getSection("refunds", query);
-      totalAmount.value = Number(payload?.totals?.amount || 0);
+      const totals = payload?.totals || {};
+      totalAmount.value = Number(totals.refundAmount ?? totals.amount ?? 0);
+      totalCollectedAmount.value = Number(totals.collectedAmount ?? 0);
       return payload;
     },
     {

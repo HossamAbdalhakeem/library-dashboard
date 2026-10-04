@@ -183,6 +183,8 @@ export type EligibleSaleResponse = {
   canModify: boolean;
   totalAmount: number;
   paidAmount: number;
+  /** Sum of fees on the sale. Separate from paidAmount and totalAmount. */
+  feeAmount?: number;
   quantitySummary: EligibleSaleQuantitySummary;
   student: StudentBrief;
   branch: NamedRef | null;
@@ -262,4 +264,6 @@ export type ExchangeCreatePayload = {
   paymentMethod?: PaymentMethod;
   refundMethod?: PaymentMethod;
   proofReference?: string;
+  /** Only when the student pays a positive difference by wallet or Instapay. */
+  feeAmount?: number;
 };

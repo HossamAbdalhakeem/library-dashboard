@@ -15,6 +15,7 @@
         label="السنة الدراسية"
         placeholder="كل السنوات"
         show-clear
+        :exclude-inactive="false"
       />
 
       <AppGlobalSelectTeacher
@@ -62,7 +63,6 @@
           icon="pi pi-download"
           severity="primary"
           :loading="exporting"
-          data-testid="students-export-confirm"
           @click="onExport"
         />
       </div>

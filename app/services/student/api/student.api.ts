@@ -17,12 +17,12 @@ import type {
 } from "../types/student.types";
 
 export const studentApi = {
-  /** GET /students → PaginatedResponse<StudentResponse> */
+  /** GET /admin-api/students → PaginatedResponse<StudentResponse> */
   async getStudents(
     params: StudentQuery = {},
   ): Promise<PaginatedResponse<StudentResponse>> {
     return asPaginated<StudentResponse>(
-      await apiFetch("/students", { method: "GET", params }),
+      await apiFetch("/admin-api/students", { method: "GET", params }),
     );
   },
 
@@ -40,56 +40,56 @@ export const studentApi = {
     return result.data;
   },
 
-  /** GET /students/:id/transactions → PaginatedResponse<StudentTransactionResponse> */
+  /** GET /admin-api/students/:id/transactions → PaginatedResponse<StudentTransactionResponse> */
   async getStudentTransactions(
     id: string,
     params: StudentTransactionsQuery = {},
   ): Promise<PaginatedResponse<StudentTransactionResponse>> {
     return asPaginated<StudentTransactionResponse>(
-      await apiFetch(`/students/${id}/transactions`, {
+      await apiFetch(`/admin-api/students/${id}/transactions`, {
         method: "GET",
         params,
       }),
     );
   },
 
-  /** GET /students/export → CSV blob */
+  /** GET /admin-api/students/export → CSV blob */
   async exportStudents(params: StudentExportQuery = {}): Promise<Blob> {
-    return apiFetchBlob("/students/export", {
+    return apiFetchBlob("/admin-api/students/export", {
       method: "GET",
       params,
     });
   },
 
-  /** POST /students → StudentResponse | null */
+  /** POST /admin-api/students → StudentResponse | null */
   async createStudent(
     payload: StudentPayload,
   ): Promise<StudentResponse | null> {
     return firstRow<StudentResponse>(
-      await apiFetch("/students", {
+      await apiFetch("/admin-api/students", {
         method: "POST",
         body: payload,
       }),
     );
   },
 
-  /** PATCH /students/:id → StudentResponse | null */
+  /** PATCH /admin-api/students/:id → StudentResponse | null */
   async updateStudent(
     id: string,
     payload: StudentUpdatePayload,
   ): Promise<StudentResponse | null> {
     return firstRow<StudentResponse>(
-      await apiFetch(`/students/${id}`, {
+      await apiFetch(`/admin-api/students/${id}`, {
         method: "PATCH",
         body: payload,
       }),
     );
   },
 
-  /** DELETE /students/:id → StudentDeleteResponse | null */
+  /** DELETE /admin-api/students/:id → StudentDeleteResponse | null */
   async deleteStudent(id: string): Promise<StudentDeleteResponse | null> {
     return firstRow<StudentDeleteResponse>(
-      await apiFetch(`/students/${id}`, { method: "DELETE" }),
+      await apiFetch(`/admin-api/students/${id}`, { method: "DELETE" }),
     );
   },
 };

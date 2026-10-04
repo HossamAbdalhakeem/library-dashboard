@@ -25,7 +25,7 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "camera=(self), microphone=(), geolocation=(), display-capture=(), fullscreen=()"
+          "value": "camera=(self), microphone=(), geolocation=(self), display-capture=(), fullscreen=()"
         },
         {
           "key": "Content-Security-Policy",

@@ -17,13 +17,13 @@
       :selected-new-product="selectedNewProduct"
       :price-comparison="priceComparison"
       :exchange-quantity="exchangeQuantity"
+      :fee-amount="feeAmount"
     />
 
     <template #footer>
       <div class="flex w-full justify-start gap-2">
         <Button
           label="نعم، تأكيد الاستبدال"
-          data-testid="sale-exchange-yes"
           severity="primary"
           :loading="busy"
           :disabled="busy"
@@ -60,6 +60,7 @@ defineProps({
   selectedNewProduct: { type: Object, default: null },
   priceComparison: { type: Object, default: null },
   exchangeQuantity: { type: [Number, String], default: 1 },
+  feeAmount: { type: Number, default: null },
 });
 
 const emit = defineEmits(["update:visible", "confirm"]);

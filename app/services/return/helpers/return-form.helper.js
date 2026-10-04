@@ -6,17 +6,15 @@ import { normalizePaymentMethod } from "~/enums/paymentMethod";
  * Accepts either multi-item `items` or a single saleItemId + quantity.
  */
 export const buildReturnPayload = (form) => {
+  const toItem = (item, damaged) => ({
+    saleItemId: item.saleItemId,
+    quantity: Number(item.quantity || 1),
+    ...(damaged ? { damaged: true } : {}),
+  });
+
   const items = Array.isArray(form?.items) && form.items.length
-    ? form.items.map((item) => ({
-        saleItemId: item.saleItemId,
-        quantity: Number(item.quantity || 1),
-      }))
-    : [
-        {
-          saleItemId: form.saleItemId,
-          quantity: Number(form.quantity || 1),
-        },
-      ];
+    ? form.items.map((item) => toItem(item, item.damaged))
+    : [toItem(form, form.damaged)];
 
   const payload = {
     saleId: form.saleId,

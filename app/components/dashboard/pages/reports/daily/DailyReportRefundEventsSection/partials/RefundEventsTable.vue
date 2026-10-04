@@ -18,9 +18,25 @@
       </template>
 
       <template #kind="{ data }">
-        <span class="ops-tag" :style="kindStyle(data.kind)">
-          {{ data.kindLabel }}
+        <div class="flex min-w-0 flex-col items-start gap-0.5">
+          <span class="ops-tag" :style="kindStyle(data.kindColor)">
+            {{ data.kindLabel }}
+          </span>
+          <span v-if="data.kindHint" class="text-[11px] text-slate-400">
+            {{ data.kindHint }}
+          </span>
+        </div>
+      </template>
+
+      <template #source="{ data }">
+        <span
+          v-if="data.sourceLabel"
+          class="ops-tag"
+          :style="kindStyle(data.sourceColor)"
+        >
+          {{ data.sourceLabel }}
         </span>
+        <span v-else class="text-slate-500">—</span>
       </template>
 
       <template #student="{ data }">
@@ -33,18 +49,30 @@
         <SalesExchangeProductsCell :items="productItems(data)" />
       </template>
 
-      <template #amount="{ data }">
-        <span class="ops-tag tabular-nums" :style="amountStyle">
-          {{ data.amountLabel }}
+      <template #refund="{ data }">
+        <span class="ops-tag tabular-nums" :style="moneyStyle(data.refundAmount, 'refund')">
+          {{ data.refundAmountLabel }}
+        </span>
+      </template>
+
+      <template #collected="{ data }">
+        <span
+          class="ops-tag tabular-nums"
+          :style="moneyStyle(data.collectedAmount, 'collect')"
+        >
+          {{ data.collectedAmountLabel }}
         </span>
       </template>
 
       <template #method="{ data }">
+        <span v-if="!data.payment.method" class="text-slate-500">—</span>
         <PaymentProofThumb
+          v-else
           :method="data.payment.method"
           :method-label="data.payment.methodLabel"
           :has-proof="data.payment.image.hasProof"
-          :refund-id="data.payment.image.hasProof ? data.id : null"
+          :payment-id="data.payment.proofPaymentId"
+          :refund-id="data.payment.proofRefundId"
         />
       </template>
 
@@ -58,13 +86,23 @@
       </template>
     </AppDataTable>
 
-    <div
-      class="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3"
-    >
-      <span class="text-sm font-medium text-rose-200">إجمالي المبالغ المستردة</span>
-      <span class="text-lg font-extrabold tabular-nums text-rose-100">
-        {{ totalAmountLabel }}
-      </span>
+    <div class="mt-3 grid gap-2 sm:grid-cols-2">
+      <div
+        class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3"
+      >
+        <span class="text-sm font-medium text-rose-200">إجمالي المبالغ المستردة</span>
+        <span class="text-lg font-extrabold tabular-nums text-rose-700 dark:text-rose-100">
+          {{ totalRefundLabel }}
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3"
+      >
+        <span class="text-sm font-medium text-emerald-200">إجمالي المبالغ المحصّلة</span>
+        <span class="text-lg font-extrabold tabular-nums text-emerald-700 dark:text-emerald-100">
+          {{ totalCollectedLabel }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -74,8 +112,17 @@ import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-
 import AppStudentTableCell from "~/components/shared/tables/app-student-table-cell/index.vue";
 import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
 import SalesExchangeProductsCell from "~/components/dashboard/pages/sales/exchange/components/partials/SalesExchangeProductsCell.vue";
-import { formatMoney } from "~/utils/format/money";
+import { normalizeOperationKind } from "~/enums/operationKind";
 import { getPaymentMethodLabel, normalizePaymentMethod } from "~/enums/paymentMethod";
+import {
+  getOperationActivityColor,
+  getOperationActivityLabel,
+} from "~/utils/domain-labels/student-operations";
+import {
+  REFUND_EVENT_DEFERRED_HINT,
+  getRefundEventKindLabel,
+} from "~/utils/domain-labels/report";
+import { formatMoney } from "~/utils/format/money";
 
 const AppDataTable = defineAsyncComponent(() =>
   import("~/components/shared/tables/app-data-table/index.vue"),
@@ -83,12 +130,23 @@ const AppDataTable = defineAsyncComponent(() =>
 
 defineOptions({ name: "RefundEventsTable" });
 
-const KIND_META = {
-  RETURN: { label: "مرتجع بيع", color: "#fb7185" },
-  EXCHANGE: { label: "استبدال (رد فرق)", color: "#a78bfa" },
-  RESERVATION_CANCEL: { label: "إلغاء حجز", color: "#f97316" },
-  SALE_REFUND: { label: "استرداد بيع", color: "#f43f5e" },
+const KIND_COLORS = {
+  RETURN: "#fb7185",
+  EXCHANGE: "#a78bfa",
+  RESERVATION_CANCEL: "#f97316",
+  SALE_REFUND: "#f43f5e",
 };
+
+const SETTLEMENT_COLORS = {
+  REFUND: "#a78bfa",
+  COLLECT: "#38bdf8",
+  EVEN: "#c4b5fd",
+  DEFERRED_TO_DELIVERY: "#a78bfa",
+};
+
+const REFUND_COLOR = "#fb7185";
+const COLLECT_COLOR = "#34d399";
+const ZERO_COLOR = "#94a3b8";
 
 const props = defineProps({
   rows: { type: Array, default: () => [] },
@@ -97,9 +155,10 @@ const props = defineProps({
   pageSize: { type: Number, default: 15 },
   totalRecords: { type: Number, default: 0 },
   totalAmount: { type: [Number, String], default: 0 },
+  totalCollectedAmount: { type: [Number, String], default: 0 },
   emptyMessage: {
     type: String,
-    default: "لا توجد عمليات استرداد أو إلغاء خلال الفترة المحددة.",
+    default: "لا توجد عمليات استرداد أو إلغاء أو استبدال خلال الفترة المحددة.",
   },
 });
 
@@ -109,23 +168,21 @@ const first = computed(() =>
   Math.max(0, (Number(props.page) - 1) * Number(props.pageSize || 15)),
 );
 
-const totalAmountLabel = computed(() =>
-  formatMoney(props.totalAmount),
+const totalRefundLabel = computed(() => formatMoney(props.totalAmount));
+const totalCollectedLabel = computed(() =>
+  formatMoney(props.totalCollectedAmount),
 );
 
-const amountStyle = {
-  color: "#fb7185",
-  backgroundColor: "#fb718522",
-  border: "1px solid #fb718555",
-};
+const kindStyle = (color) => ({
+  color,
+  backgroundColor: `${color}22`,
+  border: `1px solid ${color}55`,
+});
 
-const kindStyle = (kind) => {
-  const color = KIND_META[kind]?.color || "#94a3b8";
-  return {
-    color,
-    backgroundColor: `${color}22`,
-    border: `1px solid ${color}55`,
-  };
+const moneyStyle = (amount, tone) => {
+  const active = tone === "collect" ? COLLECT_COLOR : REFUND_COLOR;
+  const color = Number(amount) > 0 ? active : ZERO_COLOR;
+  return kindStyle(color);
 };
 
 const originalRefLabel = (value) => {
@@ -144,26 +201,55 @@ const productItems = (row) => [
   },
 ];
 
+const toMoney = (value, fallback = 0) => {
+  const amount = Number(value);
+  return Number.isFinite(amount) ? amount : fallback;
+};
+
 const displayRows = computed(() =>
   (props.rows || []).map((row) => {
     const kind = String(row.kind || "SALE_REFUND").toUpperCase();
-    const meta = KIND_META[kind] || KIND_META.SALE_REFUND;
-    const method = normalizePaymentMethod(row.payment?.method);
+    const settlement = String(row.settlement || "").toUpperCase();
+    const source = normalizeOperationKind(row.source);
+    const refundAmount = toMoney(
+      row.refundAmount != null ? row.refundAmount : row.amount,
+    );
+    const collectedAmount = toMoney(row.collectedAmount, 0);
+    const rawMethod = row.payment?.method;
+    const method = rawMethod ? normalizePaymentMethod(rawMethod, "") : "";
+    const hasProof = Boolean(row.payment?.image?.hasProof);
+    const isCollect = settlement === "COLLECT";
+
     return {
       ...row,
       kind,
-      kindLabel: meta.label,
-      amountLabel: formatMoney(row.amount),
+      kindLabel: getRefundEventKindLabel(kind, settlement),
+      kindColor:
+        (kind === "EXCHANGE" && SETTLEMENT_COLORS[settlement]) ||
+        KIND_COLORS[kind] ||
+        KIND_COLORS.SALE_REFUND,
+      kindHint:
+        settlement === "DEFERRED_TO_DELIVERY" ? REFUND_EVENT_DEFERRED_HINT : "",
+      source,
+      sourceLabel: source ? getOperationActivityLabel(source) : "",
+      sourceColor: source ? getOperationActivityColor(source) : "",
+      refundAmount,
+      collectedAmount,
+      refundAmountLabel: formatMoney(refundAmount),
+      collectedAmountLabel: formatMoney(collectedAmount),
       payment: {
         id: row.payment?.id ?? null,
         method,
-        methodLabel:
-          row.payment?.methodLabel || getPaymentMethodLabel(method),
+        methodLabel: method
+          ? row.payment?.methodLabel || getPaymentMethodLabel(method)
+          : "",
         image: {
           reference: row.payment?.image?.reference ?? null,
           url: row.payment?.image?.url ?? null,
-          hasProof: Boolean(row.payment?.image?.hasProof),
+          hasProof,
         },
+        proofPaymentId: isCollect && hasProof ? row.payment?.id ?? null : null,
+        proofRefundId: !isCollect && hasProof ? row.id : null,
       },
       studentName: row.studentName || "—",
       studentPhone: row.studentPhone || "",
@@ -173,12 +259,14 @@ const displayRows = computed(() =>
 );
 
 const columns = [
-  { field: "createdAt", header: "وقت الاسترداد", slot: "time" },
+  { field: "createdAt", header: "الوقت", slot: "time" },
   { field: "kindLabel", header: "النوع", slot: "kind" },
+  { field: "sourceLabel", header: "المصدر", slot: "source" },
   { field: "studentName", header: "الطالب", slot: "student" },
   { field: "productName", header: "المنتج", slot: "product" },
-  { field: "amountLabel", header: "المبلغ المسترد", slot: "amount" },
-  { field: "payment.methodLabel", header: "طريقة الرد", slot: "method" },
+  { field: "refundAmountLabel", header: "المبلغ المسترد", slot: "refund" },
+  { field: "collectedAmountLabel", header: "المبلغ المحصّل", slot: "collected" },
+  { field: "payment.methodLabel", header: "الطريقة", slot: "method" },
   { field: "originalCreatedAt", header: "العملية الأصلية", slot: "original" },
 ];
 

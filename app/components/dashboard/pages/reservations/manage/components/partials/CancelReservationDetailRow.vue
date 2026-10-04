@@ -4,7 +4,7 @@
     :class="bordered ? borderClass : ''"
   >
     <span :class="labelClass">{{ label }}</span>
-    <span :class="valueClass">
+    <span :dir="valueDir || undefined" :class="[valueClass, valueDir === 'ltr' ? 'text-right' : '']">
       <slot>{{ value }}</slot>
     </span>
   </div>
@@ -20,5 +20,6 @@ defineProps({
   borderClass: { type: String, default: "border-t border-white/10 pt-2" },
   labelClass: { type: String, default: "text-slate-400" },
   valueClass: { type: String, default: "font-medium text-slate-100" },
+  valueDir: { type: String, default: "" },
 });
 </script>

@@ -13,12 +13,21 @@
         class="mt-0.5 text-xs text-primary-400"
       >
         ↲ استبدل بـ {{ item.exchange.newProduct.name }}
+        <span v-if="item.exchange.newProduct.studyYear?.name">
+          · {{ item.exchange.newProduct.studyYear.name }}
+        </span>
       </div>
       <div
         v-if="item.product?.teacher?.name"
         class="text-[11px] text-neutral-400"
       >
         {{ item.product.teacher.name }}
+      </div>
+      <div
+        v-if="item.product?.studyYear?.name"
+        class="text-[11px] text-neutral-400"
+      >
+        {{ item.product.studyYear.name }}
       </div>
     </li>
   </ul>

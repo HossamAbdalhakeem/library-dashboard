@@ -58,6 +58,8 @@ export type SalePaymentRef = {
   methodLabel: string;
   image: PaymentImageRef;
   amount?: number;
+  /** Transfer fee on this payment. Separate from amount. */
+  feeAmount?: number;
   createdAt?: string;
 };
 
@@ -92,6 +94,8 @@ export type SaleResponse = {
   id: string;
   status?: string | unknown;
   totalAmount: number;
+  /** Sum of payment fees. Separate from totalAmount. */
+  feeAmount?: number;
   student: StudentRef | null;
   branch: NamedRef | null;
   academicYear: AcademicYearRef | null;
@@ -113,6 +117,8 @@ export type SalePayload = {
   quantity: number;
   method: PaymentMethod;
   proofReference?: string;
+  /** Omitted for cash and when the fee toggle is off. */
+  feeAmount?: number;
 };
 
 /** GET /sales/export query params. */

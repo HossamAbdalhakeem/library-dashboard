@@ -33,7 +33,7 @@
         <ToggleSwitch v-model="form.isActive" />
       </div>
 
-      <div class="flex justify-end gap-2 pt-2">
+      <div class="flex flex-wrap justify-end gap-2 pt-2">
         <Button
           type="button"
           label="إلغاء"
@@ -122,9 +122,11 @@ const submit = async () => {
 
       const nextStatus = form.isActive ? "ACTIVE" : "INACTIVE";
       if (props.teacher.status !== nextStatus) {
-        result = await teacherApi.updateTeacherStatus(props.teacher.id, {
-          status: nextStatus,
-        });
+        result = form.isActive
+          ? await teacherApi.activateTeacher(props.teacher.id)
+          : await teacherApi.updateTeacherStatus(props.teacher.id, {
+              status: "INACTIVE",
+            });
       }
     } else {
       const academicYearId = resolvedAcademicYearId.value;

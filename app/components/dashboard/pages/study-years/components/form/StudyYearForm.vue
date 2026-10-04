@@ -20,7 +20,20 @@
       </div>
     </Field>
 
-    <div class="flex justify-end gap-2">
+    <div
+      v-if="isEdit"
+      class="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-3"
+    >
+      <div class="text-right">
+        <p class="text-sm font-medium text-slate-800">حالة السنة الدراسية</p>
+        <p class="text-xs text-slate-500">
+          {{ form.isActive ? "نشط" : "غير نشط" }}
+        </p>
+      </div>
+      <ToggleSwitch v-model="form.isActive" />
+    </div>
+
+    <div class="flex flex-wrap justify-end gap-2">
       <Button type="button" label="إلغاء" severity="secondary" text @click="$emit('cancel')" />
       <FormSubmitButton
         :label="isEdit ? 'حفظ التعديل' : 'إضافة'"
@@ -35,6 +48,7 @@
 import Button from "primevue/button";
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
 import InputText from "primevue/inputtext";
+import ToggleSwitch from "primevue/toggleswitch";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import {
   studyYearApi,
@@ -74,9 +88,18 @@ const submit = async () => {
   saving.value = true;
   try {
     const payload = buildStudyYearPayload(form);
-    const result = isEdit.value
-      ? await studyYearApi.updateStudyYear(props.studyYear.id, payload)
-      : await studyYearApi.createStudyYear(payload);
+    let result;
+    if (isEdit.value) {
+      result = await studyYearApi.updateStudyYear(props.studyYear.id, payload);
+      const nextStatus = form.isActive ? "ACTIVE" : "INACTIVE";
+      if (props.studyYear.status !== nextStatus) {
+        result = await studyYearApi.updateStudyYearStatus(props.studyYear.id, {
+          status: nextStatus,
+        });
+      }
+    } else {
+      result = await studyYearApi.createStudyYear(payload);
+    }
     emit("saved", result);
   } catch (error) {
     showError(error?.message || "تعذر حفظ السنة الدراسية.");

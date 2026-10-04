@@ -8,43 +8,43 @@ import type {
 } from "../types/user.types";
 
 export const userApi = {
-  /** GET /users → UserResponse[] */
+  /** GET /admin-api/users → UserResponse[] */
   async getUsers(params: UserQuery = {}): Promise<UserResponse[]> {
     return asList<UserResponse>(
-      await apiFetch("/users", { method: "GET", params }),
+      await apiFetch("/admin-api/users", { method: "GET", params }),
     );
   },
 
-  /** POST /users → UserResponse | null */
+  /** POST /admin-api/users → UserResponse | null */
   async createUser(payload: UserPayload): Promise<UserResponse | null> {
     return firstRow<UserResponse>(
-      await apiFetch("/users", {
+      await apiFetch("/admin-api/users", {
         method: "POST",
         body: payload,
       }),
     );
   },
 
-  /** PATCH /users/:id → UserResponse | null */
+  /** PATCH /admin-api/users/:id → UserResponse | null */
   async updateUser(
     id: string,
     payload: UserUpdatePayload,
   ): Promise<UserResponse | null> {
     return firstRow<UserResponse>(
-      await apiFetch(`/users/${id}`, {
+      await apiFetch(`/admin-api/users/${id}`, {
         method: "PATCH",
         body: payload,
       }),
     );
   },
 
-  /** PATCH /users/:id/status → UserResponse | null */
+  /** PATCH /admin-api/users/:id/status → UserResponse | null */
   async updateUserStatus(
     id: string,
     payload: UserStatusPayload,
   ): Promise<UserResponse | null> {
     return firstRow<UserResponse>(
-      await apiFetch(`/users/${id}/status`, {
+      await apiFetch(`/admin-api/users/${id}/status`, {
         method: "PATCH",
         body: payload,
       }),

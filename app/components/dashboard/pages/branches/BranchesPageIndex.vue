@@ -21,6 +21,7 @@
           @edit="openEdit"
           @add-stock="openAddStock"
           @remove-stock="openRemoveStock"
+          @remove-damaged="openRemoveDamaged"
         />
       </template>
     </Card>
@@ -45,7 +46,7 @@
       :pt="{
         root: {
           class: 'branch-stock-drawer-panel',
-          style: { width: '420px', maxWidth: '420px' },
+          style: { width: 'min(420px, 100vw)', maxWidth: '100vw' },
         },
         header: { class: 'text-right' },
         content: { class: 'overflow-y-auto' },
@@ -71,7 +72,7 @@
       :pt="{
         root: {
           class: 'branch-stock-drawer-panel',
-          style: { width: '420px', maxWidth: '420px' },
+          style: { width: 'min(420px, 100vw)', maxWidth: '100vw' },
         },
         header: { class: 'text-right' },
         content: { class: 'overflow-y-auto' },
@@ -83,6 +84,33 @@
         :branch-name="selectedBranch.name"
         @saved="handleRemoveSaved"
         @cancel="removeDrawerVisible = false"
+      />
+    </Drawer>
+
+    <Drawer
+      v-model:visible="removeDamagedDrawerVisible"
+      header="إخراج التالف من الفرع"
+      position="right"
+      :modal="true"
+      :blockScroll="true"
+      :baseZIndex="1400"
+      class="branch-stock-drawer"
+      :pt="{
+        root: {
+          class: 'branch-stock-drawer-panel',
+          style: { width: 'min(420px, 100vw)', maxWidth: '100vw' },
+        },
+        header: { class: 'text-right' },
+        content: { class: 'overflow-y-auto' },
+      }"
+    >
+      <RemoveStockForm
+        v-if="removeDamagedDrawerVisible && selectedBranch"
+        mode="damaged"
+        :locked-branch-id="selectedBranch.id"
+        :branch-name="selectedBranch.name"
+        @saved="handleRemoveDamagedSaved"
+        @cancel="removeDamagedDrawerVisible = false"
       />
     </Drawer>
   </div>
@@ -119,6 +147,7 @@ const editingBranch = ref(null);
 const formDrawerVisible = ref(false);
 const addDrawerVisible = ref(false);
 const removeDrawerVisible = ref(false);
+const removeDamagedDrawerVisible = ref(false);
 
 const formDrawerTitle = computed(() =>
   editingBranch.value?.id ? "تعديل الفرع" : "إضافة فرع جديد",
@@ -133,9 +162,7 @@ const loadData = async () => {
 
   loading.value = true;
   try {
-    const branchList = await branchApi.getBranches({
-      inventory_summary: true,
-    });
+    const branchList = await branchApi.getBranches();
 
     branches.value = branchList.map(normalizeBranchListItem);
   } catch (error) {
@@ -170,13 +197,22 @@ const handleBranchSaved = async () => {
 const openAddStock = (branch) => {
   selectedBranch.value = branch;
   removeDrawerVisible.value = false;
+  removeDamagedDrawerVisible.value = false;
   addDrawerVisible.value = true;
 };
 
 const openRemoveStock = (branch) => {
   selectedBranch.value = branch;
   addDrawerVisible.value = false;
+  removeDamagedDrawerVisible.value = false;
   removeDrawerVisible.value = true;
+};
+
+const openRemoveDamaged = (branch) => {
+  selectedBranch.value = branch;
+  addDrawerVisible.value = false;
+  removeDrawerVisible.value = false;
+  removeDamagedDrawerVisible.value = true;
 };
 
 const handleAddSaved = async () => {
@@ -193,9 +229,21 @@ const handleRemoveSaved = async () => {
   await loadData();
 };
 
-watch([addDrawerVisible, removeDrawerVisible], ([addVisible, removeVisible]) => {
-  if (!addVisible && !removeVisible) selectedBranch.value = null;
-});
+const handleRemoveDamagedSaved = async () => {
+  removeDamagedDrawerVisible.value = false;
+  selectedBranch.value = null;
+  showSuccess("تم إخراج الكمية التالفة من المخزن.");
+  await loadData();
+};
+
+watch(
+  [addDrawerVisible, removeDrawerVisible, removeDamagedDrawerVisible],
+  ([addVisible, removeVisible, removeDamagedVisible]) => {
+    if (!addVisible && !removeVisible && !removeDamagedVisible) {
+      selectedBranch.value = null;
+    }
+  },
+);
 
 watch(formDrawerVisible, (visible) => {
   if (!visible) editingBranch.value = null;
@@ -215,7 +263,7 @@ onMounted(() => {
 
 <style scoped>
 :deep(.branch-stock-drawer-panel) {
-  width: 420px !important;
-  max-width: 420px !important;
+  width: min(420px, 100vw) !important;
+  max-width: 100vw !important;
 }
 </style>

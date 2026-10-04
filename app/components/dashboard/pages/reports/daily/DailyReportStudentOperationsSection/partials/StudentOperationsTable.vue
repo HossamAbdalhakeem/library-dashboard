@@ -18,15 +18,26 @@
       </template>
 
       <template #type="{ data }">
-        <span class="ops-tag" :style="metricTagStyle(data.typeColor)">
-          {{ data.typeLabel }}
-        </span>
+        <div class="flex flex-col items-center gap-0.5">
+          <span class="ops-tag" :style="metricTagStyle(data.typeColor)">
+            {{ data.typeLabel }}
+          </span>
+          <span
+            v-if="data.reservationNumber"
+            class="max-w-full text-center text-[0.65rem] font-semibold leading-4 text-white/70 tabular-nums"
+          >
+            {{ data.reservationNumber }}
+          </span>
+        </div>
       </template>
 
       <template #status="{ data }">
-        <span class="ops-tag" :style="metricTagStyle(data.statusColor)">
-          {{ data.statusLabel }}
-        </span>
+        <StudentOperationStatusTrail
+          :trail="data.statusTrail"
+          :fallback-status="data.statusKey"
+          :fallback-label="data.statusLabel"
+          :fallback-color="data.statusColor"
+        />
       </template>
 
       <template #product="{ data }">
@@ -62,6 +73,12 @@
           >
             عند التسليم: {{ data.deliveryPaidNote }}
           </span>
+          <span
+            v-if="data.feeNote"
+            class="mt-1 max-w-full whitespace-nowrap text-center text-[0.65rem] font-semibold leading-4 text-sky-200 tabular-nums"
+          >
+            رسوم التحويل: {{ data.feeNote }}
+          </span>
         </div>
       </template>
 
@@ -88,7 +105,6 @@
           size="small"
           severity="secondary"
           title="السجل"
-          data-testid="operation-timeline-open"
           aria-label="السجل"
           @click="openTimeline(data)"
         />
@@ -113,6 +129,7 @@ import AppStudentTableCell from "~/components/shared/tables/app-student-table-ce
 import AppDatetimeTableCell from "~/components/shared/tables/app-datetime-table-cell/index.vue";
 import OperationTimelineDialog from "~/components/shared/dialog/operation-timeline-dialog/index.vue";
 import { useOperationTimeline } from "~/composables/useOperationTimeline";
+import StudentOperationStatusTrail from "./StudentOperationStatusTrail.vue";
 import {
   STUDENT_OPS_COLUMNS,
   STUDENT_OPS_METRIC_COLORS,

@@ -1,0 +1,10 @@
+---
+description: Browser checks only when the user writes make test
+alwaysApply: true
+---
+
+# Browser verification
+
+Do not open the browser, take screenshots, or verify the app in a browser after a task.
+
+Run a browser check only when the current message contains the exact phrase `make test`.

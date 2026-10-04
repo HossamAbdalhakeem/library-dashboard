@@ -126,6 +126,9 @@
         v-model:image="proofFileModel"
         v-model:image-data-url="proofKeyModel"
         v-model:image-preview-url="proofPreviewUrlModel"
+        v-model:fee-enabled="form.feeEnabled"
+        v-model:fee-amount="form.feeAmount"
+        show-fee
         :exclude="paymentExclude"
         :show-proof-source-choice="showProofSourceChoice"
         :method-invalid="!!errorMessage"

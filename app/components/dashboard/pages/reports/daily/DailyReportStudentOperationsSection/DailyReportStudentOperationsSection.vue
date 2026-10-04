@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4 min-w-0">
-      <p class="font-bold text-white">سجل العمليات</p>
+      <p class="font-bold text-[var(--app-text-strong)]">سجل العمليات</p>
     </div>
 
     <div v-if="loading && !rows.length" class="space-y-2">

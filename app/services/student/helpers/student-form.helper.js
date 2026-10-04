@@ -69,7 +69,7 @@ export const mapStudentOption = (student) => {
     id: student?.id || null,
     name,
     phone,
-    label: phone ? `${name} · ${phone}` : name,
+    label: phone ? `${name} · \u2066${phone}\u2069` : name,
     studyYear: student?.studyYear || null,
     academicYear: student?.academicYear || null,
   };

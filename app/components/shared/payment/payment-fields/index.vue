@@ -1,56 +1,88 @@
 <template>
-  <div class="grid grid-cols-1 gap-4" dir="rtl">
+  <div class="flex flex-col gap-3" dir="rtl">
     <PaymentMethods
       :model-value="method"
       :label="methodLabel"
+      :hint="methodHint"
       :options="options"
       :exclude="exclude"
       :invalid="methodInvalid"
       :error-message="methodError"
       @update:model-value="onMethodChange"
-    />
+    >
+      <template #panel="{ method: panelMethod }">
+        <div
+          v-if="showsCashNoteFor(panelMethod)"
+          class="border-t border-primary/20 px-4 pb-4 pt-3"
+        >
+          <div
+            class="flex items-center gap-2 rounded-lg bg-primary/5 px-3 py-2.5 text-sm text-primary-800 dark:bg-primary/10 dark:text-primary-200"
+          >
+            <PaymentIcon name="circle-check" class="size-4 shrink-0" />
+            <span>الدفع نقداً لا يحتاج إثبات دفع.</span>
+          </div>
+        </div>
 
-    <div v-if="showImage" class="flex h-full flex-col gap-2 text-right">
-      <ImageUpload
-        :model-value="image"
-        :label="imageLabel"
-        :placeholder="imagePlaceholder"
-        :max-size-bytes="maxSizeBytes"
-        :show-source-choice="showProofSourceChoice"
-        :invalid="imageInvalid || Boolean(imageError)"
-        :upload-handler="onImageSelect"
-        @update:model-value="onImageFileChange"
-        @clear="onImageClear"
-        @error="onImageError"
-      />
-      <p
-        v-if="uploading"
-        class="inline-flex items-center justify-end gap-1.5 text-xs font-medium text-primary-600 dark:text-primary-300"
-      >
-        <i class="pi pi-spin pi-spinner text-[11px]" />
-        جاري رفع صورة الإثبات...
-      </p>
-      <p
-        v-else-if="imageError"
-        class="inline-flex items-center justify-end gap-1.5 text-xs text-red-500"
-      >
-        <i class="pi pi-exclamation-circle text-[11px]" />
-        {{ imageError }}
-      </p>
-      <p
-        v-else-if="imageKey"
-        class="inline-flex items-center justify-end gap-1.5 truncate text-xs font-medium text-emerald-600 dark:text-emerald-300"
-        :title="imageKey"
-      >
-        <i class="pi pi-check-circle text-[11px]" />
-        تم رفع الصورة بنجاح
-      </p>
-    </div>
+        <div
+          v-else-if="showsProofFor(panelMethod) && panelMethod === normalizedMethod"
+          class="flex flex-col gap-3 border-t border-primary/20 px-4 pb-4 pt-3"
+        >
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                {{ imageLabel }}
+              </p>
+              <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                ارفع لقطة شاشة أو صورة.
+              </p>
+            </div>
+            <p
+              v-if="uploading"
+              class="inline-flex shrink-0 items-center gap-1.5 text-xs font-medium text-primary-700 dark:text-primary-200"
+            >
+              <span
+                class="size-3 animate-spin rounded-full border-2 border-primary/30 border-t-primary"
+                aria-hidden="true"
+              />
+              جاري الرفع
+            </p>
+          </div>
+
+          <ImageUpload
+            :model-value="image"
+            :preview-src="imagePreviewUrl"
+            label=""
+            bare
+            :error="uploading ? '' : imageError"
+            :placeholder="imagePlaceholder"
+            :max-size-bytes="maxSizeBytes"
+            show-source-choice
+            :invalid="Boolean(imageError)"
+            :upload-handler="onImageSelect"
+            @update:model-value="onImageFileChange"
+            @clear="onImageClear"
+            @error="onImageError"
+          />
+
+          <PaymentFeeFields
+            v-if="showFee"
+            :enabled="feeEnabled"
+            :amount="feeAmount"
+            :error="feeError"
+            @update:enabled="onFeeEnabled"
+            @update:amount="onFeeAmount"
+          />
+        </div>
+      </template>
+    </PaymentMethods>
   </div>
 </template>
 
 <script setup>
 import PaymentMethods from "~/components/shared/payment/payment-methods/index.vue";
+import PaymentIcon from "~/components/shared/payment/payment-icon/index.vue";
+import PaymentFeeFields from "~/components/shared/payment/payment-fee-fields/index.vue";
+import { feeAmountError } from "~/utils/payment-fee";
 import { paymentApi } from "~/services/payment";
 import {
   PaymentMethod,
@@ -75,6 +107,7 @@ const props = defineProps({
   /** Temporary signed URL for immediate preview (optional) */
   imagePreviewUrl: { type: String, default: "" },
   methodLabel: { type: String, default: "طريقة الدفع" },
+  methodHint: { type: String, default: "اختر طريقة الدفع المناسبة." },
   imageLabel: { type: String, default: "صورة إثبات الدفع" },
   imagePlaceholder: { type: String, default: "ارفع صورة المحفظة / إنستاباي" },
   options: { type: Array, default: null },
@@ -101,6 +134,10 @@ const props = defineProps({
    * «رفع من الجهاز» vs «فتح الكاميرا» before the crop step.
    */
   showProofSourceChoice: { type: Boolean, default: false },
+  /** Inline fee toggle under wallet / Instapay. Off for cash and other flows. */
+  showFee: { type: Boolean, default: false },
+  feeEnabled: { type: Boolean, default: false },
+  feeAmount: { type: Number, default: null },
 });
 
 const emit = defineEmits([
@@ -108,6 +145,8 @@ const emit = defineEmits([
   "update:image",
   "update:imageDataUrl",
   "update:imagePreviewUrl",
+  "update:feeEnabled",
+  "update:feeAmount",
   "change",
 ]);
 
@@ -117,10 +156,8 @@ const maxSizeBytes = computed(() =>
 );
 
 const internalImageError = ref("");
+const feeError = ref("");
 const uploading = ref(false);
-
-/** Permanent object key stored on the payment */
-const imageKey = computed(() => props.imageDataUrl);
 
 const normalizedMethod = computed(() =>
   normalizePaymentMethod(props.method),
@@ -133,6 +170,17 @@ const showImage = computed(() => {
   if (props.showImageWhen === "never") return false;
   return isNonCash.value;
 });
+
+const showCashNote = computed(() => !showImage.value && !isNonCash.value);
+
+const showsProofFor = (panelMethod) => {
+  if (!showImage.value) return false;
+  if (props.showImageWhen === "always") return true;
+  return paymentMethodNeedsProof(panelMethod);
+};
+
+const showsCashNoteFor = (panelMethod) =>
+  showCashNote.value && panelMethod === PaymentMethod.CASH;
 
 const imageRequired = computed(() => {
   if (props.requireImageWhen === "always") return true;
@@ -171,9 +219,28 @@ const clearImage = () => {
   emitChange({ image: null, imageDataUrl: "", imagePreviewUrl: "" });
 };
 
+const clearFee = () => {
+  feeError.value = "";
+  emit("update:feeEnabled", false);
+  emit("update:feeAmount", null);
+};
+
+const onFeeEnabled = (value) => {
+  feeError.value = "";
+  emit("update:feeEnabled", value);
+  if (!value) emit("update:feeAmount", null);
+};
+
+const onFeeAmount = (value) => {
+  feeError.value = "";
+  emit("update:feeAmount", value);
+};
+
 const onMethodChange = (value) => {
   const method = normalizePaymentMethod(value);
+  internalImageError.value = "";
   emit("update:method", method);
+  if (!paymentMethodNeedsProof(method)) clearFee();
 
   const keepsImage =
     props.showImageWhen === "always" || paymentMethodNeedsProof(method);
@@ -212,7 +279,6 @@ const onImageSelect = async (file) => {
 
   try {
     const uploaded = await paymentApi.uploadPaymentProof(file);
-    // Store permanent key on imageDataUrl (used as proofReference)
     emit("update:imageDataUrl", uploaded.key);
     emit("update:imagePreviewUrl", uploaded.fileUrl);
     emitChange({
@@ -238,10 +304,16 @@ const onImageClear = () => {
 };
 
 const onImageError = (message) => {
-  internalImageError.value = message || "تعذر رفع صورة الإثبات.";
+  const text = typeof message === "string" ? message : message?.message;
+  internalImageError.value = text || "تعذر رفع صورة الإثبات.";
 };
 
 const validate = () => {
+  feeError.value = "";
+  if (props.showFee && isNonCash.value) {
+    feeError.value = feeAmountError(props.feeEnabled, props.feeAmount);
+    if (feeError.value) return false;
+  }
   if (!imageRequired.value) return true;
   if (uploading.value) {
     internalImageError.value = "انتظر حتى يكتمل رفع صورة الإثبات.";
@@ -254,7 +326,10 @@ const validate = () => {
 
 const reset = () => {
   internalImageError.value = "";
+  feeError.value = "";
   uploading.value = false;
+  emit("update:feeEnabled", false);
+  emit("update:feeAmount", null);
   emit("update:image", null);
   emit("update:imageDataUrl", "");
   emit("update:imagePreviewUrl", "");

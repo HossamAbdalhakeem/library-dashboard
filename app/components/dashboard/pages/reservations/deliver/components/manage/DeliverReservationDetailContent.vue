@@ -10,7 +10,7 @@
       >
         <span
           v-if="row.key === 'createdBy' && reservation.createdBy?.roleLabel"
-          class="mr-1 rounded-md bg-slate-700/80 px-1.5 py-0.5 text-[11px] text-slate-300"
+          class="mr-1 rounded-md border border-[var(--app-border)] bg-[var(--app-elevated)] px-1.5 py-0.5 text-[11px] font-medium text-[var(--app-text-strong)]"
         >
           {{ reservation.createdBy.roleLabel }}
         </span>
@@ -49,12 +49,17 @@
         :method-invalid="!!methodError"
         :method-error="methodError"
         :image-invalid="proofRequiredError"
+        show-fee
+        :fee-enabled="feeEnabled"
+        :fee-amount="feeAmount"
         show-image-when="non-cash"
         require-image-when="non-cash"
         @update:method="$emit('update:paymentMethod', $event)"
         @update:image="$emit('update:proofFile', $event)"
         @update:image-data-url="$emit('update:proofKey', $event)"
         @update:image-preview-url="$emit('update:proofPreviewUrl', $event)"
+        @update:fee-enabled="$emit('update:feeEnabled', $event)"
+        @update:fee-amount="$emit('update:feeAmount', $event)"
       />
     </template>
 
@@ -90,6 +95,8 @@ const props = defineProps({
   methodError: { type: String, default: "" },
   proofRequiredError: { type: Boolean, default: false },
   dialogError: { type: String, default: "" },
+  feeEnabled: { type: Boolean, default: false },
+  feeAmount: { type: Number, default: null },
 });
 
 defineEmits([
@@ -97,6 +104,8 @@ defineEmits([
   "update:proofFile",
   "update:proofKey",
   "update:proofPreviewUrl",
+  "update:feeEnabled",
+  "update:feeAmount",
 ]);
 
 const paymentFieldsRef = ref(null);

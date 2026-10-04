@@ -7,7 +7,7 @@
         <RoleDashboardHeaderMenuButton @open-mobile="$emit('open-mobile')" />
         <div class="min-w-0">
           <h1
-            class="mt-0.5 truncate text-lg font-bold text-slate-400 sm:text-2xl"
+            class="mt-0.5 truncate text-lg font-bold text-[var(--app-text-strong)] sm:text-2xl"
           >
             {{ title }}
           </h1>

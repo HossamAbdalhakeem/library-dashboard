@@ -30,12 +30,12 @@
     </div>
 
     <div class="grid gap-3 md:grid-cols-2">
-      <div class="rounded-xl border border-white/10 bg-slate-900 p-4 text-sm text-slate-200">
+      <div class="rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] p-4 text-sm text-[var(--app-text)]">
         <p class="mb-3 text-xs font-semibold text-rose-300">المنتج الحالي</p>
-        <p class="text-base font-bold text-white">
+        <p class="text-base font-bold text-[var(--app-text-strong)]">
           {{ sale.product?.name || "—" }}
         </p>
-        <p class="mt-1 text-xs text-slate-400">
+        <p class="mt-1 text-xs text-[var(--app-muted)]">
           أ/ {{ sale.product?.teacher?.name || "—" }}
         </p>
         <AppDetailRows
@@ -50,8 +50,8 @@
         class="rounded-xl border p-4 text-sm"
         :class="
           selectedNewProduct
-            ? 'border-white/10 bg-slate-900 text-slate-200'
-            : 'border-dashed border-slate-600 bg-slate-900/70 text-slate-300'
+            ? 'border-[var(--app-border)] bg-[var(--app-card)] text-[var(--app-text)]'
+            : 'border-dashed border-[var(--app-border)] bg-[var(--app-elevated)] text-[var(--app-muted)]'
         "
       >
         <p
@@ -61,10 +61,10 @@
           المنتج الجديد
         </p>
         <template v-if="selectedNewProduct">
-          <p class="text-base font-bold text-white">
+          <p class="text-base font-bold text-[var(--app-text-strong)]">
             {{ selectedNewProduct.name }}
           </p>
-          <p class="mt-1 text-xs text-slate-400">
+          <p class="mt-1 text-xs text-[var(--app-muted)]">
             أ/ {{ selectedNewProduct.teacher?.name || "—" }}
           </p>
           <AppDetailRows
@@ -89,7 +89,7 @@
             </template>
           </AppDetailRows>
         </template>
-        <p v-else class="text-sm text-slate-400">
+        <p v-else class="text-sm text-[var(--app-muted)]">
           {{ previewLoading ? "جاري حساب فرق السعر..." : "اختر منتجًا متاحًا من نفس الفرع" }}
         </p>
       </div>

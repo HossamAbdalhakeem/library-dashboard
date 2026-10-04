@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4 min-w-0">
-      <p class="font-bold text-white">{{ title }}</p>
+      <p class="font-bold text-[var(--app-text-strong)]">{{ title }}</p>
       <p v-if="subtitle" class="mt-1 text-xs text-slate-400">{{ subtitle }}</p>
     </div>
 
@@ -31,6 +31,7 @@
       :page-size="pageSize"
       :total-records="totalRecords"
       :total-amount="totalAmount"
+      :total-collected-amount="totalCollectedAmount"
       :empty-message="emptyMessage"
       @update:page="$emit('update:page', $event)"
     />
@@ -50,11 +51,11 @@ defineProps({
   subtitle: {
     type: String,
     default:
-      "أحداث الاسترداد في الفترة — حتى لو كانت العملية الأصلية في يوم سابق",
+      "استرداد وإلغاء واستبدال خلال الفترة — حتى لو كانت العملية الأصلية في يوم سابق",
   },
   emptyMessage: {
     type: String,
-    default: "لا توجد عمليات استرداد أو إلغاء خلال الفترة المحددة.",
+    default: "لا توجد عمليات استرداد أو إلغاء أو استبدال خلال الفترة المحددة.",
   },
   rows: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
@@ -63,6 +64,7 @@ defineProps({
   pageSize: { type: Number, default: 15 },
   totalRecords: { type: Number, default: 0 },
   totalAmount: { type: [Number, String], default: 0 },
+  totalCollectedAmount: { type: [Number, String], default: 0 },
 });
 
 defineEmits(["retry", "update:page"]);

@@ -1,12 +1,11 @@
 <template>
   <div
-    class="flex flex-col gap-2 text-right"
+    class="flex w-full min-w-0 flex-col gap-2 text-right"
     :class="wrapperClass"
-    data-testid="select-student"
   >
     <label v-if="label" class="text-sm font-medium" :class="labelClass">{{ label }}</label>
 
-    <div class="flex items-start gap-2">
+    <div class="flex w-full min-w-0 items-start gap-2">
       <IconField
         icon-position="right"
         :class="[
@@ -16,6 +15,7 @@
       >
         <InputIcon class="pi pi-search student-search-icon" />
         <AutoComplete
+          ref="autocompleteRef"
           v-model="inputValue"
           :suggestions="suggestions"
           option-label="label"
@@ -27,11 +27,6 @@
           :class="variant === 'dark' ? 'student-search-autocomplete--dark' : ''"
           :input-class="inputClasses"
           :invalid="invalid"
-          :pt="{
-            pcInputText: {
-              root: { 'data-testid': 'select-student-input' },
-            },
-          }"
           @complete="onComplete"
           @item-select="onItemSelect"
           @update:model-value="onInput"
@@ -39,7 +34,10 @@
           <template #option="{ option }">
             <div class="flex w-full min-w-0 items-center justify-between gap-3 text-right">
               <span class="min-w-0 truncate">{{ option.name }}</span>
-              <span class="shrink-0 text-xs text-slate-400">{{ option.phone || "بدون رقم" }}</span>
+              <span
+                class="shrink-0 text-right text-xs text-slate-400"
+                :dir="option.phone ? 'ltr' : undefined"
+              >{{ option.phone || "بدون رقم" }}</span>
             </div>
           </template>
         </AutoComplete>
@@ -114,6 +112,10 @@ const loading = ref(false);
 const suggestions = ref([]);
 const drawerVisible = ref(false);
 const inputValue = ref("");
+const autocompleteRef = ref(null);
+/** Ignores the search PrimeVue starts when the selected label is written back. */
+let suppressCompleteUntil = 0;
+let suggestionsSeq = 0;
 
 const drawerTitle = "إضافة طالب";
 
@@ -161,15 +163,30 @@ const searchStudents = async (term = "") => {
   }
 };
 
-const { run: runSuggestionsSearch } = useDebouncedCallback(async (term) => {
-  suggestions.value = await searchStudents(term);
-}, props.debounceMs);
+const { run: runSuggestionsSearch, cancel: cancelSuggestionsSearch } =
+  useDebouncedCallback(async (term) => {
+    const seq = ++suggestionsSeq;
+    const items = await searchStudents(term);
+    if (seq !== suggestionsSeq) return;
+    suggestions.value = items;
+  }, props.debounceMs);
+
+const closeSuggestions = () => {
+  suggestionsSeq += 1;
+  cancelSuggestionsSearch();
+  suppressCompleteUntil = Date.now() + 400;
+  autocompleteRef.value?.hide?.();
+};
 
 const { run: emitFilterSearch } = useDebouncedCallback((term) => {
   emit("search", term);
 }, props.debounceMs);
 
 const onComplete = (event) => {
+  if (Date.now() < suppressCompleteUntil) {
+    autocompleteRef.value?.hide?.();
+    return;
+  }
   runSuggestionsSearch(event.query || "");
 };
 
@@ -181,6 +198,7 @@ const applyStudent = (student) => {
 };
 
 const onItemSelect = (event) => {
+  closeSuggestions();
   const student = mapStudentOption(event.value);
 
   if (props.mode === "picker") {

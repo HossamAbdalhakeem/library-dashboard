@@ -16,8 +16,10 @@ function buildNavigation(role) {
           { label: "بيع المنتجات", icon: "pi pi-shopping-cart", to: "/sales/direct" },
           { label: "حجز منتج", icon: "pi pi-book", to: "/reservations" },
           { label: "تسليم الحجوزات", icon: "pi pi-check-square", to: "/reservations/deliver" },
+          // { label: "تأكيد الحجوزات", icon: "pi pi-verified", to: "/reservations/submit" },
           // { label: "المبيعات / الاستبدال", icon: "pi pi-sync", to: "/sales/exchange" },
           { label: "التقرير اليومي", icon: "pi pi-chart-bar", to: "/reports/branch" },
+          { label: "الحضور والانصراف", icon: "pi pi-clock", to: "/attendance" },
         ],
       },
     ];
@@ -49,17 +51,39 @@ function buildNavigation(role) {
         { label: "المنتجات", icon: "pi pi-box", to: "/products" },
         { label: "المدرسون", icon: "pi pi-user", to: "/teachers" },
         { label: "السنوات الدراسية", icon: "pi pi-calendar", to: "/study-years" },
-        { label: "الفروع", icon: "pi pi-building", to: "/branches" },
         { label: "الطلاب", icon: "pi pi-users", to: "/students" },
-        { label: "الموظفون", icon: "pi pi-id-card", to: "/users" },
       ],
     },
     {
-      id: "operations",
-      label: "العمليات",
+      id: "staff",
+      label: "شؤون الموظفين",
       items: [
-        { label: "الحجوزات", icon: "pi pi-book", to: "/reservations/manage" },
-        { label: "المبيعات", icon: "pi pi-shopping-cart", to: "/sales/exchange" },
+        { label: "الموظفون", icon: "pi pi-id-card", to: "/users" },
+        { label: "الحضور والانصراف", icon: "pi pi-clock", to: "/attendance/manage" },
+      ],
+    },
+    {
+      id: "branches",
+      label: "الفروع والمخزن",
+      items: [
+        { label: "الفروع", icon: "pi pi-building", to: "/branches" },
+        { label: "تقرير المخزن", icon: "pi pi-box", to: "/inventory/report" },
+      ],
+    },
+    {
+      id: "reservations",
+      label: "الحجوزات",
+      items: [
+        { label: "إدارة الحجوزات", icon: "pi pi-book", to: "/reservations/manage" },
+        { label: "تقرير الحجوزات المنتظرة", icon: "pi pi-chart-line", to: "/reservations/report" },
+      ],
+    },
+    {
+      id: "sales",
+      label: "المبيعات",
+      items: [
+        { label: "إدارة المبيعات", icon: "pi pi-shopping-cart", to: "/sales/exchange" },
+        { label: "تقرير المبيعات", icon: "pi pi-chart-line", to: "/sales/report" },
       ],
     },
     {
@@ -96,6 +120,7 @@ export function useRoleDashboardShell(props) {
     if (to === "/reports") {
       return path === "/reports";
     }
+    if (to === "/attendance") return path === "/attendance";
     return path === to || path.startsWith(`${to}/`);
   };
 

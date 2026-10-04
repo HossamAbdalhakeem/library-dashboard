@@ -4,6 +4,7 @@ import { isFiniteNumber } from "~/utils/format/number";
 import { getPaymentMethodLabel, normalizePaymentMethod } from "~/enums/paymentMethod";
 import { getUserRoleLabel } from "~/enums/userRole";
 import { getStatusTagMeta } from "~/utils/status-tags/catalog";
+import { visibleFeeAmount } from "~/utils/payment-fee";
 
 const toMoney = (value) => {
   if (!isFiniteNumber(value)) return 0;
@@ -29,9 +30,11 @@ export const normalizeReservation = (item = {}) => {
 
   const quantity = Number(item.quantity ?? 1);
   const paidAmount = toMoney(payment.paidAmount);
+  const depositAmount = toMoney(item.depositAmount);
   const sellingPrice = toMoney(product.unitPrice);
   const totalAmount = toMoney(product.totalAmount);
   const remainingAmount = toMoney(payment.remainingAmount);
+  const feeAmount = visibleFeeAmount(payment.feeAmount ?? item.feeAmount);
   const status = String(item.status || "").toUpperCase();
   const statusMeta = getStatusTagMeta("reservation", status);
   const paymentMethod = normalizePaymentMethod(payment.method);
@@ -65,6 +68,8 @@ export const normalizeReservation = (item = {}) => {
     hasRemaining: remainingAmount > 0,
     paidAmountLabel: formatMoney(paidAmount),
     remainingAmountLabel: formatMoney(remainingAmount),
+    feeAmount: feeAmount ?? 0,
+    feeAmountLabel: feeAmount != null ? formatMoney(feeAmount) : "",
     image: {
       reference: image.reference ?? null,
       url: image.url ?? null,
@@ -99,6 +104,7 @@ export const normalizeReservation = (item = {}) => {
     },
     product: normalizedProduct,
     payment: normalizedPayment,
+    feeAmount: feeAmount ?? 0,
     statusLabel:
       remainingAmount > 0 && status === "READY"
         ? "جاهز · متبقي مبلغ"
@@ -126,6 +132,8 @@ export const normalizeReservation = (item = {}) => {
     totalAmount,
     paidAmount,
     paidAmountLabel: normalizedPayment.paidAmountLabel,
+    depositAmount,
+    depositAmountLabel: formatMoney(depositAmount),
     remainingAmount,
     remainingAmountLabel: normalizedPayment.remainingAmountLabel,
     hasRemaining: normalizedPayment.hasRemaining,
@@ -136,6 +144,12 @@ export const normalizeReservation = (item = {}) => {
     proofUrl: normalizedPayment.image.url,
     hasProof: normalizedPayment.image.hasProof,
   };
+};
+
+const toDayIso = (value) => {
+  if (!value) return null;
+  const day = String(value).slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : null;
 };
 
 export const buildReservationListQuery = ({
@@ -154,8 +168,15 @@ export const buildReservationListQuery = ({
       : filters.status;
   }
   if (filters.academicYearId) params.academicYearId = filters.academicYearId;
-  if (filters.branchId) params.branchId = filters.branchId;
+  if (filters.branchId && filters.branchId !== "all") {
+    params.branchId = filters.branchId;
+  }
   if (filters.teacherId) params.teacherId = filters.teacherId;
   if (filters.studyYearId) params.studyYearId = filters.studyYearId;
+
+  const fromDay = toDayIso(filters.from);
+  const toDay = toDayIso(filters.to);
+  if (fromDay) params.from = new Date(`${fromDay}T00:00:00`).toISOString();
+  if (toDay) params.to = new Date(`${toDay}T23:59:59.999`).toISOString();
   return params;
 };

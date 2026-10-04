@@ -36,7 +36,9 @@ export const canAccessPath = (role, path) => {
   if (appRole === UserRole.BRANCH_EMPLOYEE) {
     if (isExactOrChild(normalized, "/sales/direct")) return true;
     if (isExactOrChild(normalized, "/reservations/deliver")) return true;
+    if (isExactOrChild(normalized, "/reservations/submit")) return true;
     if (isExactOrChild(normalized, "/reports/branch")) return true;
+    if (normalized === "/attendance") return true;
     // Branch booking page only — not /reservations/manage
     if (normalized === "/reservations") return true;
     return false;

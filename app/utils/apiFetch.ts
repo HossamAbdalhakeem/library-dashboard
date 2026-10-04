@@ -1,7 +1,43 @@
+import { useAuth } from "~/composables/useAuth";
 import { useLocalStorage } from "~/composables/useLocalStorage";
 import { resolveApiErrorMessage } from "~/utils/api-errors/messages";
 
 type FetchOptions = Parameters<typeof $fetch>[1];
+
+export type ApiFetchOptions = NonNullable<FetchOptions> & {
+  /**
+   * Cancel this read when the route changes.
+   * Writes are never cancelled. Set false for a GET that must finish
+   * across a redirect (academic years after login).
+   */
+  abortOnNavigate?: boolean;
+};
+
+/** Thrown when a read is cancelled because the user left the page. */
+export const REQUEST_ABORTED = "REQUEST_ABORTED";
+
+let routeController: AbortController | null = null;
+
+const getRouteSignal = () => {
+  if (!import.meta.client) return undefined;
+  if (!routeController || routeController.signal.aborted) {
+    routeController = new AbortController();
+  }
+  return routeController.signal;
+};
+
+/** Drop in-flight GET requests started on the page being left. */
+export const abortRouteRequests = () => {
+  if (!import.meta.client) return;
+  routeController?.abort();
+  routeController = new AbortController();
+};
+
+const isAbortError = (error: any) =>
+  error?.name === "AbortError" || error?.cause?.name === "AbortError";
+
+export const isRequestAborted = (error: any) =>
+  error?.code === REQUEST_ABORTED || isAbortError(error);
 
 export class ApiError extends Error {
   code: string;
@@ -29,7 +65,31 @@ export const getApiOrigin = () => {
   return stripSlash(config.public.baseUrl || "");
 };
 
-const PUBLIC_PATHS = ["/auth/login"];
+/** Login stays callable without a staff token. */
+const PUBLIC_PATHS = ["/admin-api/auth/login"];
+
+/** Backend code for a rejected bearer token (invalid or failed auth). */
+const AUTH_SESSION_END_CODE = "AUTHENTICATION_FAILED";
+
+let endingSession = false;
+
+const endSession = async () => {
+  if (endingSession) return;
+  endingSession = true;
+
+  try {
+    await useAuth().logout();
+  } catch (error) {
+    console.error("Failed to end session after authentication failure", error);
+    try {
+      await navigateTo("/login");
+    } catch {
+      // Navigation can be unavailable during early boot.
+    }
+  } finally {
+    endingSession = false;
+  }
+};
 
 const isPublicPath = (path: string) => {
   const normalized = String(path || "").split("?")[0] || "";
@@ -164,7 +224,7 @@ const withAcademicYearParams = (params: Record<string, any> = {}) => {
 const request = async <T = any>(
   baseURL: string,
   path: string,
-  options: FetchOptions = {},
+  options: ApiFetchOptions = {},
 ) => {
   if (!baseURL) {
     throw new ApiError("MISSING_API_BASE", "API base URL is not configured.");
@@ -175,28 +235,46 @@ const request = async <T = any>(
     throw new ApiError("SESSION_CLEARED", "Not authenticated.", 401);
   }
 
+  const { abortOnNavigate = true, ...fetchOptions } = options;
+  const method = String(fetchOptions.method || "GET").toUpperCase();
+  const signal =
+    method === "GET" && abortOnNavigate
+      ? getRouteSignal()
+      : fetchOptions.signal;
+
   try {
     return await $fetch<T>(path, {
-      ...options,
+      ...fetchOptions,
+      signal,
       params: cleanParams(
         withAcademicYearParams(
-          (options.params || {}) as Record<string, any>,
+          (fetchOptions.params || {}) as Record<string, any>,
         ),
       ),
       baseURL,
       headers: getAuthHeaders({
-        ...((options.headers || {}) as Record<string, string>),
+        ...((fetchOptions.headers || {}) as Record<string, string>),
       }),
     });
   } catch (error) {
-    throw toApiError(error);
+    if (isAbortError(error)) {
+      throw new ApiError(REQUEST_ABORTED, REQUEST_ABORTED);
+    }
+
+    const apiError = toApiError(error);
+
+    if (apiError.code === AUTH_SESSION_END_CODE && !isPublicPath(path)) {
+      await endSession();
+    }
+
+    throw apiError;
   }
 };
 
 /** NestJS REST API requests */
 export const apiFetch = async <T = any>(
   path: string,
-  options: FetchOptions = {},
+  options: ApiFetchOptions = {},
 ) => {
   return request<T>(getApiOrigin(), path, options);
 };
@@ -204,7 +282,7 @@ export const apiFetch = async <T = any>(
 /** Binary/file downloads (CSV, etc.) */
 export const apiFetchBlob = async (
   path: string,
-  options: FetchOptions = {},
+  options: ApiFetchOptions = {},
 ) => {
   return request<Blob>(getApiOrigin(), path, {
     ...options,
@@ -215,7 +293,7 @@ export const apiFetchBlob = async (
 /** Auth endpoints on the same NestJS API */
 export const authFetch = async <T = any>(
   path: string,
-  options: FetchOptions = {},
+  options: ApiFetchOptions = {},
 ) => {
   return request<T>(getApiOrigin(), path, options);
 };

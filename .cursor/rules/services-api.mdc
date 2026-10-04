@@ -23,7 +23,8 @@ Example barrel: [`app/services/user/index.ts`](mdc:app/services/user/index.ts).
 
 - Use [`apiFetch`](mdc:app/utils/apiFetch.ts) / helpers `asList`, `asData`, `asPaginated`, `firstRow`
 - Do **not** raw-`$fetch` the Nest API from components — go through `*Api` modules
-- Auth: Bearer token from localStorage (handled in `apiFetch`); public allowlist includes `/auth/login`
+- Auth: Bearer token from localStorage (handled in `apiFetch`); public allowlist includes `/admin-api/auth/login`
+- Staff paths are written with the `/admin-api` prefix in each `*Api` module. `apiFetch` does not rewrite paths
 - `academicYearId` query is attached automatically when stored
 - [`useApi.js`](mdc:app/composables/useApi.js) exists but is unused — prefer `*Api` + `apiFetch`, do not revive it for new work
 
@@ -32,7 +33,7 @@ Example barrel: [`app/services/user/index.ts`](mdc:app/services/user/index.ts).
 export const userApi = {
   async getUsers(params: UserQuery = {}): Promise<UserResponse[]> {
     return asList<UserResponse>(
-      await apiFetch("/users", { method: "GET", params }),
+      await apiFetch("/admin-api/users", { method: "GET", params }),
     );
   },
 };

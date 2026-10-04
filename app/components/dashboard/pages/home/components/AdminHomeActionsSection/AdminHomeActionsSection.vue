@@ -1,7 +1,7 @@
 <template>
   <section class="space-y-3">
     <div>
-      <p class="font-bold text-white">إجراءات سريعة</p>
+      <p class="font-bold text-[var(--app-text-strong)]">إجراءات سريعة</p>
       <p class="mt-0.5 text-xs text-slate-400">
         اختصارات للعمليات الأكثر استخدامًا
       </p>

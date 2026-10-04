@@ -19,7 +19,6 @@
             text
             size="small"
             severity="primary"
-            data-testid="sale-exchange-action"
             @click="emitAction('exchange', item)"
           />
           <Button
@@ -28,7 +27,6 @@
             text
             size="small"
             severity="danger"
-            data-testid="sale-refund-action"
             @click="emitAction('refund', item)"
           />
         </div>

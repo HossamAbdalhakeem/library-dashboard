@@ -8,17 +8,16 @@
       @retry="reload"
     />
 
-    <div v-else class="grid gap-4 xl:grid-cols-3 xl:items-start">
-      <div class="flex flex-col gap-4 xl:col-span-1">
-        <DailyReportHero
-          :title="heroTitle"
-          :payments-total="paymentsTotal"
-          :refunds-total="refundsTotal"
-          :chips="heroChips"
-        />
-      </div>
+    <div v-else class="grid gap-4 lg:grid-cols-2 lg:items-stretch">
+      <DailyReportHero
+        class="min-w-0"
+        :title="heroTitle"
+        :payments-total="paymentsTotal"
+        :refunds-total="refundsTotal"
+        :chips="heroChips"
+      />
       <PaymentMethodsReport
-        class="xl:col-span-2"
+        class="min-w-0"
         :items="paymentMethodItems"
         :total-label="paymentTotalLabel"
       />
@@ -55,7 +54,7 @@ const props = defineProps({
   params: { type: Object, default: null },
   reloadKey: { type: Number, default: 0 },
   heroTitle: { type: String, default: "صافي المدفوعات" },
-  paymentTotalLabel: { type: String, default: "إجمالي المحصل" },
+  paymentTotalLabel: { type: String, default: "إجمالي المدفوعات" },
 });
 
 const emit = defineEmits(["loading"]);

@@ -1,6 +1,6 @@
 <template>
-  <div class="grid gap-4 xl:grid-cols-3 xl:items-start">
-    <div class="flex flex-col gap-4 xl:col-span-1">
+  <div class="grid gap-4 lg:grid-cols-2 lg:items-stretch">
+    <div class="flex flex-col gap-4">
       <div class="rounded-2xl border border-white/10 bg-slate-900 p-5">
         <div class="flex items-start justify-between gap-3">
           <div class="w-full space-y-3">
@@ -36,7 +36,7 @@
     </div>
 
     <div
-      class="rounded-2xl border border-white/10 bg-slate-900 p-5 xl:col-span-2"
+      class="rounded-2xl border border-white/10 bg-slate-900 p-5"
     >
       <div class="mb-4 space-y-2">
         <Skeleton width="10rem" height="1.1rem" border-radius="6px" />

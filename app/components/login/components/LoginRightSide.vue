@@ -30,11 +30,11 @@
         class="mb-8 inline-flex rounded-2xl border border-[var(--app-border)] bg-white p-3 shadow-[0_0_40px_-12px_theme(colors.primary.500/40)] dark:border-transparent dark:shadow-[0_0_40px_-12px_theme(colors.primary.500/55)]"
       >
         <img
-          src="/library-logo.jpeg"
+          src="/library-logo.png"
           alt="بكالوريا وثانوية أونلاين"
-          class="h-24 w-auto object-contain sm:h-28"
-          width="112"
-          height="112"
+          class="h-24 w-auto object-cover sm:h-[124px]"
+          width="124"
+          height="124"
         />
       </div>
       <p

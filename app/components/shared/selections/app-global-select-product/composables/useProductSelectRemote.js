@@ -40,6 +40,7 @@ export function useProductSelectRemote({
         mapInventoryProductOptions(items, {
           excludeProductId: props.excludeProductId,
           minAvailableQuantity: props.minAvailableQuantity,
+          minDamagedQuantity: props.minDamagedQuantity,
         }),
         query,
       );

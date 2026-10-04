@@ -17,7 +17,7 @@
       @request-logout="confirmLogoutVisible = true"
     />
 
-    <div class="min-h-screen lg:mr-72">
+    <div class="min-h-screen min-w-0 overflow-x-clip lg:mr-72">
       <RoleDashboardHeader
         :title="title"
         :normalized-role="normalizedRole"
@@ -28,7 +28,7 @@
         @open-mobile="mobileNavOpen = true"
       />
 
-      <main class="p-3 sm:p-6">
+      <main class="min-w-0 p-3 sm:p-6">
         <div
           v-if="stats.length"
           class="mb-4 grid gap-3 sm:mb-6 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4"

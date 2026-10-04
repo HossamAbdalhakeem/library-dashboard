@@ -3,7 +3,7 @@
     :visible="visible"
     header="إضافة تصنيف مصروف"
     modal
-    :style="{ width: '360px' }"
+    :style="{ width: 'min(360px, 96vw)' }"
     dir="rtl"
     @update:visible="$emit('update:visible', $event)"
   >

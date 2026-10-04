@@ -64,12 +64,50 @@ export const TIMELINE_EVENT_LABELS = {
   COMPLETED_SALE: "تم الدفع والاستلام",
 };
 
+/**
+ * Student-ops status column trail. Mixes reservation lifecycle codes
+ * with sale/operation refund codes. Same-day collapse is already done by the API.
+ */
+export const STUDENT_OPS_TRAIL_LABELS = {
+  PENDING: "قيد الانتظار",
+  WAITING_FOR_STOCK: "بانتظار المخزون",
+  READY: "جاهز",
+  DELIVERED: "تم التسليم",
+  CANCELLED: "ملغي",
+  COMPLETED: "مكتمل",
+  PARTIALLY_REFUNDED: "مسترد جزئياً",
+  FULLY_REFUNDED: "مسترد بالكامل",
+};
+
+/** Reservation codes are not in OPERATION_STATUS_COLORS. */
+const STUDENT_OPS_TRAIL_COLORS = {
+  PENDING: "#f5af52",
+  WAITING_FOR_STOCK: "#06b6d4",
+  READY: "#a78bfa",
+  DELIVERED: "#10b981",
+};
+
 export const getOperationStatusLabel = (status) =>
   getLabel(OPERATION_STATUS_LABELS, String(status || "").toUpperCase());
 
 export const getOperationStatusColor = (status) =>
   OPERATION_STATUS_COLORS[String(status || "").toUpperCase()] ||
   DEFAULT_METRIC_COLOR;
+
+export const getStudentOpsTrailLabel = (status) => {
+  const key = String(status || "").toUpperCase();
+  if (STUDENT_OPS_TRAIL_LABELS[key]) return STUDENT_OPS_TRAIL_LABELS[key];
+  return getOperationStatusLabel(key) || "—";
+};
+
+export const getStudentOpsTrailColor = (status) => {
+  const key = String(status || "").toUpperCase();
+  return (
+    STUDENT_OPS_TRAIL_COLORS[key] ||
+    OPERATION_STATUS_COLORS[key] ||
+    DEFAULT_METRIC_COLOR
+  );
+};
 
 export const getOperationActivityLabel = (activity) =>
   getLabel(OPERATION_ACTIVITY_LABELS, String(activity || "").toUpperCase());

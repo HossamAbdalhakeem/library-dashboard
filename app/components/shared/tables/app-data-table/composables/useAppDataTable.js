@@ -3,8 +3,24 @@ import { toArabicDigits } from "~/utils/format/digits";
 /**
  * Column resolution, cell formatting, and Arabic paginator digit sync for AppDataTable.
  */
+const PAGE_SIZE_OPTIONS = [20, 50, 100, 200];
+
 export function useAppDataTable(props, emit) {
   const wrapRef = ref(null);
+  const pageRows = ref(props.rows);
+  const rowsPerPageOptions = PAGE_SIZE_OPTIONS;
+
+  const recordCount = computed(() =>
+    props.lazy ? Number(props.totalRecords) || 0 : props.value?.length || 0,
+  );
+
+  const showPaginator = computed(
+    () => props.paginator && recordCount.value > 0,
+  );
+
+  const showPageSizes = computed(
+    () => recordCount.value > PAGE_SIZE_OPTIONS[0],
+  );
   let paginatorObserver = null;
   let syncingDigits = false;
 
@@ -65,6 +81,35 @@ export function useAppDataTable(props, emit) {
     emit("page", event);
     nextTick(arabicizePaginatorDigits);
   };
+
+  const selectPageSize = (size) => {
+    const next = Number(size);
+    const current = Number(pageRows.value) || next;
+    if (!next || next === current) return;
+
+    const total = props.lazy
+      ? Number(props.totalRecords) || 0
+      : props.value?.length || 0;
+    const currentPage = Math.floor((Number(props.first) || 0) / current);
+    const pageCount = Math.max(1, Math.ceil(total / next) || 1);
+    const page = Math.min(currentPage, pageCount - 1);
+
+    pageRows.value = next;
+    emit("page", {
+      page,
+      first: page * next,
+      rows: next,
+      pageCount,
+    });
+    nextTick(arabicizePaginatorDigits);
+  };
+
+  watch(
+    () => props.rows,
+    (value) => {
+      pageRows.value = value;
+    },
+  );
 
   const onRowExpand = (event) => {
     emit("row-expand", event);
@@ -136,9 +181,15 @@ export function useAppDataTable(props, emit) {
     tableAttrs,
     resolvedColumns,
     resolvedTableStyle,
+    rowsPerPageOptions,
+    pageRows,
+    showPaginator,
+    showPageSizes,
     hasCustomBody,
     resolveCell,
     onPage,
+    selectPageSize,
+    toArabicDigits,
     onRowExpand,
   };
 }

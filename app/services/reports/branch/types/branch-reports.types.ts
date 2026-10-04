@@ -16,6 +16,7 @@ import type {
   ReportStudentOperationsSection,
 } from "../../shared/types/reports-shared.types";
 import type { BranchReportSection } from "../../shared/daily-report.types";
+import type { OperationKind } from "~/enums/operationKind";
 import type { PaymentMethod } from "~/enums/paymentMethod";
 
 export type BranchReportQuery = ReportQuery;
@@ -24,6 +25,8 @@ export type BranchReportSummary = {
   paymentsCollected: number;
   refundsTotal: number;
   paymentsTotal: number;
+  /** Transfer fees. Separate from paymentsTotal and paymentsCollected. */
+  feesTotal?: number;
   paymentsByMethod: ReportPaymentMethod[];
   branchExpenses: number;
   sales?: number;
@@ -170,11 +173,36 @@ export type BranchRefundKind =
   | "SALE_REFUND"
   | string;
 
+/**
+ * Money direction on an exchange row.
+ * REFUND — difference returned now.
+ * COLLECT — difference collected now (sale exchange).
+ * EVEN — same price, no money.
+ * DEFERRED_TO_DELIVERY — reservation upgrade; extra is collected at delivery.
+ */
+export type BranchRefundSettlement =
+  | "REFUND"
+  | "COLLECT"
+  | "EVEN"
+  | "DEFERRED_TO_DELIVERY";
+
 export type BranchRefundRow = {
   id: string;
   createdAt: string;
   kind: BranchRefundKind;
+  /**
+   * Money returned to the student on this event.
+   * Older payloads only send `amount`; treat that as the refund.
+   */
+  refundAmount?: number;
+  /** Money collected from the student on this event. */
+  collectedAmount?: number;
+  /** Legacy refund total. Same value as `refundAmount` once both are sent. */
   amount: number;
+  /** Sale vs reservation. Do not infer this from saleId / reservationId. */
+  source?: OperationKind | null;
+  /** Present on EXCHANGE. Absent on older payloads. */
+  settlement?: BranchRefundSettlement | null;
   method: PaymentMethod;
   payment: ReportPaymentProof;
   studentName: string;
@@ -192,7 +220,12 @@ export type BranchRefundRow = {
 export type BranchRefundsSection = {
   section: string;
   data: BranchRefundRow[];
-  totals: { amount: number };
+  totals: {
+    /** Legacy refund total. Prefer `refundAmount` when present. */
+    amount: number;
+    refundAmount?: number;
+    collectedAmount?: number;
+  };
   pagination: ReportPagination;
 };
 

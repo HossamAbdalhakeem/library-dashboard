@@ -6,6 +6,7 @@ import {
   type PaginatedResponse,
 } from "~/utils/apiFetch";
 import { normalizePaymentMethod } from "~/enums/paymentMethod";
+import { assignFeeAmount } from "~/utils/payment-fee";
 import type {
   EligibleSalesQuery,
   ExchangePreviewPayload,
@@ -16,24 +17,24 @@ import type {
 } from "../types/exchange.types";
 
 export const exchangeApi = {
-  /** GET /exchanges/eligible-sales → PaginatedResponse<EligibleSaleResponse> */
+  /** GET /admin-api/exchanges/eligible-sales → PaginatedResponse<EligibleSaleResponse> */
   async getEligibleSales(
     params: EligibleSalesQuery = {},
   ): Promise<PaginatedResponse<EligibleSaleResponse>> {
     return asPaginated<EligibleSaleResponse>(
-      await apiFetch("/exchanges/eligible-sales", {
+      await apiFetch("/admin-api/exchanges/eligible-sales", {
         method: "GET",
         params,
       }),
     );
   },
 
-  /** POST /exchanges/preview → ExchangePreviewResponse */
+  /** POST /admin-api/exchanges/preview → ExchangePreviewResponse */
   async previewExchange(
     payload: ExchangePreviewPayload,
   ): Promise<ExchangePreviewResponse> {
     return asData<ExchangePreviewResponse>(
-      await apiFetch("/exchanges/preview", {
+      await apiFetch("/admin-api/exchanges/preview", {
         method: "POST",
         body: {
           saleId: payload.saleId,
@@ -45,7 +46,7 @@ export const exchangeApi = {
     );
   },
 
-  /** POST /exchanges → ExchangeResponse | null */
+  /** POST /admin-api/exchanges → ExchangeResponse | null */
   async createExchange(
     payload: ExchangeCreatePayload,
   ): Promise<ExchangeResponse | null> {
@@ -58,6 +59,7 @@ export const exchangeApi = {
 
     if (payload.paymentMethod) {
       body.paymentMethod = normalizePaymentMethod(payload.paymentMethod);
+      assignFeeAmount(body, body.paymentMethod, payload.feeAmount);
     }
 
     if (payload.refundMethod) {
@@ -69,7 +71,7 @@ export const exchangeApi = {
     }
 
     return firstRow<ExchangeResponse>(
-      await apiFetch("/exchanges", {
+      await apiFetch("/admin-api/exchanges", {
         method: "POST",
         body,
       }),

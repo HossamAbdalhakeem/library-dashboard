@@ -1,6 +1,7 @@
 import { useAuthStore } from "~/store/auth.js";
 import { useAcademicYearStore } from "~/store/academicYear.js";
 import { useLocalStorage } from "~/composables/useLocalStorage";
+import { isRequestAborted } from "~/utils/apiFetch";
 
 /**
  * Session restore on app boot / hard refresh.
@@ -33,6 +34,7 @@ export default defineNuxtPlugin(() => {
         });
       }
     } catch (error) {
+      if (isRequestAborted(error)) return;
       console.error("Failed to restore user session:", error);
       authStore.removeUser();
       academicYearStore.clear();

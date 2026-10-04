@@ -24,7 +24,9 @@
         <TeachersTable
           :teachers="teachers"
           :loading="loading"
+          :activating-id="activatingId"
           @edit="openEdit"
+          @activate="handleActivate"
         />
       </template>
     </Card>
@@ -33,8 +35,8 @@
       v-model:visible="drawerVisible"
       :header="drawerTitle"
       position="right"
-      class="!w-[400px] max-w-[400px]"
-      :style="{ width: '400px' }"
+      class="!w-[min(400px,100vw)] !max-w-[100vw]"
+      :style="{ width: 'min(400px, 100vw)', maxWidth: '100vw' }"
       :block-scroll="true"
     >
       <TeacherForm
@@ -70,6 +72,7 @@ const { showError, showSuccess } = useAppToast();
 const { academicYearId: currentAcademicYearId } = useAcademicYear();
 
 const loading = ref(true);
+const activatingId = ref(null);
 const drawerVisible = ref(false);
 const editingTeacher = ref(null);
 const teachers = ref([]);
@@ -134,6 +137,28 @@ const handleSaved = async () => {
   closeDrawer();
   showSuccess("تم حفظ المدرس بنجاح.");
   await loadTeachers();
+};
+
+const handleActivate = async (teacher) => {
+  if (!teacher?.id || activatingId.value) return;
+  activatingId.value = teacher.id;
+  try {
+    const result = await teacherApi.activateTeacher(teacher.id);
+    const updated = normalizeTeacherListItem({
+      ...(result || teacher),
+      status: result?.status || "ACTIVE",
+    });
+    const index = teachers.value.findIndex((item) => item.id === teacher.id);
+    if (index !== -1) {
+      if (filters.status === "INACTIVE") teachers.value.splice(index, 1);
+      else teachers.value.splice(index, 1, updated);
+    }
+    showSuccess("تم تفعيل المدرس بنجاح.");
+  } catch (error) {
+    showError(error?.message || "تعذر تفعيل المدرس.");
+  } finally {
+    activatingId.value = null;
+  }
 };
 
 watch(currentAcademicYearId, () => {

@@ -6,7 +6,9 @@
       :model-value="branchId"
       label="الفرع"
       placeholder="كل الفروع"
-      show-clear
+      include-all-option
+      all-option-label="كل الفروع"
+      all-option-value="all"
       @update:model-value="onBranchChange"
       @change="$emit('change')"
     />
@@ -42,12 +44,29 @@
         @update:model-value="onStatusChange"
       />
     </div>
+
+    <div class="flex flex-col gap-2 text-right">
+      <label class="text-sm font-medium text-slate-700">الفترة</label>
+      <AppPeriodDateFilter
+        :from="from"
+        :to="to"
+        :academic-year-range="academicYearRange"
+        :default-period="defaultPeriod"
+        wrapper-class="w-full min-w-0"
+        select-class="w-full"
+        @update:from="emit('update:from', $event)"
+        @update:to="emit('update:to', $event)"
+        @update:period="emit('update:period', $event)"
+        @change="emit('change')"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
 import Select from "primevue/select";
 import AppSearchInput from "~/components/shared/inputs/app-search-input/index.vue";
+import AppPeriodDateFilter from "~/components/shared/reports/app-period-date-filter/index.vue";
 import AppGlobalSelectBranch from "~/components/shared/selections/app-global-select-branch/index.vue";
 import AppGlobalSelectTeacher from "~/components/shared/selections/app-global-select-teacher/index.vue";
 import AppGlobalSelectStudyYear from "~/components/shared/selections/app-global-select-study-year/index.vue";
@@ -56,10 +75,15 @@ import { RESERVATION_STATUS_LABELS } from "~/utils/domain-labels/reservation";
 defineOptions({ name: "ReservationsFilters" });
 
 defineProps({
-  branchId: { type: [String, Number], default: null },
+  branchId: { type: [String, Number], default: "all" },
   teacherId: { type: [String, Number], default: null },
   studyYearId: { type: [String, Number], default: null },
   status: { type: String, default: null },
+  from: { type: String, default: null },
+  to: { type: String, default: null },
+  academicYearRange: { type: Object, default: null },
+  /** Same presets as admin reports. Reservations start on the academic year. */
+  defaultPeriod: { type: String, default: "year" },
 });
 
 const emit = defineEmits([
@@ -67,6 +91,9 @@ const emit = defineEmits([
   "update:teacherId",
   "update:studyYearId",
   "update:status",
+  "update:from",
+  "update:to",
+  "update:period",
   "search",
   "change",
 ]);

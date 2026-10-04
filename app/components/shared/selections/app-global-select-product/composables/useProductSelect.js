@@ -138,6 +138,7 @@ export function useProductSelect(props, emit) {
       props.branchId,
       props.excludeProductId,
       props.minAvailableQuantity,
+      props.minDamagedQuantity,
       JSON.stringify(props.inventoryQuery || {}),
       JSON.stringify(props.catalogQuery || {}),
       props.reservationOnly,

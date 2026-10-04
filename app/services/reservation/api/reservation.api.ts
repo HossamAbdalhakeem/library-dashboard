@@ -10,9 +10,12 @@ import {
   PaymentMethod,
   normalizePaymentMethod,
 } from "~/enums/paymentMethod";
+import { assignFeeAmount } from "~/utils/payment-fee";
 import type {
   ReservationQuery,
   CreateReservationPayload,
+  CreateReservationResponse,
+  ConfirmReservationPayload,
   DeliverReservationPayload,
   CancelReservationPayload,
   ChangeProductPayload,
@@ -22,19 +25,19 @@ import type {
 } from "../types/reservation.types";
 
 export const reservationApi = {
-  /** GET /reservations → PaginatedResponse<ReservationResponse> */
+  /** GET /admin-api/reservations → PaginatedResponse<ReservationResponse> */
   async getReservations(
     params: ReservationQuery = {},
   ): Promise<PaginatedResponse<ReservationResponse>> {
     return asPaginated<ReservationResponse>(
-      await apiFetch("/reservations", { method: "GET", params }),
+      await apiFetch("/admin-api/reservations", { method: "GET", params }),
     );
   },
 
-  /** POST /reservations → ReservationResponse | null */
+  /** POST /admin-api/reservations → CreateReservationResponse | null */
   async createReservation(
     payload: CreateReservationPayload,
-  ): Promise<ReservationResponse | null> {
+  ): Promise<CreateReservationResponse | null> {
     const body: Record<string, unknown> = {
       studentId: payload.studentId,
       productId: payload.productId,
@@ -45,16 +48,36 @@ export const reservationApi = {
 
     if (payload.branchId) body.branchId = payload.branchId;
     if (payload.proofReference) body.proofReference = payload.proofReference;
+    assignFeeAmount(body, body.method, payload.feeAmount);
 
-    return firstRow<ReservationResponse>(
-      await apiFetch("/reservations", {
+    return firstRow<CreateReservationResponse>(
+      await apiFetch("/admin-api/reservations", {
         method: "POST",
         body,
       }),
     );
   },
 
-  /** POST /reservations/:id/deliver → DeliverReservationResponse | null */
+  /** POST /admin-api/reservations/:id/confirm → ReservationResponse */
+  async confirmReservation(
+    id: string,
+    payload: ConfirmReservationPayload,
+  ): Promise<ReservationResponse> {
+    const body: Record<string, unknown> = {
+      method: normalizePaymentMethod(payload.method || PaymentMethod.CASH),
+    };
+    if (payload.proofReference) body.proofReference = payload.proofReference;
+    assignFeeAmount(body, body.method, payload.feeAmount);
+
+    return asData<ReservationResponse>(
+      await apiFetch(`/admin-api/reservations/${id}/confirm`, {
+        method: "POST",
+        body,
+      }),
+    );
+  },
+
+  /** POST /admin-api/reservations/:id/deliver → DeliverReservationResponse | null */
   async deliverReservation(
     id: string,
     payload: DeliverReservationPayload = {},
@@ -63,19 +86,20 @@ export const reservationApi = {
 
     if (payload.method != null && String(payload.method).trim() !== "") {
       body.method = normalizePaymentMethod(payload.method);
+      assignFeeAmount(body, body.method, payload.feeAmount);
     }
 
     if (payload.proofReference) body.proofReference = payload.proofReference;
 
     return firstRow<DeliverReservationResponse>(
-      await apiFetch(`/reservations/${id}/deliver`, {
+      await apiFetch(`/admin-api/reservations/${id}/deliver`, {
         method: "POST",
         body,
       }),
     );
   },
 
-  /** POST /reservations/:id/cancel → ReservationResponse | null */
+  /** POST /admin-api/reservations/:id/cancel → ReservationResponse | null */
   async cancelReservation(
     id: string,
     payload: CancelReservationPayload = {},
@@ -92,14 +116,14 @@ export const reservationApi = {
     if (payload.proofReference) body.proofReference = payload.proofReference;
 
     return firstRow<ReservationResponse>(
-      await apiFetch(`/reservations/${id}/cancel`, {
+      await apiFetch(`/admin-api/reservations/${id}/cancel`, {
         method: "POST",
         body,
       }),
     );
   },
 
-  /** POST /reservations/:id/change-product → ReservationResponse | null */
+  /** POST /admin-api/reservations/:id/change-product → ReservationResponse | null */
   async changeProduct(
     id: string,
     payload: ChangeProductPayload,
@@ -118,23 +142,23 @@ export const reservationApi = {
     if (payload.proofReference) body.proofReference = payload.proofReference;
 
     return firstRow<ReservationResponse>(
-      await apiFetch(`/reservations/${id}/change-product`, {
+      await apiFetch(`/admin-api/reservations/${id}/change-product`, {
         method: "POST",
         body,
       }),
     );
   },
 
-  /** GET /reservations/:id/timeline → ReservationTimelineResponse */
+  /** GET /admin-api/reservations/:id/timeline → ReservationTimelineResponse */
   async getTimeline(id: string): Promise<ReservationTimelineResponse> {
     return asData<ReservationTimelineResponse>(
-      await apiFetch(`/reservations/${id}/timeline`, { method: "GET" }),
+      await apiFetch(`/admin-api/reservations/${id}/timeline`, { method: "GET" }),
     );
   },
 
-  /** GET /reservations/export → Excel blob (admin only) */
+  /** GET /admin-api/reservations/export → Excel blob (admin only) */
   async exportReservations(params: Record<string, unknown> = {}): Promise<Blob> {
-    return apiFetchBlob("/reservations/export", {
+    return apiFetchBlob("/admin-api/reservations/export", {
       method: "GET",
       params,
     });

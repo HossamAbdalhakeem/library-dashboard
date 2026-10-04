@@ -52,6 +52,8 @@ export type ReservationPaymentRef = {
   image: PaymentImageRef;
   paidAmount: number;
   remainingAmount: number;
+  /** Sum of deposit and delivery fees. Separate from paid and remaining. */
+  feeAmount?: number;
 };
 
 /** Entity status as returned by the API. */
@@ -65,9 +67,10 @@ export type ReservationStatus =
 /**
  * Stable response from:
  * GET /reservations, GET /reservations/:id,
- * POST /reservations, POST /reservations/:id/cancel,
- * POST /reservations/:id/change-product
+ * POST /reservations/:id/cancel, POST /reservations/:id/change-product
  * (and `reservation` on deliver).
+ *
+ * POST /reservations returns `CreateReservationResponse` instead.
  */
 export type ReservationResponse = {
   id: string;
@@ -79,6 +82,10 @@ export type ReservationResponse = {
   createdBy: CreatedByRef | null;
   product: ReservationProductRef | null;
   payment: ReservationPaymentRef;
+  /** Sum of deposit and delivery fees. Separate from payment amounts. */
+  feeAmount?: number;
+  /** Declared deposit on a public request. Zero on staff reservations. */
+  depositAmount?: number;
   createdAt?: string;
 };
 
@@ -93,6 +100,21 @@ export type ReservationQuery = {
   branchId?: string;
   teacherId?: string;
   studyYearId?: string;
+  /** Inclusive day start, ISO-8601. */
+  from?: string;
+  /** Inclusive day end, ISO-8601. */
+  to?: string;
+};
+
+/**
+ * POST /reservations. Server-generated fields only.
+ * Student, product, amounts, and payment method stay on the booking form.
+ */
+export type CreateReservationResponse = {
+  id: string;
+  reservationNumber: string;
+  createdAt: string;
+  paymentId: string;
 };
 
 /** POST /reservations body. */
@@ -104,12 +126,22 @@ export type CreateReservationPayload = {
   method: PaymentMethod;
   branchId?: string;
   proofReference?: string;
+  feeAmount?: number;
+};
+
+/** POST /reservations/:id/confirm body. */
+export type ConfirmReservationPayload = {
+  method: PaymentMethod;
+  proofReference?: string;
+  feeAmount?: number;
 };
 
 /** POST /reservations/:id/deliver body. */
 export type DeliverReservationPayload = {
   method?: PaymentMethod;
   proofReference?: string;
+  /** Only when the remainder is collected by wallet or Instapay. */
+  feeAmount?: number;
 };
 
 /** POST /reservations/:id/cancel body. */
@@ -159,6 +191,7 @@ export type DeliverSalePaymentRef = {
   methodLabel: string;
   image: PaymentImageRef;
   amount?: number;
+  feeAmount?: number;
   createdAt?: string;
 };
 
@@ -166,6 +199,7 @@ export type DeliverSaleResponse = {
   id: string;
   status?: string | unknown;
   totalAmount: number;
+  feeAmount?: number;
   student: (NamedRef & { phone?: string | null }) | null;
   branch: NamedRef | null;
   academicYear: (NamedRef & { status?: string }) | null;

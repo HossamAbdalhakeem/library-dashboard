@@ -1,6 +1,6 @@
 import { exchangeApi, normalizeExchangePreview } from "~/services/exchange";
 import { useAppToast } from "~/composables/useAppToast";
-import { PaymentMethod } from "~/enums/paymentMethod";
+import { PaymentMethod, paymentMethodNeedsProof } from "~/enums/paymentMethod";
 import {
   buildExchangePayload,
   buildPriceComparisonUi,
@@ -18,6 +18,8 @@ export function useSalesExchangeExchangeFlow(props, emit) {
   const busy = ref(false);
   const previewLoading = ref(false);
   const confirmVisible = ref(false);
+  const feeDialogVisible = ref(false);
+  const pendingFeeAmount = ref(null);
   const newProductId = ref(null);
   const exchangeQuantity = ref(1);
   const quantityError = ref("");
@@ -86,6 +88,8 @@ export function useSalesExchangeExchangeFlow(props, emit) {
     exchangeImage.value = defaults.exchangeImage;
     exchangeProofKey.value = defaults.exchangeProofKey;
     confirmVisible.value = defaults.confirmVisible;
+    feeDialogVisible.value = false;
+    pendingFeeAmount.value = null;
     previewLoading.value = defaults.previewLoading;
   };
 
@@ -183,6 +187,20 @@ export function useSalesExchangeExchangeFlow(props, emit) {
       return;
     }
 
+    pendingFeeAmount.value = null;
+    const collectsFee =
+      preview.value?.kind === "more" &&
+      paymentMethodNeedsProof(exchangePaymentMethod.value);
+    if (collectsFee) {
+      feeDialogVisible.value = true;
+      return;
+    }
+    confirmVisible.value = true;
+  };
+
+  const onFeeConfirm = (feeAmount) => {
+    pendingFeeAmount.value = feeAmount;
+    feeDialogVisible.value = false;
     confirmVisible.value = true;
   };
 
@@ -203,6 +221,7 @@ export function useSalesExchangeExchangeFlow(props, emit) {
         exchangePaymentMethod: exchangePaymentMethod.value,
         exchangeRefundMethod: exchangeRefundMethod.value,
         exchangeProofKey: exchangeProofKey.value,
+        feeAmount: pendingFeeAmount.value,
       });
 
       await exchangeApi.createExchange(payload);
@@ -238,6 +257,8 @@ export function useSalesExchangeExchangeFlow(props, emit) {
     busy,
     previewLoading,
     confirmVisible,
+    feeDialogVisible,
+    pendingFeeAmount,
     newProductId,
     exchangeQuantity,
     quantityError,
@@ -256,6 +277,7 @@ export function useSalesExchangeExchangeFlow(props, emit) {
     onNewProductId,
     onExchangeQuantity,
     requestConfirm,
+    onFeeConfirm,
     confirm,
   };
 }

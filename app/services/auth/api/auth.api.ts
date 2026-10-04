@@ -10,9 +10,9 @@ import type {
 } from "../types/auth.types";
 
 export const authApi = {
-  /** POST /auth/login → AuthSession */
+  /** POST /admin-api/auth/login → AuthSession */
   async login(payload: LoginPayload): Promise<AuthSession> {
-    const session = await authFetch<LoginResponse>("/auth/login", {
+    const session = await authFetch<LoginResponse>("/admin-api/auth/login", {
       method: "POST",
       body: {
         email: payload.email,
@@ -29,18 +29,20 @@ export const authApi = {
     return normalizeAuthSession(session.user, token);
   },
 
-  /** POST /auth/logout → LogoutResponse */
+  /** POST /admin-api/auth/logout → LogoutResponse */
   async logout(): Promise<LogoutResponse> {
-    return await authFetch<LogoutResponse>("/auth/logout", {
+    return await authFetch<LogoutResponse>("/admin-api/auth/logout", {
       method: "POST",
       body: {},
     });
   },
 
-  /** GET /auth/me → AuthSession */
+  /** GET /admin-api/auth/me → AuthSession */
   async getCurrentUser(): Promise<AuthSession> {
-    const user = await authFetch<AuthUserResponse>("/auth/me", {
+    const user = await authFetch<AuthUserResponse>("/admin-api/auth/me", {
       method: "GET",
+      // Session restore runs during the refresh navigation. Do not cancel it.
+      abortOnNavigate: false,
     });
     return normalizeAuthSession(user, useLocalStorage("token").value);
   },

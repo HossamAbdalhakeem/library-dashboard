@@ -15,14 +15,27 @@
       />
     </template>
     <template #actions="{ data }">
-      <Button
-        label="تعديل"
-        icon="pi pi-pencil"
-        text
-        size="small"
-        severity="primary"
-        @click="$emit('edit', data)"
-      />
+      <div class="flex flex-wrap justify-center gap-1">
+        <Button
+          label="تعديل"
+          icon="pi pi-pencil"
+          text
+          size="small"
+          severity="primary"
+          @click="$emit('edit', data)"
+        />
+        <Button
+          v-if="data.status === 'INACTIVE'"
+          label="تفعيل"
+          icon="pi pi-check"
+          text
+          size="small"
+          severity="success"
+          :loading="activatingId === data.id"
+          :disabled="Boolean(activatingId)"
+          @click="$emit('activate', data)"
+        />
+      </div>
     </template>
   </AppDataTable>
 </template>
@@ -35,13 +48,14 @@ import AppStatusTableCell from "~/components/shared/tables/app-status-table-cell
 defineProps({
   teachers: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
+  activatingId: { type: String, default: null },
 });
 
-defineEmits(["edit"]);
+defineEmits(["edit", "activate"]);
 
 const columns = [
   { field: "name", header: "اسم المدرس" },
   { field: "statusLabel", header: "الحالة", slot: "status" },
-  { field: "actions", header: "إجراء", slot: "actions", style: "width: 8rem" },
+  { field: "actions", header: "إجراء", slot: "actions", style: "width: 14rem" },
 ];
 </script>

@@ -20,7 +20,7 @@
         @teachers-loaded="onTeachersLoaded"
       />
 
-      <div class="flex justify-end gap-2 pt-2">
+      <div class="flex flex-wrap justify-end gap-2 pt-2">
         <Button type="button" label="إلغاء" severity="secondary" text @click="$emit('cancel')" />
         <FormSubmitButton
           :label="isEdit ? 'تحديث المنتج' : 'حفظ المنتج'"

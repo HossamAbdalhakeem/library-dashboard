@@ -36,6 +36,7 @@ export type {
   ReportCreatedByRef,
   ReportBranchRef,
   ReportOperationStatus,
+  ReportStudentOperationStatusTrailStep,
   ReportOperationKind,
   ReportOperationActivity,
   ReportStudentOperationRow,

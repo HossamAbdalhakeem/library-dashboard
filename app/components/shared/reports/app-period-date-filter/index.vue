@@ -163,7 +163,9 @@ const rangeForPeriod = (value) => {
   }
 
   if (value === "month") {
-    const from = new Date(today.getFullYear(), today.getMonth(), 1);
+    const from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const lastDay = new Date(from.getFullYear(), from.getMonth() + 1, 0).getDate();
+    from.setDate(Math.min(today.getDate(), lastDay));
     return { from: toIsoDate(from), to };
   }
 

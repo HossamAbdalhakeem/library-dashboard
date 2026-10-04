@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end gap-2">
+  <div class="flex flex-wrap justify-end gap-2">
     <Button
       type="button"
       label="إلغاء"
@@ -11,7 +11,6 @@
       :label="isEdit ? 'حفظ التعديل' : 'إضافة'"
       :loading="loading"
       :valid="valid"
-      dataTestid="expense-submit"
     />
   </div>
 </template>

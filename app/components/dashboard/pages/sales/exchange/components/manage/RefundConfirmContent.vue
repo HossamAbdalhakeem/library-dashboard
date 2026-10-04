@@ -27,6 +27,7 @@ const props = defineProps({
   refundQuantity: { type: Number, default: 1 },
   refundAmountLabel: { type: String, default: "-" },
   refundMethodLabel: { type: String, default: "-" },
+  damaged: { type: Boolean, default: false },
 });
 
 const confirmDetails = computed(() => [
@@ -34,6 +35,14 @@ const confirmDetails = computed(() => [
     key: "quantity",
     label: "الكمية",
     value: `${props.refundQuantity} من أصل ${props.sale?.quantity?.remaining ?? "—"}`,
+  },
+  {
+    key: "condition",
+    label: "حالة المنتج",
+    value: props.damaged ? "تالف" : "سليم",
+    valueClass: props.damaged
+      ? "font-semibold text-rose-700"
+      : "font-semibold text-slate-900",
   },
   {
     key: "refund",

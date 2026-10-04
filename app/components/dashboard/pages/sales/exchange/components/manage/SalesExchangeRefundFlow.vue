@@ -18,7 +18,9 @@
         :refund-proof-key="refundProofKey"
         :refund-error="refundError"
         :quantity-error="quantityError"
+        :damaged="damaged"
         @update:refund-quantity="onQuantityChange"
+        @update:damaged="damaged = $event"
         @update:refund-method="refundMethod = $event"
         @update:refund-image="refundImage = $event"
         @update:refund-proof-key="refundProofKey = $event"
@@ -28,7 +30,6 @@
         <div class="flex w-full justify-start gap-2">
           <Button
             label="تأكيد الاسترداد"
-            data-testid="refund-confirm"
             severity="danger"
             icon="pi pi-replay"
             :disabled="!sale || busy"
@@ -63,13 +64,13 @@
         :refund-quantity="refundQuantity"
         :refund-amount-label="refundAmountLabel"
         :refund-method-label="refundMethodLabel"
+        :damaged="damaged"
       />
 
       <template #footer>
         <div class="flex w-full justify-start gap-2">
           <Button
             label="نعم، تأكيد الاسترداد"
-            data-testid="refund-confirm-yes"
             severity="danger"
             :loading="busy"
             :disabled="busy"
@@ -127,6 +128,7 @@ const refundImage = ref(null);
 const refundProofKey = ref("");
 const refundError = ref("");
 const quantityError = ref("");
+const damaged = ref(false);
 
 const detailVisible = computed({
   get: () => props.open,
@@ -170,6 +172,7 @@ const resetFields = () => {
   refundProofKey.value = "";
   refundError.value = "";
   quantityError.value = "";
+  damaged.value = false;
   confirmVisible.value = false;
 };
 
@@ -230,6 +233,7 @@ const confirm = async () => {
         saleId: props.sale.saleId,
         saleItemId: props.sale.saleItemId,
         quantity: qty,
+        damaged: damaged.value,
         method: refundMethod.value,
         proofReference: refundProofKey.value || undefined,
       }),

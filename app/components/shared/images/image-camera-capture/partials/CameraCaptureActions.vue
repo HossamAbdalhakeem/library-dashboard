@@ -13,7 +13,6 @@
       type="button"
       class="relative inline-flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_0_0_6px_rgba(255,255,255,0.12)] transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
       :disabled="starting || !streamReady || Boolean(error)"
-      data-testid="camera-capture-shot"
       aria-label="التقاط"
       @click="$emit('capture')"
     >

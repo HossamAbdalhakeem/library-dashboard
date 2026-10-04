@@ -29,8 +29,8 @@
         "
         :card-class="
           selectedNewProduct
-            ? 'border-white/10 bg-slate-900 text-slate-200'
-            : 'border-dashed border-slate-600 bg-slate-900/70 text-slate-300'
+            ? 'border-[var(--app-border)] bg-[var(--app-card)] text-[var(--app-text)]'
+            : 'border-dashed border-[var(--app-border)] bg-[var(--app-elevated)] text-[var(--app-muted)]'
         "
         :has-product="Boolean(selectedNewProduct)"
         :name="selectedNewProduct?.name"

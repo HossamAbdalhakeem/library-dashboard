@@ -12,8 +12,8 @@
       root: {
         class: 'product-form-drawer-panel',
         style: {
-          width: '400px',
-          maxWidth: '400px',
+          width: 'min(400px, 100vw)',
+          maxWidth: '100vw',
         },
       },
       header: { class: 'text-right' },
@@ -62,7 +62,7 @@ const onSaved = (result) => {
 
 <style scoped>
 :deep(.product-form-drawer-panel) {
-  width: 400px !important;
-  max-width: 400px !important;
+  width: min(400px, 100vw) !important;
+  max-width: 100vw !important;
 }
 </style>

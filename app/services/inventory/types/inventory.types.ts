@@ -41,6 +41,7 @@ export type InventoryResponse = {
   productId: string;
   physicalQuantity: number;
   reservedQuantity: number;
+  damagedQuantity: number;
   availableQuantity: number;
   product: InventoryProductResponse;
   branch?: NamedRef | null;
@@ -62,6 +63,7 @@ export type InventoryQuery = {
   academicYearId?: string;
   type?: string;
   availableOnly?: boolean;
+  damagedOnly?: boolean;
   forReservation?: boolean;
   include_sold?: boolean;
   page?: number;

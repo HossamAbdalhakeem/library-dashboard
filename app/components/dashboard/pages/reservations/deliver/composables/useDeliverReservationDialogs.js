@@ -8,6 +8,8 @@ import {
   PaymentMethod,
   paymentMethodNeedsProof,
 } from "~/enums/paymentMethod";
+import { formatDateTime } from "~/utils/format/datetime";
+import { feeAmountForRequest } from "~/utils/payment-fee";
 
 /**
  * Deliver reservation dialogs: open/confirm/success flow and payment validation.
@@ -25,12 +27,16 @@ export function useDeliverReservationDialogs(emit) {
   const methodError = ref("");
   const dialogVisible = ref(false);
   const confirmVisible = ref(false);
+  const feeEnabled = ref(false);
+  const feeAmount = ref(null);
   const successVisible = ref(false);
   const dialogError = ref("");
   const selectedReservation = ref(null);
   const successReservation = ref(null);
   const successCollectedRemaining = ref(false);
   const successMethodLabel = ref("-");
+  const successFeeAmount = ref(null);
+  const successSummary = ref(null);
 
   const methodLabel = computed(() =>
     getPaymentMethodLabel(paymentMethod.value),
@@ -66,7 +72,22 @@ export function useDeliverReservationDialogs(emit) {
     proofPreviewUrl.value = "";
     proofRequiredError.value = false;
     methodError.value = "";
+    feeEnabled.value = false;
+    feeAmount.value = null;
     deliverDetailContentRef.value?.resetPayment?.();
+  };
+
+  const resolvedFeeAmount = () =>
+    feeAmountForRequest({
+      method: paymentMethod.value,
+      enabled: feeEnabled.value,
+      amount: feeAmount.value,
+    });
+
+  const teacherNameOf = (reservation) => {
+    const name =
+      reservation?.teacherName || reservation?.product?.teacher?.name || "";
+    return name && name !== "-" ? name : "";
   };
 
   const open = (item) => {
@@ -92,6 +113,8 @@ export function useDeliverReservationDialogs(emit) {
     successReservation.value = null;
     successCollectedRemaining.value = false;
     successMethodLabel.value = "-";
+    successFeeAmount.value = null;
+    successSummary.value = null;
   };
 
   const validateRemainingPayment = () => {
@@ -160,6 +183,7 @@ export function useDeliverReservationDialogs(emit) {
               paymentMethodNeedsProof(paymentMethod.value) && proofKey.value
                 ? proofKey.value
                 : undefined,
+            feeAmount: resolvedFeeAmount(),
           })
         : {};
 
@@ -168,12 +192,42 @@ export function useDeliverReservationDialogs(emit) {
         payload,
       );
 
+      const feeSnapshot = collectedRemaining ? resolvedFeeAmount() : null;
+      const proofImage = proofPreviewUrl.value || "";
+      const collectedMethod = paymentMethod.value;
       confirmVisible.value = false;
       closeDetailDialog();
 
       successReservation.value = reservationSnapshot;
       successCollectedRemaining.value = collectedRemaining;
       successMethodLabel.value = collectedMethodLabel;
+      successFeeAmount.value = feeSnapshot;
+      successSummary.value = collectedRemaining
+        ? {
+            reservationNumber: reservationSnapshot.reservationNumber,
+            dateTimeLabel: formatDateTime(new Date()),
+            productName:
+              reservationSnapshot.productName ||
+              reservationSnapshot.product?.name ||
+              "",
+            teacherName: teacherNameOf(reservationSnapshot),
+            studentName:
+              reservationSnapshot.studentName ||
+              reservationSnapshot.student?.name ||
+              "",
+            quantity: reservationSnapshot.quantity ?? 1,
+            productAmount:
+              reservationSnapshot.remainingAmount ??
+              reservationSnapshot.payment?.remainingAmount ??
+              0,
+            feeAmount: feeSnapshot,
+            method: collectedMethod,
+            methodLabel: collectedMethodLabel,
+            paymentId: "",
+            hasProof: Boolean(proofImage),
+            proofImage,
+          }
+        : null;
       successVisible.value = true;
 
       emit("delivered", reservationSnapshot.id);
@@ -208,12 +262,16 @@ export function useDeliverReservationDialogs(emit) {
     methodError,
     dialogVisible,
     confirmVisible,
+    feeEnabled,
+    feeAmount,
     successVisible,
     dialogError,
     selectedReservation,
     successReservation,
     successCollectedRemaining,
     successMethodLabel,
+    successFeeAmount,
+    successSummary,
     methodLabel,
     dialogTitle,
     needsRemainingPayment,
@@ -223,6 +281,7 @@ export function useDeliverReservationDialogs(emit) {
     closeDetailDialog,
     closeSuccessDialog,
     requestDeliverConfirmation,
+    resolvedFeeAmount,
     deliverReservation,
   };
 }

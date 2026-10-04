@@ -16,55 +16,55 @@ import type {
 } from "../types/expense.types";
 
 export const expenseApi = {
-  /** GET /expense-categories → ExpenseCategoryResponse[] */
+  /** GET /admin-api/expense-categories → ExpenseCategoryResponse[] */
   async getCategories(
     params: ExpenseCategoryQuery = {},
   ): Promise<ExpenseCategoryResponse[]> {
     return asList<ExpenseCategoryResponse>(
-      await apiFetch("/expense-categories", { method: "GET", params }),
+      await apiFetch("/admin-api/expense-categories", { method: "GET", params }),
     );
   },
 
-  /** POST /expense-categories → ExpenseCategoryResponse | null */
+  /** POST /admin-api/expense-categories → ExpenseCategoryResponse | null */
   async createCategory(
     payload: ExpenseCategoryPayload,
   ): Promise<ExpenseCategoryResponse | null> {
     return firstRow<ExpenseCategoryResponse>(
-      await apiFetch("/expense-categories", {
+      await apiFetch("/admin-api/expense-categories", {
         method: "POST",
         body: { name: payload.name },
       }),
     );
   },
 
-  /** GET /expenses → PaginatedResponse<ExpenseResponse> */
+  /** GET /admin-api/expenses → PaginatedResponse<ExpenseResponse> */
   async getExpenses(
     params: ExpenseQuery = {},
   ): Promise<PaginatedResponse<ExpenseResponse>> {
     return asPaginated<ExpenseResponse>(
-      await apiFetch("/expenses", { method: "GET", params }),
+      await apiFetch("/admin-api/expenses", { method: "GET", params }),
     );
   },
 
-  /** POST /expenses → ExpenseResponse | null */
+  /** POST /admin-api/expenses → ExpenseResponse | null */
   async createExpense(
     payload: ExpensePayload,
   ): Promise<ExpenseResponse | null> {
     return firstRow<ExpenseResponse>(
-      await apiFetch("/expenses", {
+      await apiFetch("/admin-api/expenses", {
         method: "POST",
         body: payload,
       }),
     );
   },
 
-  /** PATCH /expenses/:id → ExpenseResponse | null */
+  /** PATCH /admin-api/expenses/:id → ExpenseResponse | null */
   async updateExpense(
     id: string,
     payload: ExpenseUpdatePayload,
   ): Promise<ExpenseResponse | null> {
     return firstRow<ExpenseResponse>(
-      await apiFetch(`/expenses/${id}`, {
+      await apiFetch(`/admin-api/expenses/${id}`, {
         method: "PATCH",
         body: payload,
       }),

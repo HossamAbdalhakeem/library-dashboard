@@ -1,13 +1,13 @@
 <template>
   <div
-    class="reports-filters flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-end"
+    class="reports-filters flex w-full min-w-0 flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center "
   >
     <AppGlobalSelectTeacher
       :model-value="teacher"
       label=""
       placeholder="كل المدرسين"
       show-clear
-      wrapper-class="w-full min-w-0 lg:w-56 lg:shrink-0"
+      wrapper-class="w-full min-w-0 lg:w-[18%] lg:shrink-0"
       select-class="w-full"
       @update:model-value="onTeacherChange"
     />
@@ -16,7 +16,7 @@
       label=""
       placeholder="كل السنوات الدراسية"
       show-clear
-      wrapper-class="w-full min-w-0 lg:w-56 lg:shrink-0"
+      wrapper-class="w-full min-w-0 lg:w-[18%] lg:shrink-0"
       select-class="w-full"
       @update:model-value="onStudyYearChange"
     />
@@ -28,7 +28,7 @@
       label=""
       placeholder="اختيار الكتاب"
       show-clear
-      wrapper-class="w-full min-w-0 lg:w-72 lg:shrink-0"
+      wrapper-class="w-full min-w-0 lg:w-[20%] lg:shrink-0"
       :catalog-query="productCatalogQuery"
       @update:model-value="onBookChange"
     />
@@ -39,17 +39,18 @@
       include-all-option
       all-option-label="كل الفروع"
       all-option-value="all"
-      wrapper-class="w-full min-w-0 lg:w-56 lg:shrink-0"
+      wrapper-class="w-full min-w-0 lg:w-[18%] lg:shrink-0"
       select-class="w-full"
       @update:model-value="onBranchChange"
     />
 
     <AppPeriodDateFilter
+      v-if="showPeriod"
       :from="from"
       :to="to"
       :academic-year-range="academicYearRange"
-      default-period="day"
-      wrapper-class="w-full min-w-0 lg:w-56 lg:shrink-0"
+      :default-period="defaultPeriod"
+      wrapper-class="w-full min-w-0 lg:w-[18%] lg:shrink-0"
       select-class="w-full"
       @update:from="emit('update:from', $event)"
       @update:to="emit('update:to', $event)"
@@ -58,6 +59,16 @@
     />
 
     <Button
+      v-if="searchMode"
+      label="بحث"
+      icon="pi pi-search"
+      severity="primary"
+      class="h-11 shrink-0 self-end"
+      :loading="loading"
+      @click="emit('search')"
+    />
+    <Button
+      v-else
       icon="pi pi-refresh"
       severity="secondary"
       class="h-11 w-11 shrink-0 self-end"
@@ -85,8 +96,14 @@ const props = defineProps({
   from: { type: String, default: null },
   to: { type: String, default: null },
   period: { type: String, default: "day" },
+  /** Initial preset. Reservations report starts on the academic year. */
+  defaultPeriod: { type: String, default: "day" },
   academicYearRange: { type: Object, default: null },
   loading: { type: Boolean, default: false },
+  /** Hide the period control. Inventory is a current snapshot, so dates do not apply. */
+  showPeriod: { type: Boolean, default: true },
+  /** Keep dropdown changes local until the search button is pressed. */
+  searchMode: { type: Boolean, default: false },
 });
 
 const emit = defineEmits([
@@ -99,6 +116,7 @@ const emit = defineEmits([
   "update:period",
   "change",
   "refresh",
+  "search",
 ]);
 
 const productCatalogQuery = computed(() => ({
@@ -106,25 +124,29 @@ const productCatalogQuery = computed(() => ({
   ...(props.studyYear ? { studyYearId: props.studyYear } : {}),
 }));
 
+const notifyChange = () => {
+  if (!props.searchMode) emit("change");
+};
+
 const onBookChange = (value) => {
   emit("update:book", value ?? null);
-  emit("change");
+  notifyChange();
 };
 
 const onBranchChange = (value) => {
   emit("update:branch", value);
-  emit("change");
+  notifyChange();
 };
 
 const onTeacherChange = (value) => {
   emit("update:teacher", value ?? null);
   emit("update:book", null);
-  emit("change");
+  notifyChange();
 };
 
 const onStudyYearChange = (value) => {
   emit("update:studyYear", value ?? null);
   emit("update:book", null);
-  emit("change");
+  notifyChange();
 };
 </script>

@@ -13,7 +13,6 @@
           v-bind="field"
           v-model="form.name"
           class="w-full"
-          data-testid="student-name"
           :class="{ 'p-invalid': errorMessage || fieldErrors.name }"
         />
         <ErrorMessage name="name" class="text-xs text-red-500" />
@@ -51,13 +50,12 @@
       <ErrorMessage name="studyYearId" class="text-xs text-red-500" />
     </Field>
 
-    <div class="flex justify-end gap-2">
+    <div class="flex flex-wrap justify-end gap-2">
       <Button type="button" label="إلغاء" severity="secondary" text @click="$emit('cancel')" />
       <FormSubmitButton
         :label="isEdit ? 'حفظ التعديل' : 'إضافة'"
         :loading="saving"
         :valid="meta.valid"
-        data-testid="student-submit"
       />
     </div>
   </Form>

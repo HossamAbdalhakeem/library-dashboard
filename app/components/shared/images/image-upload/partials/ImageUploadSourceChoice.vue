@@ -1,61 +1,50 @@
 <template>
-  <div class="p-3 sm:p-4">
-    <div class="mb-3 text-center">
-      <p class="text-sm font-semibold text-slate-800 dark:text-slate-100">
-        إضافة صورة الإثبات
-      </p>
-      <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-        اختر طريقة رفع الصورة — صور فقط · الحد {{ maxSizeLabel }}
-      </p>
-    </div>
-
-    <div class="grid gap-2.5 sm:grid-cols-2">
-      <button
-        type="button"
-        class="group relative flex flex-col items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white px-3 py-5 text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/60 dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-primary-400/50"
-        data-testid="payment-proof-from-device"
-        @click="$emit('pick-device')"
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <button
+      type="button"
+      class="flex min-h-28 flex-col items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-4 text-center transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+      data-testid="payment-proof-from-camera"
+      aria-label="فتح الكاميرا لالتقاط صورة الإثبات"
+      @click="$emit('pick-camera')"
+    >
+      <span
+        class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary-700 dark:text-primary-200"
       >
-        <span
-          class="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-600 transition group-hover:bg-primary-500 group-hover:text-white dark:text-primary-300"
-        >
-          <i class="pi pi-images text-xl" />
-        </span>
-        <span class="text-sm font-semibold">من الجهاز</span>
-        <span
-          class="text-center text-[11px] leading-relaxed text-slate-400 dark:text-slate-500"
-        >
-          اختر صورة محفوظة من المعرض أو الملفات
-        </span>
-      </button>
+        <PaymentIcon name="camera" class="size-5" />
+      </span>
+      <span class="text-sm font-medium text-slate-900 dark:text-slate-100">
+        فتح الكاميرا
+      </span>
+      <span class="text-xs text-slate-500 dark:text-slate-400">التقط صورة الآن</span>
+    </button>
 
-      <button
-        type="button"
-        class="group relative flex flex-col items-center gap-2.5 rounded-2xl border border-slate-200/90 bg-white px-3 py-5 text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/60 dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:border-emerald-400/50"
-        data-testid="payment-proof-from-camera"
-        @click="$emit('pick-camera')"
+    <button
+      type="button"
+      class="flex min-h-28 flex-col items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-4 text-center transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+      data-testid="payment-proof-from-device"
+      aria-label="رفع صورة الإثبات من الجهاز"
+      @click="$emit('pick-device')"
+    >
+      <span
+        class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary-700 dark:text-primary-200"
       >
-        <span
-          class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 transition group-hover:bg-emerald-500 group-hover:text-white dark:text-emerald-300"
-        >
-          <i class="pi pi-camera text-xl" />
-        </span>
-        <span class="text-sm font-semibold">الكاميرا</span>
-        <span
-          class="text-center text-[11px] leading-relaxed text-slate-400 dark:text-slate-500"
-        >
-          التقاط صورة مباشرة ثم قصها ورفعها
-        </span>
-      </button>
-    </div>
+        <PaymentIcon name="upload" class="size-5" />
+      </span>
+      <span class="text-sm font-medium text-slate-900 dark:text-slate-100">
+        رفع صورة
+      </span>
+      <span class="text-xs text-slate-500 dark:text-slate-400">اختر من جهازك</span>
+    </button>
   </div>
 </template>
 
 <script setup>
+import PaymentIcon from "~/components/shared/payment/payment-icon/index.vue";
+
 defineOptions({ name: "ImageUploadSourceChoice" });
 
 defineProps({
-  maxSizeLabel: { type: String, required: true },
+  maxSizeLabel: { type: String, default: "" },
 });
 
 defineEmits(["pick-device", "pick-camera"]);

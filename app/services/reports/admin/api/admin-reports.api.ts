@@ -1,15 +1,15 @@
-import { apiFetch, asData } from "~/utils/apiFetch";
+import { apiFetch, apiFetchBlob, asData } from "~/utils/apiFetch";
 import { buildGeneralSalesTrendQuery } from "../helpers/admin-reports.helper";
 import type {
   AdminReportQuery,
   AdminSummaryResponse,
-  AdminRevenueResponse,
   AdminSalesTrendResponse,
   AdminProfitLossResponse,
   AdminPaymentMethodsResponse,
-  AdminBranchesResponse,
-  AdminReturnsExchangesResponse,
-  AdminExpensesResponse,
+  AdminSalesResponse,
+  AdminReservationsByProductResponse,
+  AdminSalesByProductResponse,
+  AdminInventoryByProductResponse,
   AdminGeneralSummary,
   AdminGeneralPaymentMethod,
   AdminGeneralTopProduct,
@@ -18,21 +18,13 @@ import type {
 } from "../types/admin-reports.types";
 
 export const adminReportsApi = {
-  // --- Modular /reports/admin/* ---
+  // --- Modular /admin-api/reports/admin/* ---
 
   async getSummary(
     params: AdminReportQuery = {},
   ): Promise<AdminSummaryResponse> {
     return asData(
-      await apiFetch("/reports/admin/summary", { method: "GET", params }),
-    );
-  },
-
-  async getRevenue(
-    params: AdminReportQuery = {},
-  ): Promise<AdminRevenueResponse> {
-    return asData(
-      await apiFetch("/reports/admin/revenue", { method: "GET", params }),
+      await apiFetch("/admin-api/reports/admin/summary", { method: "GET", params }),
     );
   },
 
@@ -40,7 +32,7 @@ export const adminReportsApi = {
     params: AdminReportQuery = {},
   ): Promise<AdminSalesTrendResponse> {
     return asData(
-      await apiFetch("/reports/admin/sales-trend", { method: "GET", params }),
+      await apiFetch("/admin-api/reports/admin/sales-trend", { method: "GET", params }),
     );
   },
 
@@ -48,7 +40,7 @@ export const adminReportsApi = {
     params: AdminReportQuery = {},
   ): Promise<AdminProfitLossResponse> {
     return asData(
-      await apiFetch("/reports/admin/profit-loss", { method: "GET", params }),
+      await apiFetch("/admin-api/reports/admin/profit-loss", { method: "GET", params }),
     );
   },
 
@@ -56,63 +48,107 @@ export const adminReportsApi = {
     params: AdminReportQuery = {},
   ): Promise<AdminPaymentMethodsResponse> {
     return asData(
-      await apiFetch("/reports/admin/payment-methods", {
+      await apiFetch("/admin-api/reports/admin/payment-methods", {
         method: "GET",
         params,
       }),
     );
   },
 
-  async getBranches(
+  async getSales(
     params: AdminReportQuery = {},
-  ): Promise<AdminBranchesResponse> {
+  ): Promise<AdminSalesResponse> {
     return asData(
-      await apiFetch("/reports/admin/branches", { method: "GET", params }),
-    );
-  },
-
-  async getReturnsExchanges(
-    params: AdminReportQuery = {},
-  ): Promise<AdminReturnsExchangesResponse> {
-    return asData(
-      await apiFetch("/reports/admin/returns-exchanges", {
+      await apiFetch("/admin-api/reports/admin/sales", {
         method: "GET",
         params,
       }),
     );
   },
 
-  async getExpenses(
+  async getReservationsByProduct(
     params: AdminReportQuery = {},
-  ): Promise<AdminExpensesResponse> {
+  ): Promise<AdminReservationsByProductResponse> {
     return asData(
-      await apiFetch("/reports/admin/expenses", { method: "GET", params }),
+      await apiFetch("/admin-api/reports/admin/reservations-by-product", {
+        method: "GET",
+        params,
+      }),
     );
   },
 
-  // --- Home /reports/general/* ---
+  async exportReservationsByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<Blob> {
+    return apiFetchBlob("/admin-api/reports/admin/reservations-by-product/export", {
+      method: "GET",
+      params,
+    });
+  },
+
+  async getSalesByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<AdminSalesByProductResponse> {
+    return asData(
+      await apiFetch("/admin-api/reports/admin/sales-by-product", {
+        method: "GET",
+        params,
+      }),
+    );
+  },
+
+  async exportSalesByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<Blob> {
+    return apiFetchBlob("/admin-api/reports/admin/sales-by-product/export", {
+      method: "GET",
+      params,
+    });
+  },
+
+  async getInventoryByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<AdminInventoryByProductResponse> {
+    return asData(
+      await apiFetch("/admin-api/reports/admin/inventory-by-product", {
+        method: "GET",
+        params,
+      }),
+    );
+  },
+
+  async exportInventoryByProduct(
+    params: AdminReportQuery = {},
+  ): Promise<Blob> {
+    return apiFetchBlob("/admin-api/reports/admin/inventory-by-product/export", {
+      method: "GET",
+      params,
+    });
+  },
+
+  // --- Home /admin-api/reports/general/* ---
 
   async getGeneralSummary(): Promise<AdminGeneralSummary> {
     return asData(
-      await apiFetch("/reports/general/summary", { method: "GET" }),
+      await apiFetch("/admin-api/reports/general/summary", { method: "GET" }),
     );
   },
 
   async getGeneralPayments(): Promise<AdminGeneralPaymentMethod[]> {
     return asData(
-      await apiFetch("/reports/general/payments", { method: "GET" }),
+      await apiFetch("/admin-api/reports/general/payments", { method: "GET" }),
     );
   },
 
   async getGeneralTopProducts(): Promise<AdminGeneralTopProduct[]> {
     return asData(
-      await apiFetch("/reports/general/top-products", { method: "GET" }),
+      await apiFetch("/admin-api/reports/general/top-products", { method: "GET" }),
     );
   },
 
   async getGeneralRecentOperations(): Promise<AdminGeneralRecentOperation[]> {
     return asData(
-      await apiFetch("/reports/general/recent-operations", { method: "GET" }),
+      await apiFetch("/admin-api/reports/general/recent-operations", { method: "GET" }),
     );
   },
 
@@ -120,7 +156,7 @@ export const adminReportsApi = {
     params: AdminReportQuery = {},
   ): Promise<AdminGeneralSalesTrend> {
     return asData(
-      await apiFetch("/reports/general/sales-trend", {
+      await apiFetch("/admin-api/reports/general/sales-trend", {
         method: "GET",
         params: buildGeneralSalesTrendQuery(params),
       }),

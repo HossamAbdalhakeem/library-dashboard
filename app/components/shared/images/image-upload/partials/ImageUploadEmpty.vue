@@ -1,22 +1,20 @@
 <template>
   <button
     type="button"
-    class="flex w-full flex-col items-center gap-2 px-4 py-6 text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+    class="flex w-full min-h-12 items-center justify-center gap-2 rounded-xl bg-white/80 px-3 py-3 text-sm font-semibold text-slate-800 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/60 dark:bg-slate-950/70 dark:text-slate-100"
     @click="$emit('pick')"
   >
-    <span
-      class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900/5 text-slate-600 dark:bg-white/5 dark:text-slate-200"
-    >
-      <i class="pi pi-cloud-upload text-xl" />
-    </span>
-    <span class="text-sm font-medium">{{ placeholder }}</span>
-    <span class="text-xs text-slate-400">
-      صور فقط — الحد الأقصى {{ maxSizeLabel }}
+    <PaymentIcon name="image" class="size-5 text-slate-400" />
+    <span>{{ placeholder }}</span>
+    <span class="text-[11px] font-normal text-slate-400">
+      · {{ maxSizeLabel }}
     </span>
   </button>
 </template>
 
 <script setup>
+import PaymentIcon from "~/components/shared/payment/payment-icon/index.vue";
+
 defineOptions({ name: "ImageUploadEmpty" });
 
 defineProps({

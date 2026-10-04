@@ -1,17 +1,6 @@
 import { studentApi, normalizeStudentTransaction } from "~/services/student";
 import { useAppToast } from "~/composables/useAppToast";
 
-const today = () => {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
-};
-
-const monthStart = () => {
-  const d = new Date();
-  d.setDate(1);
-  return d.toISOString().slice(0, 10);
-};
-
 /**
  * Student transactions dialog data, filters, and pagination.
  */
@@ -29,8 +18,8 @@ export function useStudentTransactions(props) {
   });
 
   const filters = reactive({
-    from: monthStart(),
-    to: today(),
+    from: null,
+    to: null,
     teacherId: null,
     productId: null,
   });
@@ -126,8 +115,8 @@ export function useStudentTransactions(props) {
     () => [props.visible, props.student?.id],
     async ([open]) => {
       if (!open || !props.student?.id) return;
-      filters.from = monthStart();
-      filters.to = today();
+      filters.from = null;
+      filters.to = null;
       filters.teacherId = null;
       filters.productId = null;
       resetPagination();

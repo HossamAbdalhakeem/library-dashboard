@@ -22,8 +22,22 @@ export const API_ERROR_MESSAGES_AR: Record<string, string> = {
   AUTH_TOKEN_REVOKED: "انتهت صلاحية الجلسة. سجّل الدخول مرة أخرى",
   AUTH_USER_INACTIVE: "الحساب غير نشط",
 
+  // Attendance
+  ATTENDANCE_ALREADY_COMPLETED: "تم تسجيل الانصراف لهذا اليوم بالفعل",
+  ATTENDANCE_CHECK_IN_EXISTS: "تم تسجيل الحضور لهذا اليوم بالفعل",
+  ATTENDANCE_CHECK_IN_REQUIRED: "يجب تسجيل الحضور قبل الانصراف",
+  ATTENDANCE_DATE_INVALID: "تاريخ الحضور غير صحيح",
+  ATTENDANCE_LOCATION_INVALID: "بيانات الموقع غير صحيحة",
+  ATTENDANCE_NOT_FOUND: "لا يوجد سجل حضور لهذا اليوم",
+  ATTENDANCE_OUTSIDE_BRANCH: "أنت خارج نطاق الفرع. حاول مرة أخرى داخل النطاق",
+
   // Branch
   BRANCH_EMPLOYEE_UNASSIGNED: "الموظف غير مرتبط بأي فرع",
+  BRANCH_LOCATION_INVALID: "أدخل خط العرض وخط الطول معاً",
+  BRANCH_LOCATION_NOT_CONFIGURED:
+    "لم يتم ضبط موقع الفرع بعد. يجب على المدير تحديد الموقع أولاً",
+  BRANCH_MAPS_LINK_INVALID:
+    "تعذر استخراج الموقع من رابط خرائط جوجل. استخدم رابط المكان الكامل",
   BRANCH_INACTIVE: "الفرع غير نشط",
   BRANCH_INACTIVE_OR_NOT_FOUND: "الفرع غير نشط أو غير موجود",
   BRANCH_NOT_FOUND: "الفرع غير موجود",
@@ -50,14 +64,15 @@ export const API_ERROR_MESSAGES_AR: Record<string, string> = {
 
   // Inventory
   INVENTORY_ADJUSTED_BELOW_RESERVED_QUANTITY:
-    "لا يمكن التسوية لأقل من الكمية المحجوزة",
+    "لا يمكن التسوية لأقل من الكمية المحجوزة والتالفة",
   INVENTORY_AVAILABLE_STOCK_INSUFFICIENT:
     "الكمية المتاحة في المخزون غير كافية",
   INVENTORY_AVAILABLE_STOCK_INSUFFICIENT_TO_RESERVE:
     "الكمية المتاحة غير كافية لإتمام الحجز",
   INVENTORY_BELOW_RESERVED_QUANTITY:
-    "الكمية أقل من الكمية المحجوزة",
+    "لا يمكن إنقاص المخزون إلى أقل من الكمية المحجوزة والتالفة",
   INVENTORY_BRANCH_FORBIDDEN: "غير مسموح بالتعامل مع مخزون هذا الفرع",
+  INVENTORY_DAMAGED_STOCK_INSUFFICIENT: "الكمية التالفة في المخزون غير كافية",
   INVENTORY_NOT_FOUND: "سجل المخزون غير موجود",
   INVENTORY_PHYSICAL_QUANTITY_NEGATIVE:
     "الكمية الفعلية في المخزون لا يمكن أن تكون سالبة",
@@ -114,6 +129,9 @@ export const API_ERROR_MESSAGES_AR: Record<string, string> = {
     "يجب تحديد طريقة الاسترداد عند إلغاء الحجز",
   RESERVATION_CANNOT_BE_CANCELLED: "لا يمكن إلغاء هذا الحجز",
   RESERVATION_CANNOT_BE_MODIFIED: "لا يمكن تعديل هذا الحجز",
+  RESERVATION_CONFIRM_BRANCH_EMPLOYEE_REQUIRED:
+    "تأكيد الحجز يتطلب صلاحية موظف فرع",
+  RESERVATION_NOT_PENDING: "هذا الحجز ليس بانتظار تأكيد الدفع",
   RESERVATION_CHANGE_REFUND_METHOD_REQUIRED:
     "يجب تحديد طريقة الاسترداد عند تغيير الحجز",
   RESERVATION_CREATE_BRANCH_FORBIDDEN: "غير مسموح بإنشاء حجز لهذا الفرع",
@@ -164,6 +182,7 @@ export const API_ERROR_MESSAGES_AR: Record<string, string> = {
   STUDY_YEAR_NOT_FOUND: "السنة الدراسية غير موجودة",
   TEACHER_ACADEMIC_YEAR_MISMATCH:
     "المدرس لا يتوافق مع السنة الدراسية المحددة",
+  TEACHER_ALREADY_ACTIVE: "المدرس نشط بالفعل",
   TEACHER_NOT_FOUND: "المدرس غير موجود",
 
   // User

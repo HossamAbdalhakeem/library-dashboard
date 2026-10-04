@@ -9,7 +9,6 @@
       v-if="showHeader"
       :title="title"
       :back-to="backTo"
-      :is-customer-service="isCustomerService"
     >
       <template #header-actions>
         <slot name="header-actions" />
@@ -22,7 +21,8 @@
         :key="formKey"
         :initial-values="formInitialValues"
         class="grid gap-4 md:grid-cols-2"
-        @submit="handleSubmit"
+        @submit="requestSubmit"
+        @invalid-submit="flagMissingProof"
       >
         <BookingFormFields
           v-model:selected-student="selectedStudent"
@@ -56,27 +56,54 @@
 
         <div class="md:col-span-2 flex justify-center">
           <FormSubmitButton
-            data-testid="booking-submit"
             :label="submitLabel"
             :loading="saving"
-            :valid="meta.valid"
-            button-class="min-w-[220px]"
+            :valid="meta.valid && bookingPaymentReady"
+            button-class="w-full min-w-0 sm:w-auto sm:min-w-[220px]"
           />
         </div>
       </Form>
     </div>
 
-    <ReservationSuccessDialog
-      v-if="successDialogVisible"
-      v-model:visible="successDialogVisible"
-      :summary="reservationSummary"
-      @close="closeSuccessDialog"
+    <PaymentConfirmDialog
+      v-model:visible="confirmDialogVisible"
+      :saving="saving"
+      header="تأكيد الحجز"
+      confirm-label="تأكيد الحجز"
+      lead="تأكيد حجز"
+      :summary="{
+        productName: selectedProductOption?.name,
+        teacherName: selectedProductOption?.teacherName,
+        studentName: form.studentName,
+        productAmount: form.amount,
+        feeAmount: resolvedFeeAmount(),
+      }"
+      @confirm="handleSubmit"
     />
+
+    <PaymentSuccessDialog
+      v-model:visible="successDialogVisible"
+      title="تم تسجيل الحجز بنجاح"
+      reference-label="رقم الحجز"
+      :reference-value="reservationSummary?.reservationNumber"
+      reference-value-class="text-xl font-extrabold tracking-wide text-emerald-700 break-all"
+      :summary="reservationSummary"
+      :product-amount="reservationSummary?.paidAmount"
+      method-position="after-fee"
+      @close="closeSuccessDialog"
+    >
+      <template #footnote>
+        احتفظ برقم الحجز لتسليم الكتاب لاحقًا
+      </template>
+    </PaymentSuccessDialog>
   </div>
 </template>
 
 <script setup>
 import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
+import PaymentConfirmDialog from "~/components/shared/dialog/payment-confirm-dialog/index.vue";
+import PaymentSuccessDialog from "~/components/shared/dialog/payment-success-dialog/index.vue";
+import { paymentMethodNeedsProof } from "~/enums/paymentMethod";
 import { Form } from "vee-validate";
 import { useBookingForm } from "./composables/useBookingForm";
 
@@ -91,10 +118,6 @@ const BookingFormHeader = defineAsyncComponent(
 const BookingFormFields = defineAsyncComponent(
   () => import("./partials/BookingFormFields.vue"),
 );
-const ReservationSuccessDialog = defineAsyncComponent(
-  () => import("~/components/shared/dialog/reservation-success-dialog/index.vue"),
-);
-
 const props = defineProps({
   title: { type: String, default: "حجز منتج" },
   submitLabel: { type: String, default: "تأكيد الحجز" },
@@ -132,13 +155,17 @@ const {
   saving,
   reservationSummary,
   successDialogVisible,
+  confirmDialogVisible,
   proofFile,
   proofKey,
   proofPreviewUrl,
   proofRequiredError,
   paymentFieldsRef,
   closeSuccessDialog,
+  requestSubmit,
+  resolvedFeeAmount,
   handleSubmit,
+  flagMissingProof,
   validateStudentSelection,
   applyStudent,
   clearStudent,
@@ -147,4 +174,9 @@ const {
 const setPaymentFieldsRef = (el) => {
   paymentFieldsRef.value = el || null;
 };
+
+const bookingPaymentReady = computed(() => {
+  if (!paymentMethodNeedsProof(form.paymentMethod)) return true;
+  return Boolean(proofKey.value);
+});
 </script>

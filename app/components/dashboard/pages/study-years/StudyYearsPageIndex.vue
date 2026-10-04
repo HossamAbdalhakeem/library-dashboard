@@ -40,7 +40,7 @@ import Button from "primevue/button";
 import AppGlobalDrawer from "~/components/shared/drawer/app-global-drawer/index.vue";
 import AppSearchInput from "~/components/shared/inputs/app-search-input/index.vue";
 import StudyYearsTable from "~/components/dashboard/pages/study-years/components/table/StudyYearsTable.vue";
-import { studyYearApi } from "~/services/study-year";
+import { studyYearApi, normalizeStudyYearListItem } from "~/services/study-year";
 import { useAppToast } from "~/composables/useAppToast";
 
 const StudyYearForm = defineAsyncComponent(() =>
@@ -68,7 +68,8 @@ const filteredYears = computed(() => {
 const loadData = async () => {
   loading.value = true;
   try {
-    studyYears.value = await studyYearApi.getStudyYears();
+    const years = await studyYearApi.getStudyYears();
+    studyYears.value = years.map(normalizeStudyYearListItem);
   } catch (error) {
     showError(error?.message || "تعذر تحميل السنوات الدراسية.");
     studyYears.value = [];

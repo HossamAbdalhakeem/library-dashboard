@@ -17,8 +17,8 @@
       <DataTable
         v-bind="tableAttrs"
         :value="value"
-        :paginator="paginator"
-        :rows="rows"
+        :paginator="showPaginator"
+        :rows="pageRows"
         :lazy="lazy"
         :first="first"
         :total-records="totalRecords"
@@ -32,6 +32,25 @@
         @page="onPage"
         @row-expand="onRowExpand"
       >
+        <template #paginatorend>
+          <div
+            v-if="showPageSizes"
+            class="app-page-sizes"
+            role="group"
+            aria-label="عدد الصفوف"
+          >
+            <button
+              v-for="size in rowsPerPageOptions"
+              :key="size"
+              type="button"
+              class="app-page-size"
+              :class="{ 'is-active': Number(pageRows) === size }"
+              @click="selectPageSize(size)"
+            >
+              {{ toArabicDigits(size) }}
+            </button>
+          </div>
+        </template>
         <template #empty>
           <div class="app-data-table-empty">
             {{ emptyMessage }}
@@ -110,9 +129,15 @@ const {
   tableAttrs,
   resolvedColumns,
   resolvedTableStyle,
+  rowsPerPageOptions,
+  pageRows,
+  showPaginator,
+  showPageSizes,
   hasCustomBody,
   resolveCell,
   onPage,
+  selectPageSize,
+  toArabicDigits,
   onRowExpand,
 } = useAppDataTable(props, emit);
 </script>

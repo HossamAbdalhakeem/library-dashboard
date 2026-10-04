@@ -1,6 +1,6 @@
 <template>
   <div class="ops-timeline-panel w-full space-y-3 text-right" dir="rtl">
-    <p v-if="showTitle" class="text-sm font-semibold text-white">سجل العملية</p>
+    <p v-if="showTitle" class="text-sm font-semibold text-[var(--app-text-strong)]">سجل العملية</p>
 
     <div v-if="loading" class="ops-timeline ops-timeline-skeleton w-full @container">
       <div
@@ -9,7 +9,7 @@
         class="ops-timeline-skeleton__event flex items-stretch"
       >
         <div
-          class="ops-timeline-skeleton__opposite flex min-w-0 flex-1 justify-end pe-3 pt-3 @max-[280px]:hidden"
+          class="ops-timeline-skeleton__opposite flex min-w-0 justify-end pe-3 pt-3"
         >
           <Skeleton height="0.85rem" width="6.5rem" border-radius="4px" />
         </div>
@@ -27,7 +27,7 @@
             class="space-y-3 rounded-xl border border-slate-700 bg-slate-900/80 p-4 shadow-sm"
           >
             <Skeleton
-              class="hidden @max-[280px]:block"
+              class="ops-timeline-date"
               height="0.75rem"
               width="5.5rem"
               border-radius="4px"
@@ -79,10 +79,8 @@
       v-else
       :value="timeline"
       align="right"
-      class="ops-timeline w-full @container"
+      class="ops-timeline w-full"
       :pt="{
-        eventOpposite: { class: '@max-[280px]:hidden' },
-        eventContent: { class: '@max-[280px]:text-right!' },
         eventConnector: { class: 'mb-4' },
       }"
     >
@@ -103,14 +101,21 @@
 
       <template #content="{ item }">
         <div
-          class="mb-4 rounded-xl border border-slate-700 bg-slate-900/80 p-4 text-right shadow-sm"
+          class="mb-4 rounded-xl border bg-slate-900/80 p-3 text-right shadow-sm sm:p-4"
+          :class="item.damaged ? 'ops-timeline-card--damaged' : 'border-slate-700'"
           dir="rtl"
         >
-          <div class="mb-2 hidden text-sm text-slate-400 @max-[280px]:block">
+          <div class="ops-timeline-date mb-2 text-sm text-slate-400">
             <AppDatetimeTableCell :value="item.date" />
           </div>
 
-          <p class="mb-3 font-bold text-white">{{ item.title }}</p>
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <p class="font-bold text-[var(--app-text-strong)]">{{ item.title }}</p>
+            <span v-if="item.damaged" class="ops-damaged-tag">
+              <i class="pi pi-exclamation-triangle text-[0.7rem]" />
+              تالف
+            </span>
+          </div>
 
           <ul
             v-if="item.details?.length"
@@ -119,10 +124,18 @@
             <li
               v-for="(line, idx) in item.details"
               :key="`${item.id}-d-${idx}`"
-              class="flex items-start gap-2 break-words text-sm leading-relaxed text-slate-300"
+              class="flex items-start gap-2 text-sm leading-relaxed"
+              :class="detailIsDamaged(line) ? 'ops-timeline-line--damaged' : 'text-slate-300'"
             >
-              <i class="pi pi-box mt-0.5 shrink-0 text-xs text-slate-500" />
-              <span>{{ line }}</span>
+              <i
+                class="mt-0.5 shrink-0 text-xs"
+                :class="
+                  detailIsDamaged(line)
+                    ? 'pi pi-exclamation-triangle ops-timeline-line--damaged'
+                    : 'pi pi-box text-slate-500'
+                "
+              />
+              <span class="min-w-0">{{ detailText(line) }}</span>
             </li>
           </ul>
 
@@ -180,27 +193,85 @@ const EVENT_MARKERS = {
 };
 
 const DEFAULT_MARKER = { icon: "pi pi-circle", color: "#64748b" };
+const DAMAGED_MARKER = {
+  icon: "pi pi-exclamation-triangle",
+  color: "#b91c1c",
+};
 
-const markerMeta = (item) =>
-  EVENT_MARKERS[String(item?.type || "").toUpperCase()] || DEFAULT_MARKER;
+const markerMeta = (item) => {
+  if (item?.damaged) return DAMAGED_MARKER;
+  return EVENT_MARKERS[String(item?.type || "").toUpperCase()] || DEFAULT_MARKER;
+};
+
+const detailText = (line) =>
+  typeof line === "string" ? line : line?.text || "";
+
+const detailIsDamaged = (line) =>
+  Boolean(line && typeof line === "object" && line.damaged);
 </script>
 
 <style scoped>
 .ops-timeline {
-  width: 82%;
-  max-width: 82%;
+  container-type: inline-size;
+  container-name: ops-timeline;
+  width: 100%;
+  max-width: 100%;
+}
+
+.ops-timeline-date {
+  display: none;
+}
+
+.ops-timeline :deep(.p-timeline-event-opposite) {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.ops-timeline :deep(.p-timeline-event-content) {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .ops-timeline :deep(.p-timeline-event-connector) {
   background: rgba(148, 163, 184, 0.35);
 }
 
-.ops-timeline :deep(.p-timeline-event-opposite),
-.ops-timeline :deep(.p-timeline-event-content) {
-  min-width: 0;
+@container ops-timeline (max-width: 30rem) {
+  .ops-timeline-date {
+    display: block;
+  }
+
+  .ops-timeline :deep(.p-timeline-event-opposite),
+  .ops-timeline-skeleton__opposite {
+    display: none;
+  }
 }
 
 .ops-timeline-skeleton__event:last-child .ops-timeline-skeleton__content {
   padding-bottom: 0;
+}
+
+.ops-timeline-card--damaged {
+  border-color: rgba(251, 113, 133, 0.7);
+  background: rgba(136, 19, 55, 0.35);
+}
+
+.ops-damaged-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  padding: 0.125rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  color: #fecdd3;
+  background: rgba(190, 18, 60, 0.35);
+  border: 1px solid rgba(251, 113, 133, 0.65);
+  white-space: nowrap;
+}
+
+.ops-timeline-line--damaged {
+  color: #fda4af;
 }
 </style>

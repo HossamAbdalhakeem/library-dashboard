@@ -1,6 +1,6 @@
 <template>
   <div
-    class="session-splash fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-black"
+    class="session-splash fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
     dir="rtl"
     role="status"
     aria-live="polite"
@@ -34,18 +34,50 @@ defineOptions({ name: "SessionWelcomeSplash" });
 </script>
 
 <style scoped>
+.session-splash {
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(245, 175, 82, 0.22), transparent 55%),
+    radial-gradient(90% 70% at 0% 100%, rgba(224, 154, 58, 0.14), transparent 50%),
+    linear-gradient(160deg, #fff8f0 0%, #faf6f1 45%, var(--app-bg) 100%);
+  color: var(--app-text-strong);
+  --splash-grid: rgba(24, 24, 27, 0.07);
+  --splash-glow-a: rgba(245, 175, 82, 0.32);
+  --splash-glow-b: rgba(245, 175, 82, 0.14);
+  --splash-mark-color: #7a5124;
+  --splash-mark-bg: rgba(245, 175, 82, 0.2);
+  --splash-mark-border: rgba(188, 125, 44, 0.4);
+  --splash-eyebrow: #976328;
+  --splash-title: var(--app-text-strong);
+  --splash-subtitle: var(--app-muted);
+  --splash-bar: rgba(24, 24, 27, 0.1);
+}
+
+.app-dark .session-splash {
+  background: #000000;
+  --splash-grid: rgba(255, 255, 255, 0.04);
+  --splash-glow-a: rgba(245, 175, 82, 0.18);
+  --splash-glow-b: rgba(245, 175, 82, 0.06);
+  --splash-mark-color: #fcefd9;
+  --splash-mark-bg: rgba(245, 175, 82, 0.12);
+  --splash-mark-border: rgba(245, 175, 82, 0.3);
+  --splash-eyebrow: rgba(252, 239, 217, 0.75);
+  --splash-title: #ffffff;
+  --splash-subtitle: #a3a3a3;
+  --splash-bar: rgba(255, 255, 255, 0.08);
+}
+
 .session-splash__glow {
   position: absolute;
   inset: -20%;
   background:
     radial-gradient(
       ellipse 50% 40% at 50% 35%,
-      rgba(245, 175, 82, 0.18),
+      var(--splash-glow-a),
       transparent 70%
     ),
     radial-gradient(
       ellipse 40% 35% at 70% 70%,
-      rgba(245, 175, 82, 0.06),
+      var(--splash-glow-b),
       transparent 70%
     );
   animation: splash-glow 4.5s ease-in-out infinite alternate;
@@ -54,12 +86,16 @@ defineOptions({ name: "SessionWelcomeSplash" });
 .session-splash__grid {
   position: absolute;
   inset: 0;
-  opacity: 0.18;
+  opacity: 0.45;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(var(--splash-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--splash-grid) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 60% 55% at 50% 45%, #000 20%, transparent 75%);
+}
+
+.app-dark .session-splash__grid {
+  opacity: 0.18;
 }
 
 .session-splash__mark {
@@ -70,9 +106,9 @@ defineOptions({ name: "SessionWelcomeSplash" });
   justify-content: center;
   margin-bottom: 1.75rem;
   border-radius: 1rem;
-  border: 1px solid rgba(245, 175, 82, 0.3);
-  background: rgba(245, 175, 82, 0.12);
-  color: #fcefd9;
+  border: 1px solid var(--splash-mark-border);
+  background: var(--splash-mark-bg);
+  color: var(--splash-mark-color);
   font-size: 1.5rem;
   box-shadow: 0 0 40px -12px rgba(245, 175, 82, 0.55);
   animation: splash-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -83,7 +119,7 @@ defineOptions({ name: "SessionWelcomeSplash" });
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.28em;
-  color: rgba(252, 239, 217, 0.75);
+  color: var(--splash-eyebrow);
   animation: splash-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
@@ -93,14 +129,14 @@ defineOptions({ name: "SessionWelcomeSplash" });
   font-size: clamp(1.6rem, 4vw, 2.15rem);
   font-weight: 700;
   line-height: 1.35;
-  color: #ffffff;
+  color: var(--splash-title);
   animation: splash-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
 }
 
 .session-splash__subtitle {
   margin: 1rem 0 0;
   font-size: 0.875rem;
-  color: #a3a3a3;
+  color: var(--splash-subtitle);
   animation: splash-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.26s both;
 }
 
@@ -111,7 +147,7 @@ defineOptions({ name: "SessionWelcomeSplash" });
   width: 8rem;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--splash-bar);
   animation: splash-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.36s both;
 }
 

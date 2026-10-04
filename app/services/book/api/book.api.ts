@@ -7,7 +7,7 @@ import type {
 } from "../types/book.types";
 
 export const bookApi = {
-  /** GET /products/search?type=BOOK → PaginatedResponse<BookSearchResponse> */
+  /** GET /admin-api/products/search?type=BOOK → PaginatedResponse<BookSearchResponse> */
   async searchBooks(
     params: BookSearchQuery = {},
   ): Promise<PaginatedResponse<BookSearchResponse>> {

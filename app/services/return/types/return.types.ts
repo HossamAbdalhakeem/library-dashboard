@@ -53,6 +53,7 @@ export type ReturnItemResponse = {
   id: string;
   quantity: number;
   refundAmount: number;
+  damaged: boolean;
   saleItem: ReturnSaleItemRef | null;
 };
 
@@ -90,6 +91,7 @@ export type ReturnResponse = {
 export type ReturnItemPayload = {
   saleItemId: string;
   quantity: number;
+  damaged?: boolean;
 };
 
 /** POST /returns body — flat FKs (CreateReturnDto). */

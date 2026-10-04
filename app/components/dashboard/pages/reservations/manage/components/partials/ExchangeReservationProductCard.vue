@@ -3,8 +3,8 @@
     <p class="mb-3 text-xs font-semibold" :class="titleClass">{{ title }}</p>
 
     <template v-if="hasProduct">
-      <p class="text-base font-bold text-white">{{ name }}</p>
-      <p class="mt-1 text-xs text-slate-400">
+      <p class="text-base font-bold text-[var(--app-text-strong)]">{{ name }}</p>
+      <p class="mt-1 text-xs text-[var(--app-muted)]">
         مقدم من أ/ {{ teacherName || "—" }}
       </p>
       <div class="mt-3 space-y-1.5">
@@ -28,7 +28,7 @@
       </div>
     </template>
 
-    <p v-else class="text-sm text-slate-400">
+    <p v-else class="text-sm text-[var(--app-muted)]">
       {{ emptyMessage }}
     </p>
   </div>
@@ -46,7 +46,8 @@ defineProps({
   titleClass: { type: String, default: "text-slate-400" },
   cardClass: {
     type: String,
-    default: "border-white/10 bg-slate-900 text-slate-200",
+    default:
+      "border-[var(--app-border)] bg-[var(--app-card)] text-[var(--app-text)]",
   },
   hasProduct: { type: Boolean, default: true },
   name: { type: String, default: "" },

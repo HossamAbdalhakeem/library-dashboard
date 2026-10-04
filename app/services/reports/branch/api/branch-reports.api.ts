@@ -31,7 +31,7 @@ export const branchReportsApi = {
     params: BranchReportQuery = {},
   ): Promise<BranchDailySummaryResponse> {
     return asData(
-      await apiFetch("/reports/branch/summary", {
+      await apiFetch("/admin-api/reports/branch/summary", {
         method: "GET",
         params: withDefaultRange(params),
       }),
@@ -46,7 +46,7 @@ export const branchReportsApi = {
     if (!path) {
       throw new Error(`Unsupported branch report section: ${section}`);
     }
-    const response = await apiFetch(`/reports/branch/${path}`, {
+    const response = await apiFetch(`/admin-api/reports/branch/${path}`, {
       method: "GET",
       params: withDefaultRange(params),
     });
@@ -58,7 +58,7 @@ export const branchReportsApi = {
   ): Promise<BranchOperationTimeline> {
     return asData(
       await apiFetch(
-        `/reports/branch/student-operations/${encodeURIComponent(operationId)}/timeline`,
+        `/admin-api/reports/branch/student-operations/${encodeURIComponent(operationId)}/timeline`,
         { method: "GET" },
       ),
     );

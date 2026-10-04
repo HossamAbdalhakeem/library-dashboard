@@ -1,9 +1,6 @@
 <template>
   <div class="flex flex-wrap items-center justify-between gap-3">
-    <h2
-      class="text-xl font-bold"
-      :class="isCustomerService ? 'text-white' : 'text-slate-900'"
-    >
+    <h2 class="text-xl font-bold text-[var(--app-text-strong)]">
       {{ title }}
     </h2>
     <div class="flex flex-wrap items-center gap-2">
@@ -11,12 +8,7 @@
       <NuxtLink
         v-if="backTo"
         :to="backTo"
-        class="rounded-xl border px-4 py-2 text-sm transition"
-        :class="
-          isCustomerService
-            ? 'border-white/10 text-slate-300 hover:bg-white/5'
-            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-        "
+        class="rounded-xl border border-[var(--app-border)] px-4 py-2 text-sm text-[var(--app-muted-soft)] transition hover:bg-[var(--app-overlay-hover)]"
       >
         ← رجوع للكتب
       </NuxtLink>
@@ -30,6 +22,5 @@ defineOptions({ name: "BookingFormHeader" });
 defineProps({
   title: { type: String, default: "حجز منتج" },
   backTo: { type: String, default: "" },
-  isCustomerService: { type: Boolean, default: false },
 });
 </script>

@@ -11,7 +11,6 @@
               icon="pi pi-download"
               severity="secondary"
               outlined
-              data-testid="students-export"
               :disabled="!currentAcademicYearId"
               @click="openExport"
             />
@@ -19,7 +18,6 @@
               label="إضافة طالب جديد"
               icon="pi pi-user-plus"
               severity="primary"
-              data-testid="students-create"
               :disabled="!currentAcademicYearId"
               @click="openCreate"
             />

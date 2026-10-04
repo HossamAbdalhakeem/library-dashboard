@@ -7,6 +7,7 @@ import {
   PaymentMethod,
   paymentMethodNeedsProof,
 } from "~/enums/paymentMethod";
+import { feeAmountForRequest } from "~/utils/payment-fee";
 import { useAppToast } from "~/composables/useAppToast";
 import { useSalesProductSelection } from "./useSalesProductSelection";
 
@@ -20,6 +21,9 @@ export function useSalesPage() {
   const proofRequiredError = ref(false);
   const paymentFieldsRef = ref(null);
   const successDialogVisible = ref(false);
+  const confirmDialogVisible = ref(false);
+  const feeEnabled = ref(false);
+  const feeAmount = ref(null);
   const saleSummary = ref(null);
   const selectedStudent = ref(null);
 
@@ -51,6 +55,9 @@ export function useSalesPage() {
     onStudyYearChange,
     validateQuantity,
     quantityError,
+    clearProductSelection,
+    loadProducts,
+    canSelectProduct,
   } = productSelection;
 
   const validateStudentSelection = (value) => {
@@ -116,6 +123,30 @@ export function useSalesPage() {
   const closeSuccessDialog = () => {
     successDialogVisible.value = false;
     saleSummary.value = null;
+    resetForm();
+  };
+
+  const clearPaymentProof = () => {
+    proofFile.value = null;
+    proofKey.value = "";
+    proofPreviewUrl.value = "";
+    proofRequiredError.value = false;
+    paymentFieldsRef.value?.reset?.();
+  };
+
+  /** Keep student, teacher, year, quantity, and payment method. Clear product and proof. */
+  const startAnotherSale = async () => {
+    successDialogVisible.value = false;
+    saleSummary.value = null;
+    clearProductSelection();
+    quantityError.value = "";
+    clearPaymentProof();
+    if (!canSelectProduct.value) return;
+    try {
+      await loadProducts();
+    } catch (error) {
+      showError(error?.message || "تعذر تحميل المنتجات.");
+    }
   };
 
   const resetForm = () => {
@@ -135,16 +166,40 @@ export function useSalesPage() {
     proofPreviewUrl.value = "";
     proofRequiredError.value = false;
     quantityError.value = "";
+    feeEnabled.value = false;
+    feeAmount.value = null;
+    confirmDialogVisible.value = false;
     paymentFieldsRef.value?.reset?.();
     formKey.value += 1;
   };
 
-  const submitSale = async () => {
+  const flagMissingProof = () => {
     proofRequiredError.value = false;
-    quantityError.value = "";
-
     if (paymentFieldsRef.value && !paymentFieldsRef.value.validate()) {
       proofRequiredError.value = true;
+      return true;
+    }
+    return false;
+  };
+
+  const requestSubmit = () => {
+    quantityError.value = "";
+    if (flagMissingProof()) return;
+    if (!validateQuantity()) return;
+    confirmDialogVisible.value = true;
+  };
+
+  const resolvedFeeAmount = () =>
+    feeAmountForRequest({
+      method: form.method,
+      enabled: feeEnabled.value,
+      amount: feeAmount.value,
+    });
+
+  const submitSale = async () => {
+    quantityError.value = "";
+
+    if (flagMissingProof()) {
       return;
     }
 
@@ -164,6 +219,7 @@ export function useSalesPage() {
           productId: form.productId,
           quantity: form.quantity,
           method: form.method,
+          feeAmount: resolvedFeeAmount(),
           ...(needsProof && proofKey.value
             ? { proofReference: proofKey.value }
             : {}),
@@ -175,6 +231,7 @@ export function useSalesPage() {
         studentName: asText(form.studentName, "name") || "-",
         proofImage: proofPreviewUrl.value || "",
         needsProof,
+        feeAmount: resolvedFeeAmount(),
       });
 
       if (!summary) {
@@ -182,10 +239,8 @@ export function useSalesPage() {
       }
 
       saleSummary.value = summary;
+      confirmDialogVisible.value = false;
       successDialogVisible.value = true;
-
-      // Temporarily disabled — keep form values after successful sale
-      // resetForm();
     } catch (error) {
       showError(error?.message || "تعذر تسجيل البيع.");
     } finally {
@@ -207,6 +262,9 @@ export function useSalesPage() {
     proofPreviewUrl,
     proofRequiredError,
     successDialogVisible,
+    confirmDialogVisible,
+    feeEnabled,
+    feeAmount,
     saleSummary,
     selectedStudent,
     form,
@@ -216,8 +274,12 @@ export function useSalesPage() {
     clearStudent,
     onPaymentChange,
     closeSuccessDialog,
+    startAnotherSale,
     resetForm,
+    requestSubmit,
+    resolvedFeeAmount,
     submitSale,
+    flagMissingProof,
     setPaymentFieldsRef,
     ...productSelection,
   });

@@ -106,9 +106,9 @@ export default defineNuxtConfig({
       // which Nuxt head re-applies on refresh and overrides a saved light preference)
       htmlAttrs: { lang: 'ar', dir: 'rtl' },
       link: [
-        { rel: 'icon', type: 'image/jpeg', href: '/library-logo.jpeg' },
-        { rel: 'shortcut icon', type: 'image/jpeg', href: '/library-logo.jpeg' },
-        { rel: 'apple-touch-icon', href: '/library-logo.jpeg' },
+        { rel: 'icon', type: 'image/jpeg', href: '/library-logo.png' },
+        { rel: 'shortcut icon', type: 'image/jpeg', href: '/library-logo.png' },
+        { rel: 'apple-touch-icon', href: '/library-logo.png' },
       ],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -199,10 +199,10 @@ export default defineNuxtConfig({
       xFrameOptions: 'DENY',
       xXSSProtection: '0',
       permissionsPolicy: {
-        // Needed for payment-proof webcam capture (branch / CS flows)
+        // Camera for payment proofs and attendance photos. Geolocation for branch setup and attendance.
         camera: ['self'],
         microphone: [],
-        geolocation: [],
+        geolocation: ['self'],
         'display-capture': [],
         fullscreen: [],
       },

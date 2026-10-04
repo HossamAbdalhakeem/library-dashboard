@@ -1,24 +1,17 @@
 <template>
   <div class="w-full min-w-0 space-y-8 overflow-x-hidden text-right" dir="rtl">
     <div>
-      <h2 class="text-xl font-bold text-white">الرئيسية</h2>
+      <h2 class="text-xl font-bold text-[var(--app-text-strong)]">الرئيسية</h2>
       <p class="mt-1 text-sm text-slate-400">
         نظرة عامة على النظام مع اختصارات سريعة للصفحات والعمليات
       </p>
     </div>
 
-    <AdminHomeKpiSection />
-
     <div class="w-full min-w-0 space-y-4 overflow-x-hidden">
-      <ReportsSummaryCards
-        :params="reportParams"
-        :reload-key="reloadKey"
-      />
-      <ReportsRevenueSection
-        :params="reportParams"
-        :reload-key="reloadKey"
-      />
-      <ReportsReturnsExchangesSection
+      <AdminHomeKpiSection />
+      <AdminHomeActionsSection />
+      <ReportsSummaryCards :params="reportParams" :reload-key="reloadKey" />
+      <ReportsSalesSection
         :params="reportParams"
         :reload-key="reloadKey"
       />
@@ -26,14 +19,9 @@
         :params="reportParams"
         :reload-key="reloadKey"
       />
-      <ReportsExpensesSection
-        :params="reportParams"
-        :reload-key="reloadKey"
-      />
     </div>
 
     <AdminHomeSalesTrendCard />
-    <AdminHomeActionsSection />
     <AdminHomeInsightsSection />
     <AdminHomeRecentOperationsSection />
   </div>
@@ -48,39 +36,36 @@ import {
 
 defineOptions({ name: "AdminHomePageIndex" });
 
-const AdminHomeSalesTrendCard = defineAsyncComponent(() =>
-  import("./components/AdminHomeSalesTrendCard/AdminHomeSalesTrendCard.vue"),
+const AdminHomeSalesTrendCard = defineAsyncComponent(
+  () =>
+    import("./components/AdminHomeSalesTrendCard/AdminHomeSalesTrendCard.vue"),
 );
-const AdminHomeKpiSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeKpiSection/AdminHomeKpiSection.vue"),
+const AdminHomeKpiSection = defineAsyncComponent(
+  () => import("./components/AdminHomeKpiSection/AdminHomeKpiSection.vue"),
 );
-const AdminHomeActionsSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeActionsSection/AdminHomeActionsSection.vue"),
+const AdminHomeActionsSection = defineAsyncComponent(
+  () =>
+    import("./components/AdminHomeActionsSection/AdminHomeActionsSection.vue"),
 );
-const AdminHomeInsightsSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeInsightsSection/AdminHomeInsightsSection.vue"),
+const AdminHomeInsightsSection = defineAsyncComponent(
+  () =>
+    import("./components/AdminHomeInsightsSection/AdminHomeInsightsSection.vue"),
 );
-const AdminHomeRecentOperationsSection = defineAsyncComponent(() =>
-  import("./components/AdminHomeRecentOperationsSection/AdminHomeRecentOperationsSection.vue"),
+const AdminHomeRecentOperationsSection = defineAsyncComponent(
+  () =>
+    import("./components/AdminHomeRecentOperationsSection/AdminHomeRecentOperationsSection.vue"),
 );
-const ReportsSummaryCards = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsSummaryCards/ReportsSummaryCards.vue"),
+const ReportsSummaryCards = defineAsyncComponent(
+  () =>
+    import("~/components/shared/admin-page/ReportsSummaryCards/ReportsSummaryCards.vue"),
 );
-const ReportsRevenueSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsRevenueSection/ReportsRevenueSection.vue"),
+const ReportsSalesSection = defineAsyncComponent(
+  () =>
+    import("~/components/shared/admin-page/ReportsSalesSection/ReportsSalesSection.vue"),
 );
-const ReportsReturnsExchangesSection = defineAsyncComponent(() =>
-  import(
-    "~/components/shared/admin-page/ReportsReturnsExchangesSection/ReportsReturnsExchangesSection.vue"
-  ),
-);
-const ReportsFinancialsSection = defineAsyncComponent(() =>
-  import(
-    "~/components/shared/admin-page/ReportsFinancialsSection/ReportsFinancialsSection.vue"
-  ),
-);
-const ReportsExpensesSection = defineAsyncComponent(() =>
-  import("~/components/shared/admin-page/ReportsExpensesSection/ReportsExpensesSection.vue"),
+const ReportsFinancialsSection = defineAsyncComponent(
+  () =>
+    import("~/components/shared/admin-page/ReportsFinancialsSection/ReportsFinancialsSection.vue"),
 );
 
 const {

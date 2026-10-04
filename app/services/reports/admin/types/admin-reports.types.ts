@@ -37,20 +37,20 @@ export type AdminSummaryResponse = AdminSectionBase & {
   salesCount: number;
   totalPayments: number;
   totalReservations: number;
+  deliveredReservations: number;
+  readyReservations: number;
+  waitingForStockReservations: number;
+  cancelledReservations: number;
+  reservationExchangesCount: number;
   reservationPayments: number;
   reservationDeposits: number;
+  reservationDeliveryPayments: number;
+  reservationRefundAmount: number;
+  reservationExchangeRefundAmount: number;
   outstandingAmount: number;
   inventoryTotal: number;
   grossProfit: number;
   netProfit: number;
-};
-
-/** GET /reports/admin/revenue */
-export type AdminRevenueResponse = AdminSectionBase & {
-  section: "revenue" | "sales";
-  grossSales: number;
-  returns: number;
-  netSales: number;
 };
 
 export type AdminSalesTrendPoint = {
@@ -94,53 +94,117 @@ export type AdminPaymentMethodsResponse = AdminSectionBase & {
   paymentsTotal: number;
 };
 
-export type AdminBranchPerformanceRow = {
+/** GET /reports/admin/sales */
+export type AdminSalesResponse = AdminSectionBase & {
+  section: "sales";
+  salesCount: number;
+  grossSales: number;
+  netSales: number;
+  returnsCount: number;
+  returnedItemsCount: number;
+  exchangesCount: number;
+  exchangeRefundAmount: number;
+  exchangeCollectedAmount: number;
+  refundedAmount: number;
+  damagedReturnsCount: number;
+  damagedQuantity: number;
+};
+
+export type AdminReservationProductRow = {
+  productId: string;
+  name: string;
+  teacherName: string;
+  studyYearName: string;
+  price: number;
+  count: number;
+  paidAmount: number;
+  remainingAmount: number;
+  /** Transfer fees on this product. Separate from paid and remaining. */
+  feesAmount?: number;
+  waitingCount: number;
+};
+
+export type AdminReservationBranchGroup = {
   branchId: string;
   branchName: string;
-  sales: number;
-  salesCount: number;
-  reservations: number;
-  returns: number;
-  expenses: number;
-  netSales: number;
-};
-
-/** GET /reports/admin/branches */
-export type AdminBranchesResponse = AdminSectionBase & {
-  section: "branches";
-  branches: AdminBranchPerformanceRow[];
-};
-
-/** GET /reports/admin/returns-exchanges */
-export type AdminReturnsExchangesResponse = AdminSectionBase & {
-  section: "returns-exchanges";
-  returnsCount: number;
-  exchangesCount: number;
-  refundedAmount: number;
-};
-
-export type AdminExpenseByBranch = {
-  branchId: string | null;
-  branchName: string;
-  categoryId?: string | null;
-  categoryName?: string;
-  amount: number;
-};
-
-export type AdminExpenseByType = {
-  type: string;
-  amount: number;
-};
-
-/** GET /reports/admin/expenses */
-export type AdminExpensesResponse = AdminSectionBase & {
-  section: "expenses";
-  totalExpenses: number;
-  salesRelatedExpenses: number;
-  generalExpenses: number;
-  expensesByBranch: AdminExpenseByBranch[];
-  expensesByType: AdminExpenseByType[];
   count: number;
+  paidAmount: number;
+  remainingAmount: number;
+  waitingCount: number;
+  products: AdminReservationProductRow[];
+};
+
+export type AdminSalesProductRow = {
+  productId: string;
+  name: string;
+  teacherName: string;
+  studyYearName: string;
+  price: number;
+  count: number;
+  quantity: number;
+  salesAmount: number;
+  returnsAmount: number;
+  /** Transfer fees. Separate from netAmount. */
+  feesAmount?: number;
+  netAmount: number;
+};
+
+export type AdminSalesBranchGroup = {
+  branchId: string;
+  branchName: string;
+  count: number;
+  quantity: number;
+  salesAmount: number;
+  returnsAmount: number;
+  netAmount: number;
+  products: AdminSalesProductRow[];
+};
+
+export type AdminInventoryProductRow = {
+  productId: string;
+  name: string;
+  teacherName: string;
+  studyYearName: string;
+  price: number;
+  physicalQuantity: number;
+  reservedQuantity: number;
+  damagedQuantity: number;
+  availableQuantity: number;
+  lowStockThreshold: number | null;
+};
+
+export type AdminInventoryBranchGroup = {
+  branchId: string;
+  branchName: string;
+  physicalQuantity: number;
+  reservedQuantity: number;
+  damagedQuantity: number;
+  availableQuantity: number;
+  products: AdminInventoryProductRow[];
+};
+
+/** GET /reports/admin/inventory-by-product */
+export type AdminInventoryByProductResponse = AdminSectionBase & {
+  section: "inventory-by-product";
+  branches: AdminInventoryBranchGroup[];
+  /** Present when the page branch filter is all branches. */
+  productsByProduct: AdminInventoryProductRow[] | null;
+};
+
+/** GET /reports/admin/sales-by-product */
+export type AdminSalesByProductResponse = AdminSectionBase & {
+  section: "sales-by-product";
+  branches: AdminSalesBranchGroup[];
+  /** Present when the page branch filter is all branches. */
+  productsByProduct: AdminSalesProductRow[] | null;
+};
+
+/** GET /reports/admin/reservations-by-product */
+export type AdminReservationsByProductResponse = AdminSectionBase & {
+  section: "reservations-by-product";
+  branches: AdminReservationBranchGroup[];
+  /** Present when the page branch filter is all branches. */
+  productsByBook: AdminReservationProductRow[] | null;
 };
 
 // --- Home /reports/general/* ---

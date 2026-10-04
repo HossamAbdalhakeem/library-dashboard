@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative mx-auto aspect-[3/4] w-full max-h-[68vh] bg-black sm:aspect-video sm:max-h-[420px]"
+    class="relative mx-auto aspect-[3/4] w-full max-h-[68vh] bg-black sm:aspect-video sm:max-h-[420px] md:aspect-auto md:h-[320px] md:max-h-[320px]"
   >
     <slot />
 

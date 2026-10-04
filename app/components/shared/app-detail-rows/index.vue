@@ -3,11 +3,18 @@
     <div
       v-for="(item, index) in visibleItems"
       :key="item.key || `${item.label}-${index}`"
-      class="flex items-center justify-between gap-2"
+      class="flex min-w-0 items-start justify-between gap-2"
       :class="item.rowClass"
     >
-      <span :class="item.labelClass || labelClass">{{ item.label }}</span>
-      <span :class="item.valueClass || valueClass">
+      <span class="shrink-0" :class="item.labelClass || labelClass">{{ item.label }}</span>
+      <span
+        class="min-w-0 break-words"
+        :dir="item.valueDir || undefined"
+        :class="[
+          item.valueClass || valueClass,
+          item.valueDir === 'ltr' ? 'text-right' : 'text-end',
+        ]"
+      >
         <slot
           v-if="item.slot"
           :name="item.slot"
@@ -32,6 +39,7 @@ const props = defineProps({
    *   value?: string|number,
    *   labelClass?: string,
    *   valueClass?: string,
+   *   valueDir?: "ltr" | "rtl",
    *   rowClass?: string,
    *   slot?: string,
    *   hidden?: boolean,

@@ -6,7 +6,7 @@ export const paymentApi = {
   /**
    * Upload a payment proof image through the Nest API.
    * Returns a temporary signed `fileUrl` for preview and a permanent `key` to store.
-   * POST /uploads/payment-screenshot → PaymentScreenshotUploadResult
+   * POST /admin-api/uploads/payment-screenshot → PaymentScreenshotUploadResult
    */
   async uploadPaymentProof(file: File): Promise<PaymentScreenshotUploadResult> {
     const body = new FormData();
@@ -14,7 +14,7 @@ export const paymentApi = {
 
     const result = asData(
       await apiFetch<PaymentScreenshotUploadResult>(
-        "/uploads/payment-screenshot",
+        "/admin-api/uploads/payment-screenshot",
         {
           method: "POST",
           body,
@@ -25,25 +25,25 @@ export const paymentApi = {
     return assertPaymentScreenshot(result);
   },
 
-  /** GET /uploads/payment-screenshot/:paymentId → PaymentScreenshotUploadResult */
+  /** GET /admin-api/uploads/payment-screenshot/:paymentId → PaymentScreenshotUploadResult */
   async getPaymentScreenshot(
     paymentId: string,
   ): Promise<PaymentScreenshotUploadResult> {
     return asData(
       await apiFetch<PaymentScreenshotUploadResult>(
-        `/uploads/payment-screenshot/${paymentId}`,
+        `/admin-api/uploads/payment-screenshot/${paymentId}`,
         { method: "GET" },
       ),
     );
   },
 
-  /** GET /uploads/refund-screenshot/:refundId → PaymentScreenshotUploadResult */
+  /** GET /admin-api/uploads/refund-screenshot/:refundId → PaymentScreenshotUploadResult */
   async getRefundScreenshot(
     refundId: string,
   ): Promise<PaymentScreenshotUploadResult> {
     return asData(
       await apiFetch<PaymentScreenshotUploadResult>(
-        `/uploads/refund-screenshot/${refundId}`,
+        `/admin-api/uploads/refund-screenshot/${refundId}`,
         { method: "GET" },
       ),
     );

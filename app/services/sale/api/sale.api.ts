@@ -7,26 +7,26 @@ import type {
 } from "../types/sale.types";
 
 export const saleApi = {
-  /** POST /sales → SaleResponse | null */
+  /** POST /admin-api/sales → SaleResponse | null */
   async createSale(payload: SalePayload): Promise<SaleResponse | null> {
     return firstRow<SaleResponse>(
-      await apiFetch("/sales", {
+      await apiFetch("/admin-api/sales", {
         method: "POST",
         body: payload,
       }),
     );
   },
 
-  /** GET /sales/:id/timeline → SaleTimelineResponse */
+  /** GET /admin-api/sales/:id/timeline → SaleTimelineResponse */
   async getTimeline(id: string): Promise<SaleTimelineResponse> {
     return asData<SaleTimelineResponse>(
-      await apiFetch(`/sales/${id}/timeline`, { method: "GET" }),
+      await apiFetch(`/admin-api/sales/${id}/timeline`, { method: "GET" }),
     );
   },
 
-  /** GET /sales/export → Excel blob (admin only) */
+  /** GET /admin-api/sales/export → Excel blob (admin only) */
   async exportSales(params: SaleExportQuery = {}): Promise<Blob> {
-    return apiFetchBlob("/sales/export", {
+    return apiFetchBlob("/admin-api/sales/export", {
       method: "GET",
       params,
     });

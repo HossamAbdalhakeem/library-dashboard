@@ -24,7 +24,6 @@
         <Button
           label="تسجيل الخروج"
           severity="danger"
-          data-testid="logout-confirm"
           :loading="loggingOut"
           @click="$emit('confirm')"
         />

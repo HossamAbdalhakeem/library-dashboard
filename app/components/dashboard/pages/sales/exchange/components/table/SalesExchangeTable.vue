@@ -38,9 +38,16 @@
       </template>
 
       <template #paidAmount="{ data }">
-        <span class="text-sm font-medium tabular-nums">
-          {{ data.paidAmountLabel || "—" }}
-        </span>
+        <SalesExchangeAmountCell tone="paid" :label="data.paidAmountLabel" />
+      </template>
+
+      <template #feeAmount="{ data }">
+        <SalesExchangeAmountCell
+          v-if="Number(data.feeAmount) > 0"
+          tone="fee"
+          :label="data.feeAmountLabel"
+        />
+        <span v-else class="text-sm text-slate-500">—</span>
       </template>
 
       <template #status="{ data }">
@@ -66,7 +73,6 @@
           size="small"
           severity="secondary"
           title="السجل"
-          data-testid="sale-timeline-open"
           aria-label="السجل"
           @click="openTimeline(data)"
         />
@@ -167,6 +173,7 @@ const columns = [
   { field: "products", header: "المنتجات", slot: "products" },
   { field: "quantitySummary", header: "الكمية", slot: "quantity" },
   { field: "paidAmountLabel", header: "المدفوع", slot: "paidAmount" },
+  { field: "feeAmountLabel", header: "رسوم التحويل", slot: "feeAmount" },
   { field: "totalAmountLabel", header: "الإجمالي", slot: "totalAmount" },
   { field: "branchName", header: "الفرع" },
   { field: "statusLabel", header: "الحالة", slot: "status" },

@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-2xl border border-white/10 bg-slate-900/90 p-5" dir="rtl">
-    <p class="font-bold text-white">{{ title }}</p>
+    <p class="font-bold text-[var(--app-text-strong)]">{{ title }}</p>
     <p v-if="subtitle" class="mt-0.5 text-xs text-slate-400">{{ subtitle }}</p>
 
     <div
@@ -14,7 +14,7 @@
       <li
         v-for="(item, index) in items"
         :key="item.id || index"
-        class="flex items-center justify-between gap-3 border-b border-white/[0.04] py-3 last:border-b-0"
+        class="flex items-center justify-between gap-3 border-b border-[var(--app-border)] py-3 last:border-b-0"
       >
         <div class="flex min-w-0 items-center gap-3">
           <span
@@ -26,7 +26,7 @@
             item.name || "—"
           }}</span>
         </div>
-        <span class="shrink-0 text-sm font-bold text-white">
+        <span class="shrink-0 text-sm font-bold text-[var(--app-text-strong)]">
           {{ Number(item.salesCount ?? 0) }}
         </span>
       </li>

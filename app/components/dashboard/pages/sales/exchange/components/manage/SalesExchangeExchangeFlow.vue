@@ -28,6 +28,13 @@
       @close="close"
     />
 
+    <PaymentFeeDialog
+      v-model:visible="feeDialogVisible"
+      :method="exchangePaymentMethod"
+      :busy="busy"
+      @confirm="onFeeConfirm"
+    />
+
     <ExchangeFlowConfirmDialog
       :visible="confirmVisible"
       :busy="busy"
@@ -35,6 +42,7 @@
       :selected-new-product="selectedNewProduct"
       :price-comparison="priceComparisonUi"
       :exchange-quantity="exchangeQuantity"
+      :fee-amount="pendingFeeAmount"
       @update:visible="(v) => (confirmVisible = v)"
       @confirm="confirm"
     />
@@ -44,6 +52,7 @@
 <script setup>
 import ExchangeFlowDetailDialog from "~/components/dashboard/pages/sales/exchange/components/partials/ExchangeFlowDetailDialog.vue";
 import ExchangeFlowConfirmDialog from "~/components/dashboard/pages/sales/exchange/components/partials/ExchangeFlowConfirmDialog.vue";
+import PaymentFeeDialog from "~/components/shared/payment/payment-fee-dialog/index.vue";
 import { useSalesExchangeExchangeFlow } from "~/components/dashboard/pages/sales/exchange/composables/useSalesExchangeExchangeFlow";
 
 defineOptions({ name: "SalesExchangeExchangeFlow" });
@@ -59,6 +68,8 @@ const {
   busy,
   previewLoading,
   confirmVisible,
+  feeDialogVisible,
+  pendingFeeAmount,
   newProductId,
   exchangeQuantity,
   quantityError,
@@ -77,6 +88,7 @@ const {
   onNewProductId,
   onExchangeQuantity,
   requestConfirm,
+  onFeeConfirm,
   confirm,
 } = useSalesExchangeExchangeFlow(props, emit);
 </script>

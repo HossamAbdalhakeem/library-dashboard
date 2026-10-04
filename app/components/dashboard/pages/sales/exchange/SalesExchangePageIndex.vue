@@ -10,7 +10,6 @@
             icon="pi pi-download"
             severity="secondary"
             outlined
-            data-testid="sales-export"
             @click="openExport"
           />
         </div>

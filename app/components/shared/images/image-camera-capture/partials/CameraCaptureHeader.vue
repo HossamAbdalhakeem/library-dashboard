@@ -3,8 +3,8 @@
     class="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3"
   >
     <div class="text-right">
-      <p class="text-sm font-semibold">التقاط صورة الإثبات</p>
-      <p class="text-[11px] text-slate-400">وجّه الكاميرا ثم اضغط التقاط</p>
+      <p class="text-sm font-semibold">{{ title }}</p>
+      <p class="text-[11px] text-slate-400">{{ subtitle }}</p>
     </div>
     <button
       type="button"
@@ -23,6 +23,8 @@ defineOptions({ name: "CameraCaptureHeader" });
 
 defineProps({
   disabled: { type: Boolean, default: false },
+  title: { type: String, default: "التقاط صورة الإثبات" },
+  subtitle: { type: String, default: "وجّه الكاميرا ثم اضغط التقاط" },
 });
 
 defineEmits(["close"]);

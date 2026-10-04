@@ -10,6 +10,7 @@
           :label="row.label"
           :value="row.value"
           :value-class="row.valueClass"
+          :value-dir="row.valueDir"
         />
       </div>
 
@@ -90,7 +91,12 @@ const infoRows = computed(() => {
       valueClass: "font-semibold text-white",
     },
     { key: "student", label: "الطالب", value: r.student?.name },
-    { key: "phone", label: "الموبايل", value: r.student?.phone || "—" },
+    {
+      key: "phone",
+      label: "الموبايل",
+      value: r.student?.phone || "—",
+      valueDir: "ltr",
+    },
     { key: "product", label: "المنتج", value: r.product?.name },
     { key: "branch", label: "الفرع", value: r.branch?.name },
     { key: "quantity", label: "الكمية", value: r.quantity },

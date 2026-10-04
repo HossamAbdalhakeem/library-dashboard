@@ -160,6 +160,8 @@ const onValidate = (payload) => {
   box-shadow: none !important;
   background: transparent !important;
   color: var(--app-text-strong) !important;
+  direction: ltr;
+  text-align: right;
   font-size: 0.875rem;
   line-height: 1.25rem;
   padding: 0.625rem 0.75rem !important;

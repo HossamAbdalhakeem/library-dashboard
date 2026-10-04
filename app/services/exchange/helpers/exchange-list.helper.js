@@ -3,6 +3,7 @@ import { formatDateTime } from "~/utils/format/datetime";
 import { isFiniteNumber, toFiniteNumber } from "~/utils/format/number";
 import { getPaymentMethodLabel, normalizePaymentMethod } from "~/enums/paymentMethod";
 import { getSaleStatusLabel } from "~/utils/domain-labels/sale";
+import { visibleFeeAmount } from "~/utils/payment-fee";
 
 const SALE_ORIGIN_LABELS = {
   SALE: "بيع مباشر",
@@ -24,6 +25,14 @@ const normalizeTeacher = (teacher) => {
   };
 };
 
+const normalizeStudyYear = (studyYear) => {
+  if (!studyYear?.name) return null;
+  return {
+    ...(studyYear.id != null ? { id: studyYear.id } : {}),
+    name: studyYear.name,
+  };
+};
+
 const normalizeProduct = (product = {}) => {
   const unitPrice = toMoney(product.unitPrice);
   const amount = toMoney(product.amount);
@@ -31,11 +40,13 @@ const normalizeProduct = (product = {}) => {
     product.refundAmount != null ? product.refundAmount : product.amount,
   );
   const teacher = normalizeTeacher(product.teacher);
+  const studyYear = normalizeStudyYear(product.studyYear);
 
   return {
     id: product.id || null,
     name: product.name || "-",
     teacher,
+    studyYear,
     unitPrice,
     amount,
     refundAmount,
@@ -113,6 +124,7 @@ export const normalizeEligibleSale = (sale = {}) => {
 
   const totalAmount = toMoney(sale.totalAmount);
   const paidAmount = toMoney(sale.paidAmount);
+  const feeAmount = visibleFeeAmount(sale.feeAmount);
   const status = String(sale.status || "COMPLETED").toUpperCase();
   const type = String(sale.type || "SALE").toUpperCase();
   const method = normalizePaymentMethod(payment.method);
@@ -144,8 +156,10 @@ export const normalizeEligibleSale = (sale = {}) => {
     canModify: Boolean(sale.canModify ?? items.some((i) => i.canModify)),
     totalAmount,
     paidAmount,
+    feeAmount: feeAmount ?? 0,
     totalAmountLabel: formatMoney(totalAmount),
     paidAmountLabel: formatMoney(paidAmount),
+    feeAmountLabel: feeAmount != null ? formatMoney(feeAmount) : "",
     quantitySummary: buildQuantitySummary(sale.quantitySummary || {}, items),
     student: {
       ...(student.id != null ? { id: student.id } : {}),

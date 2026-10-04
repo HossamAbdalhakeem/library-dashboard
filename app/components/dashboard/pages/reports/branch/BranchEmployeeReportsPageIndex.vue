@@ -4,7 +4,7 @@
       class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between"
     >
       <div class="min-w-0">
-        <h2 class="text-xl font-bold text-white">التقرير</h2>
+        <h2 class="text-xl font-bold text-[var(--app-text-strong)]">التقرير</h2>
         <p class="mt-1 text-sm text-slate-400">
           نظرة سريعة على نشاط الفرع والمدفوعات وعمليات الطلاب والمخزن
         </p>

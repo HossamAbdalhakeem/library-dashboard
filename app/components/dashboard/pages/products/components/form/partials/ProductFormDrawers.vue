@@ -3,8 +3,8 @@
     v-model:visible="teacherDrawerVisible"
     header="إضافة مدرس"
     position="right"
-    class="!w-[400px] max-w-[400px]"
-    :style="{ width: '400px' }"
+    class="!w-[min(400px,100vw)] !max-w-[100vw]"
+    :style="{ width: 'min(400px, 100vw)', maxWidth: '100vw' }"
     :block-scroll="true"
     dir="rtl"
   >
@@ -20,8 +20,8 @@
     v-model:visible="studyYearDrawerVisible"
     header="إضافة سنة دراسية"
     position="right"
-    class="!w-[400px] max-w-[400px]"
-    :style="{ width: '400px' }"
+    class="!w-[min(400px,100vw)] !max-w-[100vw]"
+    :style="{ width: 'min(400px, 100vw)', maxWidth: '100vw' }"
     :block-scroll="true"
     dir="rtl"
   >

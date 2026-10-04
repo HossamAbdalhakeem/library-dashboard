@@ -35,15 +35,29 @@
         {{ payment?.remainingAmountLabel || "—" }}
       </span>
     </div>
+
+    <div
+      v-if="feeAmount != null"
+      class="flex items-center justify-between gap-2"
+    >
+      <span class="text-[11px] text-[var(--app-muted)]">رسوم التحويل</span>
+      <span class="rounded-md bg-sky-500/20 px-1.5 py-0.5 text-xs font-bold text-sky-300">
+        {{ payment.feeAmountLabel || formatMoney(feeAmount) }}
+      </span>
+    </div>
   </div>
 </template>
 
 <script setup>
 import PaymentProofThumb from "~/components/shared/payment/payment-proof-thumb/index.vue";
+import { formatMoney } from "~/utils/format/money";
+import { visibleFeeAmount } from "~/utils/payment-fee";
 
 defineOptions({ name: "AppPaymentSummaryTableCell" });
 
-defineProps({
+const props = defineProps({
   payment: { type: Object, default: null },
 });
+
+const feeAmount = computed(() => visibleFeeAmount(props.payment?.feeAmount));
 </script>

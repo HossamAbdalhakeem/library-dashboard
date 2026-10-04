@@ -76,7 +76,7 @@ const ACCENT_META = {
     borderClass: "border-white/10",
     barClass: "bg-slate-500",
     shadowClass: "",
-    valueClass: "text-white",
+    valueClass: "text-[var(--app-text-strong)]",
     iconWrapClass: "bg-white/5 text-slate-300",
   },
 };

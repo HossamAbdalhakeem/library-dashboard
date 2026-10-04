@@ -14,36 +14,36 @@ import type {
 } from "../types/product.types";
 
 export const productApi = {
-  /** GET /products → PaginatedResponse<ProductResponse> */
+  /** GET /admin-api/products → PaginatedResponse<ProductResponse> */
   async getProducts(
     params: ProductQuery = {},
   ): Promise<PaginatedResponse<ProductResponse>> {
     return asPaginated<ProductResponse>(
-      await apiFetch("/products", { method: "GET", params }),
+      await apiFetch("/admin-api/products", { method: "GET", params }),
     );
   },
 
-  /** GET /products/search → PaginatedResponse<ProductSearchResponse> */
+  /** GET /admin-api/products/search → PaginatedResponse<ProductSearchResponse> */
   async searchProducts(
     params: ProductSearchQuery = {},
   ): Promise<PaginatedResponse<ProductSearchResponse>> {
     return asPaginated<ProductSearchResponse>(
-      await apiFetch("/products/search", { method: "GET", params }),
+      await apiFetch("/admin-api/products/search", { method: "GET", params }),
     );
   },
 
   async getProduct(id: string): Promise<ProductResponse | null> {
     return firstRow<ProductResponse>(
-      await apiFetch(`/products/${id}`, { method: "GET" }),
+      await apiFetch(`/admin-api/products/${id}`, { method: "GET" }),
     );
   },
 
-  /** POST /products → ProductResponse | null */
+  /** POST /admin-api/products → ProductResponse | null */
   async createProduct(
     payload: ProductPayload,
   ): Promise<ProductResponse | null> {
     return firstRow<ProductResponse>(
-      await apiFetch("/products", {
+      await apiFetch("/admin-api/products", {
         method: "POST",
         body: payload,
       }),
@@ -55,7 +55,7 @@ export const productApi = {
     payload: ProductUpdatePayload,
   ): Promise<ProductResponse | null> {
     return firstRow<ProductResponse>(
-      await apiFetch(`/products/${id}`, {
+      await apiFetch(`/admin-api/products/${id}`, {
         method: "PATCH",
         body: payload,
       }),

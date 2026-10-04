@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 text-right" :class="wrapperClass" data-testid="select-product">
+  <div class="flex w-full min-w-0 flex-col gap-2 text-right" :class="wrapperClass">
     <label v-if="label" class="text-sm font-medium" :class="labelClass">{{ label }}</label>
 
     <Select
@@ -16,7 +16,6 @@
       :invalid="invalid"
       class="w-full product-select"
       :class="{ 'p-invalid': invalid }"
-      data-testid="select-product-trigger"
       @filter="onFilter"
       @update:model-value="onUpdate"
     >
@@ -71,6 +70,7 @@ const props = defineProps({
   catalogQuery: { type: Object, default: () => ({}) },
   excludeProductId: { type: [String, Number], default: null },
   minAvailableQuantity: { type: Number, default: 0 },
+  minDamagedQuantity: { type: Number, default: 0 },
   reservationOnly: { type: Boolean, default: false },
   autoLoad: { type: Boolean, default: true },
   filterFields: {

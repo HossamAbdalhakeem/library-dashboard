@@ -6,6 +6,7 @@ import {
 import { buildExchangeDiffLabels } from "~/utils/domain-labels/exchange";
 import { getAvailabilityLabel } from "~/utils/domain-labels/product";
 import { canSelectExchangeProduct } from "~/utils/productOptions";
+import { assignFeeAmount } from "~/utils/payment-fee";
 
 export const COMPARISON_UI = {
   more: {
@@ -208,6 +209,7 @@ export function buildExchangePayload({
   exchangePaymentMethod,
   exchangeRefundMethod,
   exchangeProofKey,
+  feeAmount,
 }) {
   const payload = {
     saleId: sale.saleId,
@@ -218,6 +220,7 @@ export function buildExchangePayload({
 
   if (preview?.kind === "more") {
     payload.paymentMethod = exchangePaymentMethod;
+    assignFeeAmount(payload, exchangePaymentMethod, feeAmount);
     if (exchangeProofKey) {
       payload.proofReference = exchangeProofKey;
     }

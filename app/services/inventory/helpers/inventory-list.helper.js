@@ -19,11 +19,14 @@ export const mapInventoryProductOption = (item) => {
   if (!product?.id) return null;
 
   const teacherName = product.teacher?.name || "";
+  const damagedQuantity = Number(item?.damagedQuantity || 0);
   const availableQuantity = Number(
     item?.availableQuantity ??
       Math.max(
         0,
-        Number(item?.physicalQuantity || 0) - Number(item?.reservedQuantity || 0),
+        Number(item?.physicalQuantity || 0) -
+          Number(item?.reservedQuantity || 0) -
+          damagedQuantity,
       ),
   );
   const isAvailable = availableQuantity > 0;
@@ -50,6 +53,7 @@ export const mapInventoryProductOption = (item) => {
     isSellingPrice: hasSellingPrice,
     displayPrice,
     availableQuantity,
+    damagedQuantity,
     isAvailable,
     reservationAllowed,
     canSelect: isAvailable || reservationAllowed,
@@ -70,6 +74,7 @@ export const mapInventoryProductOptions = (items = [], filters = {}) => {
   const list = Array.isArray(items) ? items : items?.data || [];
   const excludeId = filters.excludeProductId ?? null;
   const minQty = Number(filters.minAvailableQuantity || 0);
+  const minDamaged = Number(filters.minDamagedQuantity || 0);
 
   return list
     .map(mapInventoryProductOption)
@@ -80,15 +85,8 @@ export const mapInventoryProductOptions = (items = [], filters = {}) => {
         !minQty ||
         option.availableQuantity >= minQty ||
         option.reservationAllowed,
+    )
+    .filter(
+      (option) => !minDamaged || option.damagedQuantity >= minDamaged,
     );
 };
-
-/** Query for paginated branch inventory expand (same shape as expenses/reservations). */
-export const buildBranchInventoryPageQuery = ({
-  page = 1,
-  perPage = 10,
-} = {}) => ({
-  include_sold: true,
-  page,
-  per_page: perPage,
-});

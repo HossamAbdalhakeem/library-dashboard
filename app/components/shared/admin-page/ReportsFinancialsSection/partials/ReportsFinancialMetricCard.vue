@@ -61,7 +61,7 @@ const ACCENT_META = {
   },
   slate: {
     borderClass: "border-white/10",
-    valueClass: "text-white",
+    valueClass: "text-[var(--app-text-strong)]",
     iconWrapClass: "bg-white/5 text-slate-300",
     emphasizeClass: "border-white/20",
   },

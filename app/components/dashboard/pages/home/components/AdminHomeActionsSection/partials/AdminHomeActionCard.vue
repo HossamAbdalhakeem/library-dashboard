@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-slate-950/50 p-5 text-right transition-all duration-200 hover:-translate-y-0.5 hover:border-white/10 hover:bg-slate-900/70"
+    class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-950/50 p-5 text-right transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--app-border-strong)] hover:bg-[var(--app-overlay-hover)]"
     @click="$emit('select')"
   >
     <div
@@ -16,7 +16,7 @@
       <i :class="['pi text-lg', icon]" />
     </div>
 
-    <p class="text-base font-bold text-white">{{ title }}</p>
+    <p class="text-base font-bold text-[var(--app-text-strong)]">{{ title }}</p>
     <p class="mt-1.5 flex-1 text-sm leading-relaxed text-slate-400">
       {{ description }}
     </p>

@@ -32,6 +32,13 @@
         placeholder="اختياري"
       />
 
+      <BranchLocationFields
+        v-model:latitude="form.latitude"
+        v-model:longitude="form.longitude"
+        v-model:attendance-radius-meters="form.attendanceRadiusMeters"
+        :field-errors="fieldErrors"
+      />
+
       <div
         v-if="isEdit"
         class="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-3"
@@ -45,7 +52,7 @@
         <ToggleSwitch v-model="form.isActive" />
       </div>
 
-      <div class="flex justify-end gap-2 pt-2">
+      <div class="flex flex-wrap justify-end gap-2 pt-2">
         <Button
           type="button"
           label="إلغاء"
@@ -69,6 +76,7 @@ import FormSubmitButton from "~/components/shared/form-submit-button/index.vue";
 import InputText from "primevue/inputtext";
 import ToggleSwitch from "primevue/toggleswitch";
 import AppPhoneInput from "~/components/shared/inputs/app-phone-input/index.vue";
+import BranchLocationFields from "./partials/BranchLocationFields.vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import {
   branchApi,
@@ -110,6 +118,11 @@ const submit = async () => {
   try {
     const payload = buildBranchPayload(form);
     if (!payload.name) throw new Error("اسم الفرع مطلوب.");
+    const hasLatitude = payload.latitude != null;
+    const hasLongitude = payload.longitude != null;
+    if (hasLatitude !== hasLongitude) {
+      throw new Error("أدخل خط العرض وخط الطول معاً.");
+    }
 
     let result;
     if (isEdit.value) {

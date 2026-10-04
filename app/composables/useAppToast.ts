@@ -10,12 +10,16 @@ const isSessionGoneMessage = (detail) => {
   );
 };
 
+const isRequestAbortedMessage = (detail) =>
+  String(detail || "").trim() === "REQUEST_ABORTED";
+
 export const useAppToast = () => {
   const toast = useToast();
 
   const showError = (detail, summary = "خطأ") => {
-    // Ignore client-side session-cleared errors after logout (no API call).
-    if (isSessionGoneMessage(detail)) return;
+    // Ignore client-side session-cleared errors after logout (no API call),
+    // and reads cancelled because the user changed route.
+    if (isSessionGoneMessage(detail) || isRequestAbortedMessage(detail)) return;
 
     toast.add({
       severity: "error",
@@ -34,5 +38,14 @@ export const useAppToast = () => {
     });
   };
 
-  return { toast, showError, showSuccess };
+  const showWarning = (detail, summary = "تنبيه") => {
+    toast.add({
+      severity: "warn",
+      summary,
+      detail: detail || "تحقق من البيانات.",
+      life: 4500,
+    });
+  };
+
+  return { toast, showError, showSuccess, showWarning };
 };

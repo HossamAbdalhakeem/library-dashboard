@@ -10,8 +10,13 @@ export const normalizeBranchSummary = (payload = {}) => {
     paymentsTotal: Number(
       summary.paymentsTotal ?? summary.paymentsCollected ?? 0,
     ),
+    feesTotal: Number(summary.feesTotal ?? 0),
     paymentsByMethod: Array.isArray(summary.paymentsByMethod)
-      ? summary.paymentsByMethod
+      ? summary.paymentsByMethod.map((row) => ({
+          method: row?.method,
+          amount: Number(row?.amount ?? 0),
+          feesAmount: Number(row?.feesAmount ?? 0),
+        }))
       : [],
     branchExpenses: Number(summary.branchExpenses ?? 0),
   };

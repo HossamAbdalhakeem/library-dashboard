@@ -50,10 +50,15 @@
         name-only
         :branch-id="selectedBranchId"
         :inventory-query="inventoryQuery"
-        :min-available-quantity="1"
+        :min-available-quantity="isDamagedMode ? 0 : 1"
+        :min-damaged-quantity="isDamagedMode ? 1 : 0"
         :auto-load="canSelectProduct"
-        label="سحبت ايه"
-        placeholder="اختار منتجاً من مخزن الفرع ▾"
+        :label="isDamagedMode ? 'المنتج التالف' : 'سحبت ايه'"
+        :placeholder="
+          isDamagedMode
+            ? 'اختار منتجاً تالفاً ▾'
+            : 'اختار منتجاً من مخزن الفرع ▾'
+        "
         :disabled="!canSelectProduct"
         :invalid="!!errors.productId"
         :hint="productSelectHint"
@@ -70,7 +75,7 @@
           v-if="selectedProduct"
           class="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-700"
         >
-          المتاح بالمخزن: {{ availableQty }}
+          {{ isDamagedMode ? "التالف بالمخزن" : "المتاح بالمخزن" }}: {{ stockQty }}
         </span>
       </div>
       <AppInputNumber
@@ -78,7 +83,7 @@
         :min="1"
         :max="maxQuantity"
         :max-fraction-digits="0"
-        :disabled="!selectedProduct || availableQty < 1"
+        :disabled="!selectedProduct || stockQty < 1"
         :invalid="!!errors.quantity"
         @update:model-value="onQuantityChange"
       />
@@ -86,11 +91,11 @@
     </div>
 
     <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-4 text-right text-sm text-slate-600">
-      المتاح بالمخزن حالياً:
-      <strong class="text-slate-900">{{ availableQty }}</strong>
+      {{ isDamagedMode ? "التالف بالمخزن حالياً" : "المتاح بالمخزن حالياً" }}:
+      <strong class="text-slate-900">{{ stockQty }}</strong>
     </div>
 
-    <div class="flex justify-end gap-2">
+    <div class="flex flex-wrap justify-end gap-2">
       <Button
         v-if="showCancel"
         type="button"
@@ -125,6 +130,7 @@ const props = defineProps({
   lockedBranchId: { type: String, default: "" },
   branchName: { type: String, default: "" },
   showCancel: { type: Boolean, default: true },
+  mode: { type: String, default: "sellable" },
 });
 
 const emit = defineEmits(["saved", "cancel"]);
@@ -149,6 +155,8 @@ const form = reactive({
   quantity: null,
 });
 
+const isDamagedMode = computed(() => props.mode === "damaged");
+
 const selectedBranchId = computed(() => props.lockedBranchId || form.branchId || null);
 
 const canSelectProduct = computed(() =>
@@ -156,9 +164,12 @@ const canSelectProduct = computed(() =>
 );
 
 const inventoryQuery = computed(() => {
-  if (!canSelectProduct.value) return { availableOnly: true };
+  const scope = isDamagedMode.value
+    ? { damagedOnly: true }
+    : { availableOnly: true };
+  if (!canSelectProduct.value) return scope;
   return {
-    availableOnly: true,
+    ...scope,
     studyYearId: form.studyYearId,
     teacherId: form.teacherId,
   };
@@ -186,8 +197,16 @@ const availableQty = computed(() =>
   Math.max(0, Number(selectedProduct.value?.availableQuantity || 0)),
 );
 
+const damagedQty = computed(() =>
+  Math.max(0, Number(selectedProduct.value?.damagedQuantity || 0)),
+);
+
+const stockQty = computed(() =>
+  isDamagedMode.value ? damagedQty.value : availableQty.value,
+);
+
 const maxQuantity = computed(() =>
-  availableQty.value > 0 ? availableQty.value : 1,
+  stockQty.value > 0 ? stockQty.value : 1,
 );
 
 const isFormValid = computed(() => {
@@ -201,8 +220,8 @@ const isFormValid = computed(() => {
       form.quantity != null &&
       isFiniteNumber(qty) &&
       qty >= 1 &&
-      availableQty.value > 0 &&
-      qty <= availableQty.value,
+      stockQty.value > 0 &&
+      qty <= stockQty.value,
   );
 });
 
@@ -226,8 +245,9 @@ const clearProduct = () => {
 };
 
 const validateQuantity = () => {
-  const available = availableQty.value;
+  const available = stockQty.value;
   const qty = Number(form.quantity);
+  const stockLabel = isDamagedMode.value ? "التالف" : "المتاح بالمخزن";
 
   if (!form.productId) {
     errors.quantity = "";
@@ -235,7 +255,9 @@ const validateQuantity = () => {
   }
 
   if (available < 1) {
-    errors.quantity = "لا توجد كمية متاحة لهذا المنتج في الفرع.";
+    errors.quantity = isDamagedMode.value
+      ? "لا توجد كمية تالفة لهذا المنتج في الفرع."
+      : "لا توجد كمية متاحة لهذا المنتج في الفرع.";
     return false;
   }
 
@@ -245,7 +267,7 @@ const validateQuantity = () => {
   }
 
   if (qty > available) {
-    errors.quantity = `الكمية أكبر من المتاح بالمخزن (${available}).`;
+    errors.quantity = `الكمية أكبر من ${stockLabel} (${available}).`;
     return false;
   }
 
@@ -254,7 +276,7 @@ const validateQuantity = () => {
 };
 
 const clampQuantityToAvailable = () => {
-  const available = availableQty.value;
+  const available = stockQty.value;
   if (form.quantity == null) return;
   const qty = Number(form.quantity);
   if (!isFiniteNumber(qty)) {
@@ -334,11 +356,16 @@ const submitRemove = async () => {
 
   saving.value = true;
   try {
-    await inventoryApi.removeStock({
+    const payload = {
       branchId: selectedBranchId.value,
       productId: form.productId,
       quantity: Number(form.quantity),
-    });
+    };
+    if (isDamagedMode.value) {
+      await inventoryApi.removeDamagedStock(payload);
+    } else {
+      await inventoryApi.removeStock(payload);
+    }
 
     form.productId = null;
     form.quantity = null;
@@ -350,7 +377,12 @@ const submitRemove = async () => {
     errors.quantity = "";
     emit("saved");
   } catch (error) {
-    showError(error?.message || "تعذر سحب المنتج من الفرع.");
+    showError(
+      error?.message ||
+        (isDamagedMode.value
+          ? "تعذر إخراج الكمية التالفة من المخزن."
+          : "تعذر سحب المنتج من الفرع."),
+    );
   } finally {
     saving.value = false;
   }
@@ -367,7 +399,7 @@ watch(
   { immediate: true },
 );
 
-watch(availableQty, () => {
+watch(stockQty, () => {
   clampQuantityToAvailable();
   if (form.productId) validateQuantity();
 });

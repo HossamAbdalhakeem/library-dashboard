@@ -29,6 +29,23 @@
       </p>
     </div>
 
+    <div class="flex flex-col gap-1 text-right">
+      <div class="flex items-center gap-2">
+        <Checkbox
+          :model-value="damaged"
+          binary
+          input-id="return-damaged"
+          @update:model-value="$emit('update:damaged', Boolean($event))"
+        />
+        <label for="return-damaged" class="text-sm font-medium text-slate-700">
+          المنتج تالف
+        </label>
+      </div>
+      <p class="text-xs text-slate-500">
+        الكمية المدخلة كلها تالفة ولن ترجع للمتاح للبيع.
+      </p>
+    </div>
+
     <PaymentFields
       :method="refundMethod"
       :image="refundImage"
@@ -45,6 +62,7 @@
 </template>
 
 <script setup>
+import Checkbox from "primevue/checkbox";
 import AppInputNumber from "~/components/shared/inputs/app-input-number/index.vue";
 import AppDetailRows from "~/components/shared/app-detail-rows/index.vue";
 import PaymentFields from "~/components/shared/payment/payment-fields/index.vue";
@@ -59,6 +77,7 @@ const props = defineProps({
   refundProofKey: { type: String, default: "" },
   refundError: { type: String, default: "" },
   quantityError: { type: String, default: "" },
+  damaged: { type: Boolean, default: false },
 });
 
 defineEmits([
@@ -66,6 +85,7 @@ defineEmits([
   "update:refundMethod",
   "update:refundImage",
   "update:refundProofKey",
+  "update:damaged",
 ]);
 
 const maxQuantity = computed(() =>
@@ -91,7 +111,12 @@ const summaryRows = computed(() => {
       valueClass: "font-semibold text-slate-900",
     },
     { key: "student", label: "الطالب", value: sale.student?.name },
-    { key: "phone", label: "الموبايل", value: sale.student?.phone || "—" },
+    {
+      key: "phone",
+      label: "الموبايل",
+      value: sale.student?.phone || "—",
+      valueDir: "ltr",
+    },
     { key: "product", label: "المنتج", value: sale.product?.name },
     { key: "branch", label: "الفرع", value: sale.branch?.name },
     {

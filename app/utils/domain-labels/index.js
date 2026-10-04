@@ -35,6 +35,8 @@ export {
   TIMELINE_EVENT_LABELS,
   getOperationStatusLabel,
   getOperationStatusColor,
+  getStudentOpsTrailLabel,
+  getStudentOpsTrailColor,
   getOperationActivityLabel,
   getOperationActivityColor,
   getStudentSaleLabel,
@@ -53,7 +55,11 @@ export { AVAILABILITY_LABELS, getAvailabilityLabel } from "./product";
 export {
   REPORT_ACTIVITY_KEY_LABELS,
   REPORT_METRIC_COLORS,
+  REFUND_EVENT_KIND_LABELS,
+  REFUND_EVENT_SETTLEMENT_LABELS,
+  REFUND_EVENT_DEFERRED_HINT,
   getReportMetricColor,
+  getRefundEventKindLabel,
 } from "./report";
 
 export { formatLowStockNotification } from "./notification";

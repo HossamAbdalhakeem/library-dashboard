@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 text-right" :class="wrapperClass" data-testid="select-study-year">
+  <div class="flex flex-col gap-2 text-right" :class="wrapperClass">
     <label v-if="label" class="text-sm font-medium" :class="labelClass">{{ label }}</label>
 
     <Select
@@ -46,6 +46,8 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
   loading: { type: Boolean, default: false },
   showClear: { type: Boolean, default: false },
+  /** When true, omit study years with status INACTIVE */
+  excludeInactive: { type: Boolean, default: true },
   /** Auto-load study years on mount when options is not provided */
   autoLoad: { type: Boolean, default: true },
   query: { type: Object, default: () => ({}) },
@@ -101,7 +103,13 @@ const loadStudyYears = async (term = searchTerm.value) => {
     if (currentRequest !== requestId.value) return;
 
     const list = Array.isArray(years) ? years : [];
-    const mapped = list.map((year) => mapStudyYearOption(year, query));
+    const mapped = list
+      .filter((year) => {
+        if (!props.excludeInactive) return true;
+        if (year.status !== "INACTIVE") return true;
+        return year.id === props.modelValue;
+      })
+      .map((year) => mapStudyYearOption(year, query));
 
     internalOptions.value = withSelectedOption(mapped);
     emit("loaded", internalOptions.value);

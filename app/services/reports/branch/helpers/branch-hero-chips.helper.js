@@ -25,5 +25,12 @@ export const buildBranchHeroChips = (summary = {}) => {
       format: "money",
       valueClass: "text-rose-300",
     },
+    {
+      key: "fees",
+      label: "رسوم التحويل",
+      value: Number(s.feesTotal || 0),
+      format: "money",
+      valueClass: "text-sky-700 dark:text-sky-300",
+    },
   ];
 };

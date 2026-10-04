@@ -7,11 +7,11 @@
         >
           تقارير الأداء
         </span>
-        <h3 class="text-lg font-bold text-white">أهم المؤشرات</h3>
+        <h3 class="text-lg font-bold text-[var(--app-text-strong)]">أهم المؤشرات</h3>
       </div>
     </div>
 
-    <div v-if="loading" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div v-if="isLoading" class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <div
         v-for="i in 4"
         :key="`kpi-skel-${i}`"
@@ -23,9 +23,9 @@
     </div>
 
     <ReportsSectionError
-      v-else-if="error"
-      :message="error"
-      @retry="reload"
+      v-else-if="loadError"
+      :message="loadError"
+      @retry="onRetry"
     />
 
     <div
@@ -36,28 +36,28 @@
         compact
         accent="emerald"
         label="إجمالي المبيعات"
-        :value="formatMoney(summary.totalSales, 'locale')"
+        :value="formatMoney(summaryView.totalSales, 'locale')"
         hint="بيع مباشر + تسليم حجز"
       />
       <ReportKpiCard
         compact
         accent="sky"
-        label="إجمالي المدفوعات"
-        :value="formatMoney(summary.totalPayments, 'locale')"
-        hint="النقد المحصّل"
+        label="صافي النقد المحصّل"
+        :value="formatMoney(summaryView.totalPayments, 'locale')"
+        hint="بعد خصم كل المبالغ المستردة"
       />
       <ReportKpiCard
         compact
         accent="emerald"
         label="صافي الربح"
-        :value="formatMoney(summary.netProfit, 'locale')"
+        :value="formatMoney(summaryView.netProfit, 'locale')"
         hint="بعد المصروفات"
       />
       <ReportKpiCard
         compact
         accent="amber"
         label="المبالغ المستحقة"
-        :value="formatMoney(summary.outstandingAmount, 'locale')"
+        :value="formatMoney(summaryView.outstandingAmount, 'locale')"
         hint="متبقي على الحجوزات المفتوحة"
       />
     </div>
@@ -77,19 +77,45 @@ defineOptions({ name: "ReportsSummaryCards" });
 const props = defineProps({
   params: { type: Object, default: () => ({}) },
   reloadKey: { type: Number, default: 0 },
+  controlled: { type: Boolean, default: false },
+  summary: { type: Object, default: null },
+  loading: { type: Boolean, default: false },
+  error: { type: String, default: "" },
 });
 
-const emit = defineEmits(["loading"]);
+const emit = defineEmits(["loading", "retry"]);
 
-const { loading, data, error, reload } = useAdminReportSection(
+const {
+  loading: sectionLoading,
+  data,
+  error: sectionError,
+  reload,
+} = useAdminReportSection(
   (params) => adminReportsApi.getSummary(params),
   {
     params: toRef(props, "params"),
     reloadKey: toRef(props, "reloadKey"),
+    enabled: computed(() => !props.controlled),
     emit,
     errorMessage: "تعذر تحميل بيانات المؤشرات.",
   },
 );
 
-const summary = computed(() => data.value || {});
+const summaryView = computed(() =>
+  props.controlled ? props.summary || {} : data.value || {},
+);
+const isLoading = computed(() =>
+  props.controlled ? props.loading : sectionLoading.value,
+);
+const loadError = computed(() =>
+  props.controlled ? props.error : sectionError.value,
+);
+
+const onRetry = () => {
+  if (props.controlled) {
+    emit("retry");
+    return;
+  }
+  reload();
+};
 </script>

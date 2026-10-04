@@ -4,7 +4,7 @@
     dir="rtl"
   >
     <div class="mb-4">
-      <p class="font-bold text-white">اتجاه المبيعات</p>
+      <p class="font-bold text-[var(--app-text-strong)]">اتجاه المبيعات</p>
       <p class="mt-1 text-xs text-slate-400">
         {{ granularityLabel }}
       </p>
@@ -41,6 +41,7 @@ import Skeleton from "primevue/skeleton";
 import ReportsSectionError from "~/components/dashboard/pages/reports/admin/ReportsSectionError/ReportsSectionError.vue";
 import { adminReportsApi } from "~/services/reports/admin";
 import { useAdminReportSection } from "~/composables/useAdminReportSection";
+import { cachedChartAreaGradient } from "~/utils/chart-area-gradient";
 
 ChartJS.register(
   CategoryScale,
@@ -85,6 +86,8 @@ const granularityLabel = computed(() => {
   return "تجميع يومي";
 });
 
+const areaFill = cachedChartAreaGradient();
+
 const chartData = computed(() => {
   const series = points.value.length
     ? points.value
@@ -97,20 +100,7 @@ const chartData = computed(() => {
         label: "المبيعات",
         data: series.map((p) => Number(p.sales || 0)),
         borderColor: props.lineColor,
-        backgroundColor: (context) => {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) return "rgba(245, 175, 82, 0.15)";
-          const gradient = ctx.createLinearGradient(
-            0,
-            chartArea.top,
-            0,
-            chartArea.bottom,
-          );
-          gradient.addColorStop(0, "rgba(245, 175, 82, 0.35)");
-          gradient.addColorStop(1, "rgba(245, 175, 82, 0.02)");
-          return gradient;
-        },
+        backgroundColor: areaFill,
         pointBackgroundColor: props.lineColor,
         pointBorderColor: "#111111",
         pointBorderWidth: 2,

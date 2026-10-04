@@ -119,10 +119,52 @@
   border-top: 1px solid var(--app-border) !important;
   color: var(--app-text) !important;
   padding: 0.75rem !important;
+  flex-wrap: wrap;
+  row-gap: 0.35rem;
   justify-content: center;
   position: sticky;
   left: 0;
   min-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .app-data-table-wrap :deep(.p-paginator .p-paginator-current) {
+    flex-basis: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+.app-page-sizes {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.app-page-size {
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding-inline: 0.35rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--app-muted-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.app-page-size:hover {
+  background: var(--app-elevated);
+  color: var(--app-text-strong);
+}
+
+.app-page-size.is-active {
+  background: rgba(245, 175, 82, 0.18);
+  color: #f5af52;
+  border-color: rgba(245, 175, 82, 0.55);
+  font-weight: 700;
 }
 
 .app-data-table-wrap :deep(.p-paginator .p-paginator-page),

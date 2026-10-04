@@ -31,6 +31,8 @@ export function useBookingForm(props, emit) {
     productId: null,
     amount: null,
     paymentMethod: defaultPaymentMethod.value,
+    feeEnabled: false,
+    feeAmount: null,
   });
 
   const formInitialValues = computed(() => ({
@@ -76,6 +78,8 @@ export function useBookingForm(props, emit) {
       productId: null,
       amount: null,
       paymentMethod: defaultPaymentMethod.value,
+      feeEnabled: false,
+      feeAmount: null,
     });
     selectedStudent.value = null;
     products.clearProductSelection();

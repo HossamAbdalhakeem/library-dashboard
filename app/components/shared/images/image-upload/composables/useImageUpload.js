@@ -113,11 +113,8 @@ export function useImageUpload(props, emit) {
     processSelectedFile(file);
   };
 
-  const onCameraError = (message) => {
-    if (message) {
-      errorMessage.value = message;
-      emit("error", message);
-    }
+  const onCameraError = () => {
+    // The camera dialog already shows this message.
   };
 
   const onFileChange = (event) => {
@@ -194,10 +191,36 @@ export function useImageUpload(props, emit) {
     nextTick(() => openPicker());
   };
 
+  const seedPreview = () => {
+    if (previewUrl.value) return;
+
+    const file = props.modelValue;
+    if (file instanceof Blob) {
+      previewUrl.value = URL.createObjectURL(file);
+      fileMeta.value = file.name || "";
+      return;
+    }
+
+    if (typeof props.previewSrc === "string" && props.previewSrc) {
+      previewUrl.value = props.previewSrc;
+    }
+  };
+
+  watch(
+    () => props.previewSrc,
+    () => {
+      seedPreview();
+    },
+    { immediate: true },
+  );
+
   watch(
     () => props.modelValue,
     (value) => {
-      if (value) return;
+      if (value) {
+        seedPreview();
+        return;
+      }
       if (!previewUrl.value && !fileMeta.value && !errorMessage.value) return;
       revokePreview();
       errorMessage.value = "";

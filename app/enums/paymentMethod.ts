@@ -15,11 +15,23 @@ export type PaymentMethod =
 export type PaymentMethodValue = PaymentMethod;
 
 export const PAYMENT_METHOD_META: Readonly<
-  Record<PaymentMethod, { label: string; color: string }>
+  Record<
+    PaymentMethod,
+    { label: string; color: string; icon: string; logo?: string }
+  >
 > = {
-  [PaymentMethod.CASH]: { label: "كاش", color: "#4472C4" },
-  [PaymentMethod.INSTAPAY]: { label: "انستا باي", color: "#ED7D31" },
-  [PaymentMethod.WALLET]: { label: "محفظة إلكترونية", color: "#70AD47" },
+  [PaymentMethod.CASH]: { label: "كاش", color: "#4472C4", icon: "banknote" },
+  [PaymentMethod.INSTAPAY]: {
+    label: "انستا باي",
+    color: "#ED7D31",
+    icon: "instapay",
+    logo: "/images/instapay.svg",
+  },
+  [PaymentMethod.WALLET]: {
+    label: "محفظة إلكترونية",
+    color: "#70AD47",
+    icon: "wallet",
+  },
 };
 
 export const PAYMENT_METHOD_LABELS: Readonly<Record<PaymentMethod, string>> =

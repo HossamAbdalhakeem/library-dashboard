@@ -67,7 +67,6 @@
           size="small"
           severity="secondary"
           title="السجل"
-          data-testid="reservation-timeline-open"
           aria-label="السجل"
           @click="openTimeline(data)"
         />
@@ -82,7 +81,6 @@
             text
             size="small"
             severity="primary"
-            data-testid="reservation-change-product"
             @click="$emit('change-product', data)"
           />
           <Button
@@ -92,7 +90,6 @@
             text
             size="small"
             severity="danger"
-            data-testid="reservation-cancel"
             @click="$emit('cancel', data)"
           />
         </div>

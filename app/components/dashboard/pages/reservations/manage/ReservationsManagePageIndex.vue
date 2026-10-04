@@ -10,17 +10,22 @@
             icon="pi pi-download"
             severity="secondary"
             outlined
-            data-testid="reservations-export"
             @click="openExport"
           />
         </div>
       </template>
       <template #content>
         <ReservationsFilters
+          v-if="filtersReady"
           v-model:branch-id="filters.branchId"
           v-model:teacher-id="filters.teacherId"
           v-model:study-year-id="filters.studyYearId"
           v-model:status="filters.status"
+          v-model:from="filters.from"
+          v-model:to="filters.to"
+          v-model:period="filters.period"
+          :academic-year-range="academicYearRange"
+          default-period="year"
           @search="onSearch"
           @change="onFilterChange"
         />
@@ -73,6 +78,7 @@ import {
 } from "~/services/reservation";
 import { useAppToast } from "~/composables/useAppToast";
 import { useAuth } from "~/composables/useAuth";
+import { useAcademicYear } from "~/composables/useAcademicYear";
 
 defineOptions({ name: "ReservationsManagePageIndex" });
 
@@ -88,8 +94,10 @@ const ReservationsExportDialog = defineAsyncComponent(() =>
 
 const { showError } = useAppToast();
 const { isAdmin } = useAuth();
+const { academicYearRange, academicYearStore } = useAcademicYear();
 
 const loading = ref(true);
+const filtersReady = ref(false);
 const selectedReservation = ref(null);
 const reservations = ref([]);
 const cancelOpen = ref(false);
@@ -97,10 +105,13 @@ const exchangeOpen = ref(false);
 const exportVisible = ref(false);
 const filters = reactive({
   search: "",
-  branchId: null,
+  branchId: "all",
   teacherId: null,
   studyYearId: null,
   status: null,
+  from: null,
+  to: null,
+  period: "year",
 });
 const pagination = reactive({
   page: 1,
@@ -181,5 +192,8 @@ const onFlowClose = () => {
   }
 };
 
-onMounted(loadData);
+onMounted(async () => {
+  await academicYearStore.fetchYears().catch(() => {});
+  filtersReady.value = true;
+});
 </script>

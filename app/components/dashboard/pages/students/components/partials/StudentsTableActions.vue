@@ -39,7 +39,7 @@
       v-model:visible="confirmVisible"
       modal
       header="تأكيد التعطيل"
-      :style="{ width: '28rem' }"
+      :style="{ width: 'min(28rem, 96vw)' }"
       :dismissableMask="!loading"
       :closable="!loading"
       dir="rtl"
@@ -50,7 +50,7 @@
         ؟
       </p>
       <template #footer>
-        <div class="flex justify-end gap-2">
+        <div class="flex flex-wrap justify-end gap-2">
           <Button
             label="إلغاء"
             severity="secondary"

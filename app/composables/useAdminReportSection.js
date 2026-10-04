@@ -1,5 +1,6 @@
 import { useAppToast } from "~/composables/useAppToast";
 import { useAuth } from "~/composables/useAuth";
+import { isRequestAborted } from "~/utils/apiFetch";
 
 /**
  * Self-contained admin report section loader.
@@ -39,6 +40,8 @@ export const useAdminReportSection = (loader, options = {}) => {
       to: p.to || null,
       branchId: p.branchId || null,
       productId: p.productId || null,
+      teacherId: p.teacherId || null,
+      studyYearId: p.studyYearId || null,
       academicYearId: p.academicYearId || null,
       period: p.period || null,
       page: p.page ?? null,
@@ -73,6 +76,7 @@ export const useAdminReportSection = (loader, options = {}) => {
       error.value = null;
     } catch (err) {
       if (gen !== generation) return;
+      if (isRequestAborted(err)) return;
       data.value = null;
       error.value = err?.message || errorMessage;
       if (

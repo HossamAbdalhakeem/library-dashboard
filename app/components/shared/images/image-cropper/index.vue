@@ -4,32 +4,35 @@
     modal
     dir="rtl"
     :header="title || 'قص الصورة'"
-    :style="{ width: '95vw', maxWidth: '1000px', maxHeight: '96vh' }"
     :closable="!isBusy"
     :close-on-escape="!isBusy"
     :dismissable-mask="false"
     :draggable="false"
-    :pt="{ header: { class: 'pb-0 text-right' }, content: { class: 'text-right' } }"
+    :pt="{
+      root: { class: '!w-[min(60rem,calc(100vw-1.5rem))] !max-w-[60rem]' },
+      header: { class: 'pb-0 text-right' },
+      content: { class: 'text-right' },
+    }"
     @hide="handleClose"
     @update:visible="onVisibleUpdate"
   >
     <div
       v-if="!imageSrc"
-      class="flex h-[400px] w-full flex-col items-center justify-center"
+      class="flex h-60 w-full flex-col items-center justify-center sm:h-[400px]"
     >
       <i class="pi pi-image mb-4 text-4xl text-slate-400" />
       <p class="text-slate-400">لم يتم اختيار صورة</p>
     </div>
 
-    <div v-else class="grid min-h-[500px] grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
-      <div class="flex flex-col gap-4">
-        <h3 class="text-lg font-semibold text-slate-200">تعديل</h3>
-        <div class="min-h-[400px] flex-1 overflow-hidden rounded-lg bg-black">
+    <div v-else class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div class="flex flex-col gap-3">
+        <h3 class="text-base font-semibold text-slate-200">تعديل</h3>
+        <div class="h-72 overflow-hidden rounded-lg bg-black sm:h-[26rem]">
           <img
             ref="imageRef"
             :src="imageSrc"
             alt="قص الصورة"
-            class="block max-w-full"
+            class="block max-h-full max-w-full"
             @load="onImageLoad"
           />
         </div>
@@ -43,10 +46,10 @@
         />
       </div>
 
-      <div class="flex flex-col gap-4">
-        <h3 class="text-lg font-semibold text-slate-200">معاينة</h3>
+      <div class="flex flex-col gap-3">
+        <h3 class="text-base font-semibold text-slate-200">معاينة</h3>
         <div
-          class="flex min-h-[400px] flex-1 items-center justify-center overflow-hidden rounded-lg bg-black"
+          class="flex h-72 items-center justify-center overflow-hidden rounded-lg bg-black sm:h-[26rem]"
         >
           <img
             v-if="previewImage"
@@ -62,7 +65,7 @@
             <p class="mt-2 text-sm">ستظهر المعاينة هنا</p>
           </div>
         </div>
-        <div class="flex justify-center gap-2">
+        <div class="flex flex-wrap justify-center gap-2">
           <Button
             label="إلغاء"
             severity="danger"
