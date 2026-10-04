@@ -41,7 +41,7 @@ defineOptions({ name: "AppPeriodDateFilter" });
 
 const ALL_PERIOD_OPTIONS = [
   { label: "اليوم", value: "day" },
-  { label: "أمس", value: "yesterday" },
+  { label: "أول أمس", value: "day-before-yesterday" },
   { label: "اسبوع", value: "week" },
   { label: "شهر", value: "month" },
   { label: "العام الدراسي", value: "year" },
@@ -53,7 +53,7 @@ const props = defineProps({
   to: { type: String, default: null },
   /**
    * Allowed period values. Defaults to admin set (no yesterday).
-   * Branch reports pass: day | yesterday | week
+   * Branch reports pass: day | day-before-yesterday | week
    */
   periods: {
     type: Array,
@@ -149,10 +149,10 @@ const rangeForPeriod = (value) => {
     return { from: to, to };
   }
 
-  if (value === "yesterday") {
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const iso = toIsoDate(yesterday);
+  if (value === "day-before-yesterday") {
+    const day = new Date(today);
+    day.setDate(day.getDate() - 2);
+    const iso = toIsoDate(day);
     return { from: iso, to: iso };
   }
 

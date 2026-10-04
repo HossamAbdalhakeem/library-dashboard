@@ -36,8 +36,8 @@ import {
 
 defineOptions({ name: "DailyReportFilters" });
 
-/** Branch employee reports: today, yesterday, last 7 days only. */
-const BRANCH_PERIODS = ["day", "yesterday", "week"];
+/** Branch employee reports: today, the day before yesterday, last 7 days. */
+const BRANCH_PERIODS = ["day", "day-before-yesterday", "week"];
 
 defineProps({
   loading: { type: Boolean, default: false },
