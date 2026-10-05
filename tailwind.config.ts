@@ -32,15 +32,7 @@ export default <Partial<Config>>{
         },
       },
       fontFamily: {
-        sans: [
-          'Tahoma',
-          '"Segoe UI"',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          '"Geeza Pro"',
-          'system-ui',
-          'sans-serif',
-        ],
+        sans: ['"Trebuchet MS"', '"Segoe UI"', 'sans-serif'],
         display: ['Georgia', 'serif'],
       },
       keyframes: {

@@ -22,7 +22,6 @@
   --app-overlay-hover: rgb(0 0 0 / 0.04);
   --app-overlay-soft: rgb(0 0 0 / 0.03);
   --app-row-odd: #fafafa;
-  --app-font: Tahoma, "Segoe UI", -apple-system, BlinkMacSystemFont, "Geeza Pro", system-ui, sans-serif;
 }
 
 /* Dark scheme (default app mode via html.app-dark) */
@@ -55,15 +54,13 @@ body,
   text-align: right;
   background: var(--app-bg);
   color: var(--app-text);
-  font-family: var(--app-font);
 }
 
 body {
   margin: 0;
   background: var(--app-bg);
   color: var(--app-text);
-  font-family: var(--app-font);
-  -webkit-text-size-adjust: 100%;
+  font-family: "Tahoma", "Segoe UI", sans-serif;
 }
 
 * {
