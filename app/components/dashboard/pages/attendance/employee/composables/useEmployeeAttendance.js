@@ -42,12 +42,24 @@ export function useEmployeeAttendance() {
   const locationLabel = computed(() => {
     if (locationState.value === "locating") return "جاري تحديد الموقع...";
     if (locationState.value === "fix") return "تم تحديد الموقع";
+    if (locationState.value === "insecure") {
+      return "الموقع يحتاج رابط HTTPS";
+    }
+    if (locationState.value === "denied") {
+      return "اسمح للمتصفح باستخدام الموقع";
+    }
     if (locationState.value === "missing") return "تعذر تحديد الموقع";
     return "سيُطلب الموقع عند التسجيل";
   });
   const locationTone = computed(() => {
     if (locationState.value === "fix") return "ok";
-    if (locationState.value === "missing") return "warn";
+    if (
+      locationState.value === "missing" ||
+      locationState.value === "insecure" ||
+      locationState.value === "denied"
+    ) {
+      return "warn";
+    }
     if (locationState.value === "locating") return "busy";
     return "idle";
   });
@@ -116,7 +128,13 @@ export function useEmployeeAttendance() {
     locationState.value = "locating";
     const reading = await readDeviceLocation();
     locationReading.value = reading;
-    locationState.value = reading.latitude != null ? "fix" : "missing";
+    if (reading.latitude != null) {
+      locationState.value = "fix";
+    } else if (reading.signal === "insecure" || reading.signal === "denied") {
+      locationState.value = reading.signal;
+    } else {
+      locationState.value = "missing";
+    }
     return reading;
   };
 
