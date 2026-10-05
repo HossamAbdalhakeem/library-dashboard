@@ -46,7 +46,7 @@ export function useEmployeeAttendance() {
       return "الموقع يحتاج رابط HTTPS";
     }
     if (locationState.value === "denied") {
-      return "اسمح للمتصفح باستخدام الموقع";
+      return "اسمح للمتصفح باستخدام...... الموقع";
     }
     if (locationState.value === "missing") return "تعذر تحديد الموقع";
     return "سيُطلب الموقع عند التسجيل";
