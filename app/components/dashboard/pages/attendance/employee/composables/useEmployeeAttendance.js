@@ -46,7 +46,7 @@ export function useEmployeeAttendance() {
       return "الموقع يحتاج رابط HTTPS";
     }
     if (locationState.value === "denied") {
-      return "اسمح للمتصفح باستخدام...... الموقع";
+      return "اسمح للمتصفح باستخدام الموقع";
     }
     if (locationState.value === "missing") return "تعذر تحديد الموقع";
     return "سيُطلب الموقع عند التسجيل";
@@ -124,26 +124,41 @@ export function useEmployeeAttendance() {
     }
   };
 
-  const captureLocation = async () => {
-    locationState.value = "locating";
-    const reading = await readDeviceLocation();
+  const applyLocationReading = (reading) => {
     locationReading.value = reading;
     if (reading.latitude != null) {
       locationState.value = "fix";
-    } else if (reading.signal === "insecure" || reading.signal === "denied") {
-      locationState.value = reading.signal;
-    } else {
-      locationState.value = "missing";
+      return;
     }
+    if (reading.signal === "insecure" || reading.signal === "denied") {
+      locationState.value = reading.signal;
+      return;
+    }
+    locationState.value = "missing";
+  };
+
+  const captureLocation = async () => {
+    locationState.value = "locating";
+    const reading = await readDeviceLocation();
+    applyLocationReading(reading);
     return reading;
   };
 
-  const openCapture = async (action) => {
+  const openCapture = (action) => {
     captureAction.value = action;
-    // Ask for location before the camera covers the page. On iPhone the
-    // site prompt is dismissed as "denied" if a dialog opens over it.
-    await captureLocation();
-    cameraOpen.value = true;
+    locationState.value = "locating";
+    // Call this directly in the tap so iPhone Safari can show the prompt.
+    readDeviceLocation().then((reading) => {
+      applyLocationReading(reading);
+      if (reading.signal === "denied") {
+        showError(
+          "سفاري مانع الموقع لهذه الصفحة. من شريط العنوان اضغط AA ثم Location ثم Allow، وبعدين حدّث الصفحة.",
+        );
+      } else if (reading.signal === "insecure") {
+        showError("الآيفون يسمح بالموقع على رابط https فقط، وليس على 192.168.");
+      }
+      cameraOpen.value = true;
+    });
   };
 
   const onCaptured = (file) => {

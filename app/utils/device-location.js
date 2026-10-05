@@ -6,21 +6,11 @@ let pendingRead = null;
 let lastFix = null;
 let lastFixAt = 0;
 
-const positionOptions = [
-  { enableHighAccuracy: true, maximumAge: FRESH_MS, timeout: 8_000 },
-  { enableHighAccuracy: false, maximumAge: 5 * 60_000, timeout: 20_000 },
-];
-
 const signalForError = (error) => {
   if (error?.code === 1) return "denied";
   if (error?.code === 3) return "timeout";
   return "unavailable";
 };
-
-const readPosition = (options) =>
-  new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject, options);
-  });
 
 const readingFromPosition = (position) => {
   const accuracy = position.coords.accuracy;
@@ -31,31 +21,52 @@ const readingFromPosition = (position) => {
   };
 };
 
-async function readFreshLocation() {
+/**
+ * Starts getCurrentPosition in this turn so iPhone Safari still treats it
+ * as the button tap. An async wrapper drops that gesture and the prompt
+ * never appears.
+ */
+function startRead() {
   if (typeof navigator === "undefined" || !navigator.geolocation) {
-    return { signal: "unavailable" };
+    return Promise.resolve({ signal: "unavailable" });
   }
 
   if (typeof window !== "undefined" && window.isSecureContext === false) {
-    return { signal: "insecure" };
+    return Promise.resolve({ signal: "insecure" });
   }
 
-  let signal = "unavailable";
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (reading) => {
+      if (settled) return;
+      settled = true;
+      if (reading.latitude != null) {
+        lastFix = reading;
+        lastFixAt = Date.now();
+      }
+      resolve(reading);
+    };
 
-  for (const options of positionOptions) {
-    try {
-      const position = await readPosition(options);
-      const reading = readingFromPosition(position);
-      lastFix = reading;
-      lastFixAt = Date.now();
-      return reading;
-    } catch (error) {
-      signal = signalForError(error);
-      if (signal === "denied") break;
-    }
-  }
+    const onFineError = (error) => {
+      const signal = signalForError(error);
+      if (signal === "denied") {
+        finish({ signal });
+        return;
+      }
 
-  return { signal };
+      navigator.geolocation.getCurrentPosition(
+        (position) => finish(readingFromPosition(position)),
+        (coarseError) => finish({ signal: signalForError(coarseError) }),
+        { enableHighAccuracy: false, maximumAge: 5 * 60_000, timeout: 20_000 },
+      );
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => finish(readingFromPosition(position)),
+      onFineError,
+      { enableHighAccuracy: true, maximumAge: FRESH_MS, timeout: 8_000 },
+    );
+  });
 }
 
 export function readDeviceLocation() {
@@ -64,7 +75,7 @@ export function readDeviceLocation() {
   }
 
   if (!pendingRead) {
-    pendingRead = readFreshLocation().finally(() => {
+    pendingRead = startRead().finally(() => {
       pendingRead = null;
     });
   }
