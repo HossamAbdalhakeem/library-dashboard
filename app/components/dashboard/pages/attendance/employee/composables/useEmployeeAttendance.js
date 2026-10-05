@@ -138,10 +138,12 @@ export function useEmployeeAttendance() {
     return reading;
   };
 
-  const openCapture = (action) => {
+  const openCapture = async (action) => {
     captureAction.value = action;
+    // Ask for location before the camera covers the page. On iPhone the
+    // site prompt is dismissed as "denied" if a dialog opens over it.
+    await captureLocation();
     cameraOpen.value = true;
-    captureLocation();
   };
 
   const onCaptured = (file) => {
